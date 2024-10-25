@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include <spark/v2/Handler.h>
-#include <spark/v2/MessageHeader.h>
-#include <spark/v2/Link.h>
-#include <spark/v2/Tracking.h>
+#include <spark/Handler.h>
+#include <spark/MessageHeader.h>
+#include <spark/Link.h>
+#include <spark/Tracking.h>
 #include <logger/Logger.h>
 #include <boost/asio/io_context.hpp>
 #include <boost/uuid/uuid.hpp>
@@ -23,7 +23,7 @@
 #include <span>
 #include <cstdint>
 
-namespace ember::spark::v2 {
+namespace ember::spark {
 
 class Connection;
 
@@ -70,4 +70,4 @@ public:
 	bool send(flatbuffers::FlatBufferBuilder&& fbb);
 };
 
-} // v2, spark, ember
+} // spark, ember

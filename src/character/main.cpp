@@ -10,7 +10,7 @@
 #include "CharacterHandler.h"
 #include "CharacterService.h"
 #include <dbcreader/DBCReader.h>
-#include <spark/v2/Server.h>
+#include <spark/Server.h>
 #include <conpool/ConnectionPool.h>
 #include <conpool/Policies.h>
 #include <conpool/drivers/AutoSelect.h>
@@ -197,7 +197,7 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 	auto spark_filter = log::Filter(FilterType::LF_SPARK);
 
 	LOG_INFO(logger) << "Starting RPC services..." << LOG_SYNC;
-	spark::v2::Server spark(service, "character", s_address, s_port, logger);
+	spark::Server spark(service, "character", s_address, s_port, logger);
 	CharacterService char_service(spark, handler, *logger);
 	
 	service.dispatch([&, logger]() {

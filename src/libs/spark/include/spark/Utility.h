@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include <spark/v2/Common.h>
+#include <spark/Common.h>
 #include <spark/buffers/BufferAdaptor.h>
 #include <spark/buffers/BinaryStream.h>
 
-namespace ember::spark::v2 {
+namespace ember::spark {
 
 static void write_header(Message& msg) {
 	MessageHeader header;

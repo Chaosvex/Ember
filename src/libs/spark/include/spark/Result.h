@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace ember::spark::v2 {
+namespace ember::spark {
 
 enum class Result {
 	OK,
@@ -20,4 +20,4 @@ enum class Result {
 	WRONG_MESSAGE_TYPE
 };
 
-} // v2, spark, ember
+} // spark, ember

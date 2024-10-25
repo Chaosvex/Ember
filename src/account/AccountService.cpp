@@ -11,7 +11,7 @@
 namespace ember {
 
 using namespace ember::rpc::Account;
-using namespace spark::v2;
+using namespace spark;
 
 AccountService::AccountService(Server& spark, AccountHandler& handler, Sessions& sessions, log::Logger& logger)
 	: handler_(handler), 

@@ -13,26 +13,26 @@
 namespace ember {
 
 class HelloClient final : public services::HelloClient {
-	spark::v2::Server& spark_;
+	spark::Server& spark_;
 
-	void say_hello(const spark::v2::Link& link);
-	void say_hello_tracked(const spark::v2::Link& link);
+	void say_hello(const spark::Link& link);
+	void say_hello_tracked(const spark::Link& link);
 
 	void handle_say_hello_response(
-		const spark::v2::Link& link,
+		const spark::Link& link,
 		const rpc::Hello::HelloReply& msg
 	) override;
 
 	void handle_tracked_reply(
-		const spark::v2::Link& link,
-		std::expected<const rpc::Hello::HelloReply*, spark::v2::Result> msg
+		const spark::Link& link,
+		std::expected<const rpc::Hello::HelloReply*, spark::Result> msg
 	);
 
 public:
-	HelloClient(spark::v2::Server& spark);
+	HelloClient(spark::Server& spark);
 
-	void on_link_up(const spark::v2::Link& link) override;
-	void on_link_down(const spark::v2::Link& link) override;
+	void on_link_up(const spark::Link& link) override;
+	void on_link_down(const spark::Link& link) override;
 };
 
 }

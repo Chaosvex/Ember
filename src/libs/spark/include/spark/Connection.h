@@ -9,7 +9,7 @@
 #pragma once
 
 #include <logger/Logger.h>
-#include <spark/v2/Common.h>
+#include <spark/Common.h>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/asio/awaitable.hpp>
 #include <boost/asio/strand.hpp>
@@ -26,7 +26,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace ember::spark::v2 {
+namespace ember::spark {
 
 class Connection final {
 public:
@@ -62,4 +62,4 @@ public:
 	void close();
 };
 
-} // v2, spark, ember
+} // spark, ember

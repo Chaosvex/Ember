@@ -13,7 +13,7 @@
 #include <mutex>
 #include <string>
 
-namespace ember::spark::v2 {
+namespace ember::spark {
 
 class RemotePeer;
 class Handler;

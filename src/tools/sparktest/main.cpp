@@ -11,7 +11,7 @@
 #include <logger/Logger.h>
 #include <logger/ConsoleSink.h>
 #include <logger/FileSink.h>
-#include <spark/v2/Server.h>
+#include <spark/Server.h>
 #include <boost/asio/io_context.hpp>
 #include <memory>
 
@@ -25,8 +25,8 @@ int main() {
 	log::global_logger(logger.get());
 
 	boost::asio::io_context ctx;
-	spark::v2::Server spark(ctx, "test_server", "0.0.0.0", 8000, logger.get());
-	spark::v2::Server spark_cli(ctx, "test_client", "0.0.0.0", 8001, logger.get());
+	spark::Server spark(ctx, "test_server", "0.0.0.0", 8000, logger.get());
+	spark::Server spark_cli(ctx, "test_client", "0.0.0.0", 8001, logger.get());
 
 	HelloService hello_service(spark);
 	HelloClient hello_client(spark_cli);

@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <spark/v2/Connection.h>
+#include <spark/Connection.h>
 #include <spark/Exception.h>
 #include <boost/asio/co_spawn.hpp>
 #include <boost/asio/deferred.hpp>
@@ -20,7 +20,7 @@
 
 namespace ba = boost::asio;
 
-namespace ember::spark::v2 {
+namespace ember::spark {
 
 Connection::Connection(ba::ip::tcp::socket socket, log::Logger& logger, CloseHandler handler)
 	: logger_(logger),

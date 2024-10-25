@@ -6,14 +6,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <spark/v2/Channel.h>
-#include <spark/v2/Connection.h>
-#include <spark/v2/Common.h>
+#include <spark/Channel.h>
+#include <spark/Connection.h>
+#include <spark/Common.h>
 #include <spark/buffers/BinaryStream.h>
 #include <spark/buffers/BufferAdaptor.h>
 #include <cassert>
 
-namespace ember::spark::v2 {
+namespace ember::spark {
 
 Channel::Channel(boost::asio::io_context& ctx, std::uint8_t id,
                  std::string banner, std::string service,
@@ -121,4 +121,4 @@ Channel::~Channel() {
 	close();
 }
 
-} // v2, spark, ember
+} // spark, ember

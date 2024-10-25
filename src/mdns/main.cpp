@@ -16,7 +16,7 @@
 #include <shared/util/LogConfig.h>
 #include <shared/util/Utility.h>
 #include <shared/threading/Utility.h>
-#include <spark/v2/Server.h>
+#include <spark/Server.h>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/signal_set.hpp>
 #include <boost/program_options.hpp>
@@ -132,7 +132,7 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 	const auto spark_port = args["spark.port"].as<std::uint16_t>();
 
 	// start Spark services
-	spark::v2::Server spark(service, APP_NAME, spark_iface, spark_port, logger);
+	spark::Server spark(service, APP_NAME, spark_iface, spark_port, logger);
 	dns::RequestHandler handler(logger);
 	//context.register_service(&handler);
 

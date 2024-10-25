@@ -11,20 +11,20 @@
 
 namespace ember {
 
-HelloService::HelloService(spark::v2::Server& server)
+HelloService::HelloService(spark::Server& server)
 	: services::HelloService(server) {}
 
-void HelloService::on_link_up(const spark::v2::Link& link) {
+void HelloService::on_link_up(const spark::Link& link) {
 	LOG_DEBUG_GLOB << "Server: Link up" << LOG_SYNC;
 }
 
-void HelloService::on_link_down(const spark::v2::Link& link) {
+void HelloService::on_link_down(const spark::Link& link) {
 
 }
 
  auto HelloService::handle_say_hello(const rpc::Hello::HelloRequest& msg,
-                                     const spark::v2::Link& link,
-                                     const spark::v2::Token& token)
+                                     const spark::Link& link,
+                                     const spark::Token& token)
                                      -> std::optional<rpc::Hello::HelloReplyT> {
 	LOG_INFO_GLOB << "[HelloService] Received message: " << msg.name()->c_str() << LOG_SYNC;
 

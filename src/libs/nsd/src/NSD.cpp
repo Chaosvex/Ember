@@ -11,7 +11,7 @@
 
 namespace ember {
 
-NetworkServiceDiscovery::NetworkServiceDiscovery(spark::v2::Server& spark, std::string host,
+NetworkServiceDiscovery::NetworkServiceDiscovery(spark::Server& spark, std::string host,
                                                  std::uint16_t port, log::Logger& logger)
 	: services::DiscoveryClient(spark),
 	  host_(std::move(host)), 
@@ -32,14 +32,14 @@ void NetworkServiceDiscovery::connect() {
 	spark_.connect(host_, port_, SERVICE_NAME, this);
 }
 
-void NetworkServiceDiscovery::on_link_up(const spark::v2::Link& link) {
+void NetworkServiceDiscovery::on_link_up(const spark::Link& link) {
 	LOG_TRACE_ASYNC(logger_, "Established connection to NSD service");
 	link_ = link;
 	connected_ = true;
 	retry_interval_ = RETRY_INTERVAL_MIN;
 }
 
-void NetworkServiceDiscovery::on_link_down(const spark::v2::Link& link) {
+void NetworkServiceDiscovery::on_link_down(const spark::Link& link) {
 	LOG_TRACE_ASYNC(logger_, "Lost connection to NSD service");
 	connected_ = false;
 }

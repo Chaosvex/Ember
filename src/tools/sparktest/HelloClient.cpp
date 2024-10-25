@@ -12,31 +12,31 @@
 
 namespace ember {
 
-HelloClient::HelloClient(spark::v2::Server& spark)
+HelloClient::HelloClient(spark::Server& spark)
 	: services::HelloClient(spark),
 	  spark_(spark) {
 	connect("127.0.0.1", 8000);
 }
 
-void HelloClient::on_link_up(const spark::v2::Link& link) {
+void HelloClient::on_link_up(const spark::Link& link) {
 	LOG_DEBUG_GLOB << "Client: Link up" << LOG_SYNC;
 	say_hello(link);
 	say_hello_tracked(link);
 }
 
-void HelloClient::on_link_down(const spark::v2::Link& link) {
+void HelloClient::on_link_down(const spark::Link& link) {
 	LOG_TRACE_GLOB << log_func << LOG_SYNC;
 }
 
-void HelloClient::say_hello(const spark::v2::Link& link) {
+void HelloClient::say_hello(const spark::Link& link) {
 	rpc::Hello::HelloRequestT msg;
 	msg.name = "Aloha from the HelloClient!";
 	send(msg, link);
 }
 
 void HelloClient::handle_tracked_reply(
-	const spark::v2::Link& link,
-    std::expected<const rpc::Hello::HelloReply*, spark::v2::Result> msg) {
+	const spark::Link& link,
+    std::expected<const rpc::Hello::HelloReply*, spark::Result> msg) {
 	LOG_TRACE_GLOB << log_func << LOG_SYNC;
 	
 	if(msg) {
@@ -46,7 +46,7 @@ void HelloClient::handle_tracked_reply(
 	}
 }
 
-void HelloClient::say_hello_tracked(const spark::v2::Link& link) {
+void HelloClient::say_hello_tracked(const spark::Link& link) {
 	LOG_TRACE_GLOB << log_func << LOG_SYNC;
 
 	rpc::Hello::HelloRequestT msg {
@@ -58,7 +58,7 @@ void HelloClient::say_hello_tracked(const spark::v2::Link& link) {
 	});
 }
 
-void HelloClient::handle_say_hello_response(const spark::v2::Link& link, 
+void HelloClient::handle_say_hello_response(const spark::Link& link, 
                                             const rpc::Hello::HelloReply& msg) {
 	LOG_INFO_GLOB << "[HelloClient] Received response: " << msg.message()->c_str() << LOG_SYNC;
 }

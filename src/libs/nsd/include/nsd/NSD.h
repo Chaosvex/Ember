@@ -10,7 +10,7 @@
 
 #include <DiscoveryClientStub.h>
 #include <logger/Logger.h>
-#include <spark/v2/Server.h>
+#include <spark/Server.h>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/steady_timer.hpp>
 #include <chrono>
@@ -27,25 +27,25 @@ class NetworkServiceDiscovery final : public services::DiscoveryClient {
 
 	std::string host_;
 	std::uint16_t port_;
-	spark::v2::Server& spark_;
+	spark::Server& spark_;
 	bool connected_;
 	boost::asio::io_context ctx_;
 	boost::asio::io_context::work work_;
 	boost::asio::steady_timer timer_;
 	std::jthread worker_;
 	log::Logger& logger_;
-	spark::v2::Link link_;
+	spark::Link link_;
 	std::chrono::seconds retry_interval_;
 
 	void connect();
 	void increase_interval();
 
-	void on_link_up(const spark::v2::Link& link) override;
-	void on_link_down(const spark::v2::Link& link) override;
+	void on_link_up(const spark::Link& link) override;
+	void on_link_down(const spark::Link& link) override;
 	void connect_failed(std::string_view ip, std::uint16_t port) override;
 
 public:
-	NetworkServiceDiscovery(spark::v2::Server& spark, std::string host,
+	NetworkServiceDiscovery(spark::Server& spark, std::string host,
 	                        std::uint16_t port, log::Logger& logger);
 	~NetworkServiceDiscovery();
 

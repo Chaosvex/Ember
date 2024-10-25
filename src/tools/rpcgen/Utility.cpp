@@ -46,7 +46,7 @@ std::string fbs_to_name(std::string_view name) {
 /*
  * Takes a reflected FlatBuffers namespace and converts it to one that
  * can be used in C++. For example:
- * ember.spark.v2 -> ember::spark::v2
+ * ember.spark.v2 -> ember::spark
  */
 std::string to_cpp_ns(std::string_view val) {
 	std::string result {val};

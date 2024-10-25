@@ -6,12 +6,12 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <spark/v2/Server.h>
-#include <spark/v2/Handler.h>
-#include <spark/v2/Connection.h>
+#include <spark/Server.h>
+#include <spark/Handler.h>
+#include <spark/Connection.h>
 #include <spark/buffers/BufferAdaptor.h>
 #include <spark/buffers/BinaryStream.h>
-#include <spark/v2/Utility.h>
+#include <spark/Utility.h>
 #include <logger/Logger.h>
 #include <shared/FilterTypes.h>
 #include <boost/asio/co_spawn.hpp>
@@ -24,7 +24,7 @@
 #include <format>
 #include <memory>
 
-namespace ember::spark::v2 {
+namespace ember::spark {
 
 namespace ba = boost::asio;
 

@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-namespace ember::spark::v2 {
+namespace ember::spark {
 
 class Handler;
 
@@ -31,4 +31,4 @@ public:
 	std::vector<std::string> services() const;
 };
 
-} // v2, spark, ember
+} // spark, ember

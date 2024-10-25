@@ -11,7 +11,7 @@
 namespace ember {
 
 using namespace rpc::Realm;
-using namespace spark::v2;
+using namespace spark;
 
 RealmService::RealmService(Server& server, Realm realm, log::Logger& logger)
 	: services::RealmService(server),

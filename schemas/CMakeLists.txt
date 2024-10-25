@@ -7,21 +7,16 @@
 set(FB_SCHEMA_TARGET_NAME FB_SCHEMA_COMPILE)
 
 set(SERVICE_SCHEMAS
-    ${CMAKE_CURRENT_SOURCE_DIR}/spark/v2/services/Account.fbs
-    ${CMAKE_CURRENT_SOURCE_DIR}/spark/v2/services/Character.fbs
-    ${CMAKE_CURRENT_SOURCE_DIR}/spark/v2/services/Realm.fbs
-    ${CMAKE_CURRENT_SOURCE_DIR}/spark/v2/services/Hello.fbs
-    ${CMAKE_CURRENT_SOURCE_DIR}/spark/v2/services/Discovery.fbs
+    ${CMAKE_CURRENT_SOURCE_DIR}/spark/services/Account.fbs
+    ${CMAKE_CURRENT_SOURCE_DIR}/spark/services/Character.fbs
+    ${CMAKE_CURRENT_SOURCE_DIR}/spark/services/Realm.fbs
+    ${CMAKE_CURRENT_SOURCE_DIR}/spark/services/Hello.fbs
+    ${CMAKE_CURRENT_SOURCE_DIR}/spark/services/Discovery.fbs
 )
 
 set(FB_SCHEMAS
 	${SERVICE_SCHEMAS}
-    ${CMAKE_CURRENT_SOURCE_DIR}/spark/v1/Services.fbs
-    ${CMAKE_CURRENT_SOURCE_DIR}/spark/v1/Core.fbs
-    ${CMAKE_CURRENT_SOURCE_DIR}/spark/v1/Multicast.fbs
-
-    ${CMAKE_CURRENT_SOURCE_DIR}/spark/v2/Spark.fbs
-
+    ${CMAKE_CURRENT_SOURCE_DIR}/spark/Spark.fbs
     ${CMAKE_CURRENT_SOURCE_DIR}/packetlog/PacketLog.fbs
 )
 

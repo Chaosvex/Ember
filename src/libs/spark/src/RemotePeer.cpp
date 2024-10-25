@@ -6,19 +6,19 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <spark/v2/RemotePeer.h>
-#include <spark/v2/Common.h>
+#include <spark/RemotePeer.h>
+#include <spark/Common.h>
 #include <spark/buffers/BufferAdaptor.h>
 #include <spark/buffers/BinaryStream.h>
-#include <spark/v2/HandlerRegistry.h>
-#include <spark/v2/Peers.h>
-#include <spark/v2/Utility.h>
+#include <spark/HandlerRegistry.h>
+#include <spark/Peers.h>
+#include <spark/Utility.h>
 #include <shared/FilterTypes.h>
 #include <gsl/gsl_util>
 
 namespace ba = boost::asio;
 
-namespace ember::spark::v2 {
+namespace ember::spark {
 
 RemotePeer::RemotePeer(boost::asio::io_context& ctx,
                        Connection connection, std::string banner,
@@ -357,4 +357,4 @@ RemotePeer::~RemotePeer() {
 	}
 }
 
-} // v2, spark, ember
+} // spark, ember

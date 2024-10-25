@@ -13,7 +13,7 @@
 #include <stdexcept>
 #include <cstdint>
 
-namespace ember::spark::v2 {
+namespace ember::spark {
 
 namespace be = boost::endian;
 
@@ -92,4 +92,4 @@ public:
 	}
 };
 
-} // v2, spark, ember
+} // spark, ember

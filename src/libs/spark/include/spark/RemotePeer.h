@@ -9,9 +9,9 @@
 #pragma once
 
 #include "Spark_generated.h"
-#include <spark/v2/Connection.h>
-#include <spark/v2/Channel.h>
-#include <spark/v2/Handler.h>
+#include <spark/Connection.h>
+#include <spark/Channel.h>
+#include <spark/Handler.h>
 #include <boost/asio/awaitable.hpp>
 #include <boost/asio/io_context.hpp>
 #include <logger/Logger.h>
@@ -23,7 +23,7 @@
 #include <string>
 #include <utility>
 
-namespace ember::spark::v2 {
+namespace ember::spark {
 
 class HandlerRegistry;
 using namespace std::chrono_literals;

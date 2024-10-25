@@ -6,10 +6,10 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <spark/v2/Peers.h>
-#include <spark/v2/RemotePeer.h>
+#include <spark/Peers.h>
+#include <spark/RemotePeer.h>
 
-namespace ember::spark::v2 {
+namespace ember::spark {
 
 void Peers::add(std::string key, std::shared_ptr<RemotePeer> peer) {
 	std::lock_guard guard(lock_);

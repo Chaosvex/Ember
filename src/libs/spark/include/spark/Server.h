@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <spark/v2/Peers.h>
-#include <spark/v2/HandlerRegistry.h>
-#include <spark/v2/RemotePeer.h>
+#include <spark/Peers.h>
+#include <spark/HandlerRegistry.h>
+#include <spark/RemotePeer.h>
 #include <logger/LoggerFwd.h>
 #include <gsl/pointers>
 #include <boost/asio/io_context.hpp>
@@ -22,7 +22,7 @@
 #include <vector>
 #include <cstdint>
 
-namespace ember::spark::v2 {
+namespace ember::spark {
 
 class Connection;
 

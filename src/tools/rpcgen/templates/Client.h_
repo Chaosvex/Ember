@@ -14,11 +14,11 @@
 
 #include "{{fbs_name}}_generated.h"
 
-#include <spark/v2/Common.h>
-#include <spark/v2/Server.h>
-#include <spark/v2/Handler.h>
-#include <spark/v2/Link.h>
-#include <spark/v2/Message.h>
+#include <spark/Common.h>
+#include <spark/Server.h>
+#include <spark/Handler.h>
+#include <spark/Link.h>
+#include <spark/Message.h>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <format>
@@ -26,8 +26,8 @@
 
 namespace ember::services {
 
-class {{name}}Client : public spark::v2::Handler {
-	spark::v2::Server& spark_;
+class {{name}}Client : public spark::Handler {
+	spark::Server& spark_;
 	boost::uuids::uuid uuid_;
 
 	flatbuffers::FlatBufferBuilder serialise(auto& msg) const {
@@ -43,16 +43,16 @@ class {{name}}Client : public spark::v2::Handler {
 
 protected:
 	template<typename T>
-	bool send(auto& msg, const spark::v2::Link& link, auto&& cb) const {
+	bool send(auto& msg, const spark::Link& link, auto&& cb) const {
 		auto channel = link.channel.lock();
 
 		if(!channel) {
-			cb(link, std::unexpected(spark::v2::Result::LINK_GONE));
+			cb(link, std::unexpected(spark::Result::LINK_GONE));
 			return false;
 		}
 
-		spark::v2::TrackedState state = [cb = std::move(cb)](
-			const spark::v2::Link& link, spark::v2::MessageResult result) {
+		spark::TrackedState state = [cb = std::move(cb)](
+			const spark::Link& link, spark::MessageResult result) {
 			if(!result) {
 				cb(link, std::unexpected(result.error()));
 				return;
@@ -75,7 +75,7 @@ protected:
 		return channel->send(std::move(fbb), std::move(state));
 	}
 
-	bool send(auto& msg, const spark::v2::Link& link) const {
+	bool send(auto& msg, const spark::Link& link) const {
 		auto channel = link.channel.lock();
 
 		if(channel) {
@@ -91,7 +91,7 @@ protected:
 	}
 
 public:
-	{{name}}Client(spark::v2::Server& spark)
+	{{name}}Client(spark::Server& spark)
 		: spark_(spark),
 		  uuid_(boost::uuids::random_generator()()) {}
 
@@ -104,9 +104,9 @@ public:
 	}
 
 	void on_message(
-		const spark::v2::Link& link,
+		const spark::Link& link,
 		const std::span<const std::uint8_t> msg,
-		const spark::v2::Token& token = {}) override {
+		const spark::Token& token = {}) override {
 		auto fb = rpc::{{name}}::Get{{root}}(msg.data());
 		flatbuffers::Verifier verifier(msg.data(), msg.size());
 
@@ -123,7 +123,7 @@ public:
 	void dispatch_{{handler.response_sn}}(
 		flatbuffers::Verifier& verifier,
 		const rpc::{{name}}::{{handler.response}}& msg,
-		const spark::v2::Link& link) {
+		const spark::Link& link) {
 		if(!msg.Verify(verifier)) {
 			return;
 		}
@@ -134,7 +134,7 @@ public:
 
 ## for handler in handlers
 	virtual void handle_{{handler.name}}_response(
-		const spark::v2::Link& link,
+		const spark::Link& link,
 		const {{handler.response_ns}}& msg) {}
 
 ## endfor

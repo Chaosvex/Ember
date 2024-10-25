@@ -7,26 +7,26 @@
 set(LIBRARY_NAME spark)
 
 set(CORE
-    include/spark/v2/Server.h
-    include/spark/v2/Handler.h
-    include/spark/v2/Connection.h
-    include/spark/v2/RemotePeer.h
-    include/spark/v2/Link.h
-    include/spark/v2/MessageHeader.h
-    include/spark/v2/Channel.h
-    include/spark/v2/HandlerRegistry.h
-    include/spark/v2/Peers.h
-    include/spark/v2/Utility.h
-    include/spark/v2/Tracking.h
-    include/spark/v2/Common.h
-    include/spark/v2/Result.h
-    src/v2/Peers.cpp
-    src/v2/Server.cpp
-    src/v2/RemotePeer.cpp
-    src/v2/Connection.cpp
-    src/v2/Channel.cpp
-    src/v2/HandlerRegistry.cpp
-    src/v2/Tracking.cpp
+    include/spark/Server.h
+    include/spark/Handler.h
+    include/spark/Connection.h
+    include/spark/RemotePeer.h
+    include/spark/Link.h
+    include/spark/MessageHeader.h
+    include/spark/Channel.h
+    include/spark/HandlerRegistry.h
+    include/spark/Peers.h
+    include/spark/Utility.h
+    include/spark/Tracking.h
+    include/spark/Common.h
+    include/spark/Result.h
+    src/Peers.cpp
+    src/Server.cpp
+    src/RemotePeer.cpp
+    src/Connection.cpp
+    src/Channel.cpp
+    src/HandlerRegistry.cpp
+    src/Tracking.cpp
 )
 
 set(IO_SRC

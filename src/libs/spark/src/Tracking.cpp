@@ -6,8 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <spark/v2/Tracking.h>
-#include <spark/v2/Common.h>
+#include <spark/Tracking.h>
+#include <spark/Common.h>
 #include <logger/Logger.h>
 #include <shared/FilterTypes.h>
 #include <algorithm>
@@ -18,7 +18,7 @@
 namespace sc = std::chrono;
 using namespace std::chrono_literals;
 
-namespace ember::spark::v2 {
+namespace ember::spark {
 
 Tracking::Tracking(boost::asio::io_context& ctx, log::Logger* logger)
 	: timer_(ctx),
@@ -80,12 +80,12 @@ void Tracking::track(Token token, TrackedState state, sc::seconds ttl) {
 }
 
 void Tracking::timeout(Request& request) {
-	spark::v2::Link link; // todo
+	spark::Link link; // todo
 	request.state(link, std::unexpected(Result::TIMED_OUT));
 }
 
 void Tracking::cancel(Request& request) {
-	spark::v2::Link link; // todo
+	spark::Link link; // todo
 	request.state(link, std::unexpected(Result::CANCELLED));
 }
 

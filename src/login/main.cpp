@@ -22,7 +22,7 @@
 #include <conpool/ConnectionPool.h>
 #include <conpool/Policies.h>
 #include <conpool/drivers/AutoSelect.h>
-#include <spark/v2/Server.h>
+#include <spark/Server.h>
 #include <shared/Banner.h>
 #include <shared/metrics/MetricsImpl.h>
 #include <shared/metrics/Monitor.h>
@@ -264,7 +264,7 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 	auto spark_filter = log::Filter(FilterType::LF_SPARK);
 
 	LOG_INFO(logger) << "Starting RPC services..." << LOG_SYNC;
-	spark::v2::Server spark(service, "login", s_address, s_port, logger);
+	spark::Server spark(service, "login", s_address, s_port, logger);
 	AccountClient acct_svc(spark, *logger);
 	RealmClient realm_svcv2(spark, realm_list, *logger);
 

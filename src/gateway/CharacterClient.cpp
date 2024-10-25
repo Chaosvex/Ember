@@ -13,19 +13,19 @@ namespace ember {
 
 using namespace rpc::Character;
 
-CharacterClient::CharacterClient(spark::v2::Server& server, Config& config, log::Logger& logger)
+CharacterClient::CharacterClient(spark::Server& server, Config& config, log::Logger& logger)
 	: services::CharacterClient(server),
 	  config_(config),
 	  logger_(logger) {
 	connect("127.0.0.1", 8003); // temp
 }
 
-void CharacterClient::on_link_up(const spark::v2::Link& link) {
+void CharacterClient::on_link_up(const spark::Link& link) {
 	LOG_DEBUG_ASYNC(logger_, "Link up: {}", link.peer_banner);
 	link_ = link;
 }
 
-void CharacterClient::on_link_down(const spark::v2::Link& link) {
+void CharacterClient::on_link_down(const spark::Link& link) {
 	LOG_DEBUG_ASYNC(logger_, "Link down: {}", link.peer_banner);
 }
 
@@ -96,8 +96,8 @@ void CharacterClient::rename_character(std::uint32_t account_id,
 }
 
 void CharacterClient::handle_create_reply(
-	const spark::v2::Link& link,
-	std::expected<const CreateResponse*, spark::v2::Result> res,
+	const spark::Link& link,
+	std::expected<const CreateResponse*, spark::Result> res,
 	ResponseCB cb) const {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 
@@ -111,8 +111,8 @@ void CharacterClient::handle_create_reply(
 }
 
 void CharacterClient::handle_rename_reply(
-	const spark::v2::Link& link,
-	std::expected<const RenameResponse*, spark::v2::Result> res,
+	const spark::Link& link,
+	std::expected<const RenameResponse*, spark::Result> res,
 	RenameCB cb) const {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 
@@ -132,8 +132,8 @@ void CharacterClient::handle_rename_reply(
 }
 
 void CharacterClient::handle_retrieve_reply(
-	const spark::v2::Link& link,
-	std::expected<const RetrieveResponse*, spark::v2::Result> res,
+	const spark::Link& link,
+	std::expected<const RetrieveResponse*, spark::Result> res,
 	RetrieveCB cb) const {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 
@@ -188,8 +188,8 @@ void CharacterClient::handle_retrieve_reply(
 }
 
 void CharacterClient::handle_delete_reply(
-	const spark::v2::Link& link,
-	std::expected<const DeleteResponse*, spark::v2::Result> res,
+	const spark::Link& link,
+	std::expected<const DeleteResponse*, spark::Result> res,
 	ResponseCB cb) const {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 

@@ -8,24 +8,24 @@
 
 #pragma once
 
-#include <spark/v2/Link.h>
-#include <spark/v2/Common.h>
+#include <spark/Link.h>
+#include <spark/Common.h>
 #include <string>
 #include <string_view>
 #include <span>
 #include <cstdint>
 
-namespace ember::spark::v2 {
+namespace ember::spark {
 
 class Handler {
 public:
 	virtual std::string type() = 0;
 	virtual std::string name() = 0;
-	virtual void on_message(const spark::v2::Link& link,
+	virtual void on_message(const spark::Link& link,
 	                        std::span<const std::uint8_t> msg,
-	                        const spark::v2::Token& token) = 0;
-	virtual void on_link_up(const spark::v2::Link& link) = 0;
-	virtual void on_link_down(const spark::v2::Link& link) = 0;
+	                        const spark::Token& token) = 0;
+	virtual void on_link_up(const spark::Link& link) = 0;
+	virtual void on_link_down(const spark::Link& link) = 0;
 	virtual void connect_failed(std::string_view ip, std::uint16_t port) = 0;
 
 	virtual ~Handler() = default;

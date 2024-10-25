@@ -16,14 +16,14 @@ class HelloService final : public services::HelloService {
 
 	std::optional<rpc::Hello::HelloReplyT> handle_say_hello(
 		const rpc::Hello::HelloRequest& msg,
-	    const spark::v2::Link& link,
-	    const spark::v2::Token& token) override;
+	    const spark::Link& link,
+	    const spark::Token& token) override;
 
 public:
-	HelloService(spark::v2::Server& server);
+	HelloService(spark::Server& server);
 
-	void on_link_up(const spark::v2::Link& link) override;
-	void on_link_down(const spark::v2::Link& link) override;
+	void on_link_up(const spark::Link& link) override;
+	void on_link_down(const spark::Link& link) override;
 };
 
 }

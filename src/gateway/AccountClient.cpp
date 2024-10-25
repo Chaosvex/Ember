@@ -13,18 +13,18 @@ namespace ember {
 
 using namespace rpc::Account;
 
-AccountClient::AccountClient(spark::v2::Server& spark, log::Logger& logger)
+AccountClient::AccountClient(spark::Server& spark, log::Logger& logger)
 	: services::AccountClient(spark),
 	  logger_(logger) {
 	connect("127.0.0.1", 8000); // temp
 }
 
-void AccountClient::on_link_up(const spark::v2::Link& link) {
+void AccountClient::on_link_up(const spark::Link& link) {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 	link_ = link;
 }
 
-void AccountClient::on_link_down(const spark::v2::Link& link) {
+void AccountClient::on_link_down(const spark::Link& link) {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 }
 
@@ -57,7 +57,7 @@ void AccountClient::locate_account_id(const std::string& username, AccountCB cb)
 }
 
 void AccountClient::handle_lookup_response(
-	std::expected<const AccountFetchResponse*, spark::v2::Result> res,
+	std::expected<const AccountFetchResponse*, spark::Result> res,
 	const AccountCB& cb) const {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 
@@ -71,7 +71,7 @@ void AccountClient::handle_lookup_response(
 }
 
 void AccountClient::handle_locate_response(
-	std::expected<const SessionResponse*, spark::v2::Result> res,
+	std::expected<const SessionResponse*, spark::Result> res,
 	const LocateCB& cb) const {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 

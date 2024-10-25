@@ -14,10 +14,10 @@
 
 #include "{{fbs_name}}_generated.h"
 
-#include <spark/v2/Server.h>
-#include <spark/v2/Handler.h>
-#include <spark/v2/Link.h>
-#include <spark/v2/Message.h>
+#include <spark/Server.h>
+#include <spark/Handler.h>
+#include <spark/Link.h>
+#include <spark/Message.h>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <format>
@@ -26,8 +26,8 @@
 
 namespace ember::services {
 
-class {{name}}Service : public spark::v2::Handler {
-	spark::v2::Server& spark_;
+class {{name}}Service : public spark::Handler {
+	spark::Server& spark_;
 	boost::uuids::uuid uuid_;
 
 	flatbuffers::FlatBufferBuilder serialise(auto& msg) const {
@@ -40,7 +40,7 @@ class {{name}}Service : public spark::v2::Handler {
 	}
 
 protected:
-	bool send(auto& msg, const spark::v2::Link& link, const spark::v2::Token& token) const {
+	bool send(auto& msg, const spark::Link& link, const spark::Token& token) const {
 		if(auto channel = link.channel.lock(); channel) {
 			auto fbb = serialise(msg);
 			return channel->send(std::move(fbb), token);
@@ -49,7 +49,7 @@ protected:
 		}
 	}
 
-	bool send(auto& msg, const spark::v2::Link& link) const {
+	bool send(auto& msg, const spark::Link& link) const {
 		if(auto channel = link.channel.lock(); channel) {
 			auto fbb = serialise(msg);
 			return channel->send(std::move(fbb));
@@ -59,7 +59,7 @@ protected:
 	}
 
 public:
-	{{name}}Service(spark::v2::Server& spark)
+	{{name}}Service(spark::Server& spark)
 		: spark_(spark),
 		  uuid_(boost::uuids::random_generator()()) {
 		spark_.register_handler(this);
@@ -78,9 +78,9 @@ public:
 	}
 
 	void on_message(
-		const spark::v2::Link& link,
+		const spark::Link& link,
 		std::span<const std::uint8_t> msg,
-		const spark::v2::Token& token = {}) override {
+		const spark::Token& token = {}) override {
 		auto fb = rpc::{{name}}::Get{{root}}(msg.data());
 		flatbuffers::Verifier verifier(msg.data(), msg.size());
 
@@ -97,8 +97,8 @@ public:
 	void dispatch_{{handler.request_sn}}(
 		flatbuffers::Verifier& verifier,
 		const rpc::{{name}}::{{handler.request}}& msg,
-		const spark::v2::Link& link,
-		const spark::v2::Token& token) {
+		const spark::Link& link,
+		const spark::Token& token) {
 		if(!msg.Verify(verifier)) {
 			return;
 		}
@@ -114,8 +114,8 @@ public:
 ## for handler in handlers
 	virtual std::optional<{{handler.response_ns}}T> handle_{{handler.name}}(
 		const {{handler.request_ns}}& msg,
-		const spark::v2::Link& link,
-		const spark::v2::Token& token) { return std::nullopt; }
+		const spark::Link& link,
+		const spark::Token& token) { return std::nullopt; }
 
 ## endfor
 

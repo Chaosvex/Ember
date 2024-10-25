@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <spark/v2/Result.h>
+#include <spark/Result.h>
 #include <flatbuffers/flatbuffer_builder.h>
 #include <boost/container/small_vector.hpp>
 #include <boost/uuid/uuid.hpp>
@@ -17,7 +17,7 @@
 #include <span>
 #include <cstdint>
 
-namespace ember::spark::v2 {
+namespace ember::spark {
 
 using Token = boost::uuids::uuid;
 
@@ -30,7 +30,7 @@ struct Message {
 using MessageResult = std::expected<std::span<const std::uint8_t>, Result>;
 
 using TrackedState = std::function<void(
-	const spark::v2::Link& link, MessageResult 
+	const spark::Link& link, MessageResult 
 )>;
 
-} // v2, spark, ember
+} // spark, ember

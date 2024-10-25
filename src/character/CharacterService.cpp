@@ -12,7 +12,7 @@
 namespace ember {
 
 using namespace rpc::Character;
-using namespace spark::v2;
+using namespace spark;
 
 CharacterService::CharacterService(Server& server, const CharacterHandler& handler, log::Logger& logger)
 	: services::CharacterService(server),

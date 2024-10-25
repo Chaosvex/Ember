@@ -14,7 +14,7 @@
 #include <conpool/ConnectionPool.h>
 #include <conpool/Policies.h>
 #include <conpool/drivers/AutoSelect.h>
-#include <spark/v2/Server.h>
+#include <spark/Server.h>
 #include <logger/Logger.h>
 #include <conpool/ConnectionPool.h>
 #include <conpool/Policies.h>
@@ -160,7 +160,7 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 
 	Sessions sessions(true);
 
-	spark::v2::Server sparkv2(service, "account", s_address, s_port, logger); // temp port
+	spark::Server sparkv2(service, "account", s_address, s_port, logger); // temp port
 	AccountService acct_service(sparkv2, handler, sessions, *logger);
 
 	service.dispatch([logger]() {

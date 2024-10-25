@@ -21,7 +21,7 @@
 #include <dbcreader/DBCReader.h>
 #include <logger/Logger.h>
 #include <nsd/NSD.h>
-#include <spark/v2/Server.h>
+#include <spark/Server.h>
 #include <shared/Banner.h>
 #include <shared/util/EnumHelper.h>
 #include <shared/Version.h>
@@ -269,7 +269,7 @@ void launch(const po::variables_map& args, ServicePool& service_pool,
 	RealmQueue queue_service(service_pool.get());
 	
 	LOG_INFO(logger) << "Starting RPC services..." << LOG_SYNC;
-	spark::v2::Server spark(service_pool.get(), "realm", s_address, s_port, logger);
+	spark::Server spark(service_pool.get(), "realm", s_address, s_port, logger);
 	RealmService realm_svc(spark, *realm, *logger);
 	AccountClient acct_svc(spark, *logger);
 	CharacterClient char_svc(spark, config, *logger);

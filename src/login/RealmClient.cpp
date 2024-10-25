@@ -12,19 +12,19 @@ namespace ember {
 
 using namespace rpc::Realm;
 
-RealmClient::RealmClient(spark::v2::Server& server, RealmList& realmlist, log::Logger& logger)
+RealmClient::RealmClient(spark::Server& server, RealmList& realmlist, log::Logger& logger)
 	: services::RealmClient(server),
 	  realmlist_(realmlist),
 	  logger_(logger) {
 	connect("127.0.0.1", 8002); // temp
 }
 
-void RealmClient::on_link_up(const spark::v2::Link& link) {
+void RealmClient::on_link_up(const spark::Link& link) {
 	LOG_DEBUG_ASYNC(logger_, "Link up: {}", link.peer_banner);
 	request_realm_status(link);
 }
 
-void RealmClient::on_link_down(const spark::v2::Link& link) {
+void RealmClient::on_link_down(const spark::Link& link) {
 	LOG_DEBUG_ASYNC(logger_, "Link closed: {}", link.peer_banner);
 	mark_realm_offline(link);
 }
@@ -33,12 +33,12 @@ void RealmClient::connect_failed(std::string_view ip, const std::uint16_t port) 
 	LOG_DEBUG_ASYNC(logger_, "Failed to connect to realm on {}:{}", ip, port);
 }
 
-void RealmClient::request_realm_status(const spark::v2::Link& link) {
+void RealmClient::request_realm_status(const spark::Link& link) {
 	RequestStatusT msg{};
 	send(msg, link);
 }
 
-void RealmClient::mark_realm_offline(const spark::v2::Link& link) {
+void RealmClient::mark_realm_offline(const spark::Link& link) {
 	auto it = realms_.find(link.peer_banner);
 
 	// if we connected but didn't get its information, return
@@ -55,7 +55,7 @@ void RealmClient::mark_realm_offline(const spark::v2::Link& link) {
 }
 
 void RealmClient::handle_get_status_response(
-	const spark::v2::Link& link,
+	const spark::Link& link,
 	const Status& msg) {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 

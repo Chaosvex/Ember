@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <spark/v2/Link.h>
-#include <spark/v2/Common.h>
+#include <spark/Link.h>
+#include <spark/Common.h>
 #include <logger/LoggerFwd.h>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/steady_timer.hpp>
@@ -19,7 +19,7 @@
 #include <chrono>
 #include <cstdint>
 
-namespace ember::spark::v2 {
+namespace ember::spark {
 
 class Tracking final {
 	struct Request {

@@ -6,11 +6,11 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <spark/v2/HandlerRegistry.h>
-#include <spark/v2/Handler.h>
+#include <spark/HandlerRegistry.h>
+#include <spark/Handler.h>
 #include <ranges>
 
-namespace ember::spark::v2 {
+namespace ember::spark {
 
 void HandlerRegistry::deregister_service(Handler* service) {
 	std::lock_guard guard(mutex_);
@@ -87,4 +87,4 @@ std::vector<std::string> HandlerRegistry::services() const {
 	return std::ranges::to<std::vector>(view);
 }
 
-} // v2, spark, ember
+} // spark, ember

@@ -24,35 +24,35 @@ public:
 
 private:
 	const Config& config_;
-	spark::v2::Link link_;
+	spark::Link link_;
 	log::Logger& logger_;
 
-	void on_link_up(const spark::v2::Link& link) override;
-	void on_link_down(const spark::v2::Link& link) override;
+	void on_link_up(const spark::Link& link) override;
+	void on_link_down(const spark::Link& link) override;
 	void connect_failed(std::string_view ip, std::uint16_t port) override;
 
 	void handle_create_reply(
-		const spark::v2::Link& link,
-		std::expected<const rpc::Character::CreateResponse*, spark::v2::Result> res,
+		const spark::Link& link,
+		std::expected<const rpc::Character::CreateResponse*, spark::Result> res,
 		ResponseCB cb) const;
 
 	void handle_rename_reply(
-		const spark::v2::Link& link,
-		std::expected<const rpc::Character::RenameResponse*, spark::v2::Result> res,
+		const spark::Link& link,
+		std::expected<const rpc::Character::RenameResponse*, spark::Result> res,
 		RenameCB cb) const;
 
 	void handle_retrieve_reply(
-		const spark::v2::Link& link,
-		std::expected<const rpc::Character::RetrieveResponse*, spark::v2::Result> res,
+		const spark::Link& link,
+		std::expected<const rpc::Character::RetrieveResponse*, spark::Result> res,
 		RetrieveCB cb) const;
 
 	void handle_delete_reply(
-		const spark::v2::Link& link,
-		std::expected<const rpc::Character::DeleteResponse*, spark::v2::Result> res,
+		const spark::Link& link,
+		std::expected<const rpc::Character::DeleteResponse*, spark::Result> res,
 		ResponseCB cb) const;
 
 public:
-	CharacterClient(spark::v2::Server& server, Config& config, log::Logger& logger);
+	CharacterClient(spark::Server& server, Config& config, log::Logger& logger);
 
 	void retrieve_characters(std::uint32_t account_id,
 	                         RetrieveCB cb) const;

@@ -22,34 +22,34 @@ class AccountService final : public services::AccountService {
 
 	std::optional<rpc::Account::SessionResponseT> handle_session_fetch(
 		const rpc::Account::SessionLookup& msg,
-		const spark::v2::Link& link,
-		const spark::v2::Token& token) override;
+		const spark::Link& link,
+		const spark::Token& token) override;
 
 	std::optional<rpc::Account::RegisterResponseT> handle_register_session(
 		const rpc::Account::RegisterSession& msg,
-		const spark::v2::Link& link,
-		const spark::v2::Token& token) override;
+		const spark::Link& link,
+		const spark::Token& token) override;
 
 	std::optional<rpc::Account::AccountFetchResponseT> handle_account_id_fetch(
 		const rpc::Account::LookupID& msg,
-		const spark::v2::Link& link,
-		const spark::v2::Token& token) override;
+		const spark::Link& link,
+		const spark::Token& token) override;
 
 	std::optional<rpc::Account::DisconnectSessionResponseT> handle_disconnect_by_session(
 		const rpc::Account::DisconnectSession& msg,
-		const spark::v2::Link& link,
-		const spark::v2::Token& token) override;
+		const spark::Link& link,
+		const spark::Token& token) override;
 
 	std::optional<rpc::Account::DisconnectResponseT> handle_disconnect_by_id(
 		const rpc::Account::DisconnectID& msg,
-		const spark::v2::Link& link,
-		const spark::v2::Token& token) override;
+		const spark::Link& link,
+		const spark::Token& token) override;
 
-	void on_link_up(const spark::v2::Link& link) override;
-	void on_link_down(const spark::v2::Link& link) override;
+	void on_link_up(const spark::Link& link) override;
+	void on_link_down(const spark::Link& link) override;
 
 public:
-	AccountService(spark::v2::Server& spark, AccountHandler& handler,
+	AccountService(spark::Server& spark, AccountHandler& handler,
 	               Sessions& sessions, log::Logger& logger);
 };
 

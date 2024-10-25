@@ -17,7 +17,7 @@
 namespace ember {
 
 class RealmService : public services::RealmService {
-	std::vector<spark::v2::Link> links_;
+	std::vector<spark::Link> links_;
 
 	Realm realm_;
 	log::Logger& logger_;
@@ -27,15 +27,15 @@ class RealmService : public services::RealmService {
 
 	std::optional<rpc::Realm::StatusT> handle_get_status(
 		const rpc::Realm::RequestStatus& msg,
-		const spark::v2::Link& link,
-		const spark::v2::Token& token) override;
+		const spark::Link& link,
+		const spark::Token& token) override;
 
-	void on_link_up(const spark::v2::Link& link) override;
-	void on_link_down(const spark::v2::Link& link) override;
+	void on_link_up(const spark::Link& link) override;
+	void on_link_down(const spark::Link& link) override;
 	void broadcast_status();
 
 public:
-	RealmService(spark::v2::Server& server, Realm realm, log::Logger& logger);
+	RealmService(spark::Server& server, Realm realm, log::Logger& logger);
 
 	void set_online();
 	void set_offline();

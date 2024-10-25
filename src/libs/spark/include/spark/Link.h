@@ -14,7 +14,7 @@
 #include <string>
 #include <cstdint>
 
-namespace ember::spark::v2 {
+namespace ember::spark {
 
 class Channel;
 
