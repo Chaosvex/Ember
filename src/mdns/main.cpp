@@ -8,6 +8,7 @@
 
 #include "Server.h"
 #include "MulticastSocket.h"
+#include "NSDService.h"
 #include "RequestHandler.h"
 #include <logger/Logger.h>
 #include <shared/Banner.h>
@@ -131,10 +132,11 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 	const auto& spark_iface = args["spark.address"].as<std::string>();
 	const auto spark_port = args["spark.port"].as<std::uint16_t>();
 
-	// start Spark services
+	// start RPC services
 	spark::Server spark(service, APP_NAME, spark_iface, spark_port, logger);
+	NSDService nsd(spark, *logger);
+
 	dns::RequestHandler handler(logger);
-	//context.register_service(&handler);
 
 	// All done setting up
 	service.dispatch([logger]() {

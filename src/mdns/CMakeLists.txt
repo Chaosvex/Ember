@@ -18,6 +18,7 @@ set(LIBRARY_HDR
 	Utility.h
 	Serialisation.h
 	detail/Parser.h
+	NSDService.h
     )
 
 set(LIBRARY_SRC
@@ -28,6 +29,7 @@ set(LIBRARY_SRC
 	Utility.cpp
 	Serialisation.cpp
 	detail/Parser.cpp
+	NSDService.cpp
     )
 
 add_library(${LIBRARY_NAME} ${LIBRARY_HDR} ${LIBRARY_SRC})
