@@ -31,7 +31,7 @@ private:
 	template<std::size_t size>
 	constexpr auto generate_filled(const std::uint8_t value) {
 		std::array<std::uint8_t, size> target{};
-		std::fill(target.begin(), target.end(), value);
+		std::ranges::fill(target, value);
 		return target;
 	}
 
