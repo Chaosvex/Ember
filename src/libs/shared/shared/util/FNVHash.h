@@ -70,7 +70,7 @@ public:
 
 	template<std::integral T>
 	std::uint32_t update_le(T native_val) {
-		if constexpr(std::endian::native == std::endian::little) [[likely]] {
+		if constexpr(std::endian::native == std::endian::little) {
 			return update_r2l(native_val);
 		} else {
 			return update_l2r(native_val);
@@ -79,7 +79,7 @@ public:
 
 	template<std::integral T>
 	std::uint32_t update_be(T native_val) {
-		if constexpr(std::endian::native == std::endian::little) [[likely]] {
+		if constexpr(std::endian::native == std::endian::little) {
 			return update_l2r(native_val);
 		} else {
 			return update_r2l(native_val);
