@@ -9,7 +9,6 @@
 #include "Server.h"
 #include "MulticastSocket.h"
 #include "NSDService.h"
-#include "RequestHandler.h"
 #include <logger/Logger.h>
 #include <shared/Banner.h>
 #include <shared/Version.h>
@@ -135,8 +134,6 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 	// start RPC services
 	spark::Server spark(service, APP_NAME, spark_iface, spark_port, logger);
 	NSDService nsd(spark, *logger);
-
-	dns::RequestHandler handler(logger);
 
 	// All done setting up
 	service.dispatch([logger]() {

@@ -14,7 +14,6 @@ set(LIBRARY_HDR
     Socket.h
     DNSDefines.h
     Handler.h
-    RequestHandler.h
 	Utility.h
 	Serialisation.h
 	detail/Parser.h
@@ -25,7 +24,6 @@ set(LIBRARY_SRC
     ServiceRegistry.cpp
     MulticastSocket.cpp
     Server.cpp
-    RequestHandler.cpp
 	Utility.cpp
 	Serialisation.cpp
 	detail/Parser.cpp
