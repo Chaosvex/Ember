@@ -13,6 +13,7 @@
 #include <spark/Server.h>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/steady_timer.hpp>
+#include <atomic>
 #include <chrono>
 #include <string>
 #include <thread>
@@ -28,7 +29,7 @@ class NetworkServiceDiscovery final : public services::DiscoveryClient {
 	std::string host_;
 	std::uint16_t port_;
 	spark::Server& spark_;
-	bool connected_;
+	std::atomic_bool connected_;
 	boost::asio::io_context ctx_;
 	boost::asio::io_context::work work_;
 	boost::asio::steady_timer timer_;
