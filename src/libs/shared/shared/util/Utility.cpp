@@ -165,6 +165,7 @@ bool page_lock(void* address, std::size_t length) {
 	return mlock(address, length) == 0;
 #else
 	#pragma message WARN("Implement page_lock for this platform, thanks");
+	return false;
 #endif
 }
 
@@ -175,6 +176,7 @@ bool page_unlock(void* address, std::size_t length) {
 	return munlock(address, length) == 0;
 #else
 	#pragma message WARN("Implement page_unlock for this platform, thanks");
+	return false;
 #endif
 }
 
