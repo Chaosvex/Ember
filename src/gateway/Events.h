@@ -69,7 +69,7 @@ struct CharEnumResponse : Event {
 };
 
 struct CharCreateResponse : Event {
-	CharCreateResponse(protocol::Result result)
+	explicit CharCreateResponse(protocol::Result result)
 		: Event { EventType::CHAR_CREATE_RESPONSE },
 		  result(result) { }
 
@@ -77,7 +77,7 @@ struct CharCreateResponse : Event {
 };
 
 struct CharDeleteResponse : Event {
-	CharDeleteResponse(protocol::Result result)
+	explicit CharDeleteResponse(protocol::Result result)
 		: Event{ EventType::CHAR_DELETE_RESPONSE },
 		  result(result) { }
 
