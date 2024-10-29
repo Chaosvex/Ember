@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 - 2020 Ember
+ * Copyright (c) 2016 - 2024 Ember
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -66,11 +66,8 @@ void RealmQueue::enqueue(ClientUUID client, UpdateQueueCB on_update_cb,
 void RealmQueue::dequeue(const ClientUUID& client) {
 	std::lock_guard guard(lock_);
 
-	for(auto i = queue_.begin(); i != queue_.end(); ++i) {
-		if(i->client == client) {
-			queue_.erase(i);
-			break;
-		}
+	if(auto it = std::ranges::find(queue_, client, &QueueEntry::client); it != queue_.end()) {
+		queue_.erase(it);
 	}
 
 	if(queue_.empty()) {
