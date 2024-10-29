@@ -17,7 +17,7 @@ class DeltaTimer final {
 	std::chrono::nanoseconds elapsed_;
 
 public:
-	DeltaTimer(std::chrono::nanoseconds interval);
+	explicit DeltaTimer(std::chrono::nanoseconds interval);
 
 	const std::chrono::nanoseconds& value() const;
 	const std::chrono::nanoseconds& interval() const;
