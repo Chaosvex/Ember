@@ -48,7 +48,7 @@ void MulticastSocket::receive() {
 
 	socket_.async_receive(boost::asio::buffer(buffer_.data(), buffer_.size()),
         [this](const boost::system::error_code& ec, const std::size_t size) {
-            if(ec && ec == boost::asio::error::operation_aborted) {
+            if(ec == boost::asio::error::operation_aborted) {
 		        return;
 	        }
 
