@@ -10,7 +10,6 @@ set(SERVICE_SCHEMAS
     ${CMAKE_CURRENT_SOURCE_DIR}/spark/services/Account.fbs
     ${CMAKE_CURRENT_SOURCE_DIR}/spark/services/Character.fbs
     ${CMAKE_CURRENT_SOURCE_DIR}/spark/services/Realm.fbs
-    ${CMAKE_CURRENT_SOURCE_DIR}/spark/services/Hello.fbs
     ${CMAKE_CURRENT_SOURCE_DIR}/spark/services/Discovery.fbs
 )
 
