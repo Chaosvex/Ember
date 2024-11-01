@@ -66,9 +66,7 @@ public:
 
 	PatchLevel check_version(const GameVersion& client_version) const;
 
-	static std::vector<PatchMeta> load_patches(const std::string& path,
-	                                           const dal::PatchDAO& dao,
-	                                           log::Logger* logger);
+	static std::vector<PatchMeta> load_patches(const std::string& path, const dal::PatchDAO& dao);
 };
 
 } // ember

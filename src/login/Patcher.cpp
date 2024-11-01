@@ -147,9 +147,7 @@ auto Patcher::check_version(const GameVersion& client_version) const -> PatchLev
 	return PatchLevel::TOO_NEW;
 }
 
-std::vector<PatchMeta> Patcher::load_patches(const std::string& path,
-                                             const dal::PatchDAO& dao,
-                                             log::Logger* logger) {
+std::vector<PatchMeta> Patcher::load_patches(const std::string& path, const dal::PatchDAO& dao) {
 	auto patches = dao.fetch_patches();
 
 	for(auto& patch : patches) {
@@ -181,10 +179,6 @@ std::vector<PatchMeta> Patcher::load_patches(const std::string& path,
 		});
 
 		if(calc_md5) {
-			if(logger) {
-				LOG_INFO(logger) << "Calculating MD5 for " << patch.file_meta.name << LOG_SYNC;
-			}
-
 			const auto md5 = util::generate_md5(path + patch.file_meta.name);
 			assert(md5.size() == patch.file_meta.md5.size());
 			std::ranges::copy(md5, patch.file_meta.md5.data());

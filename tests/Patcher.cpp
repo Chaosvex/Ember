@@ -67,7 +67,7 @@ TEST(PatcherTest, VersionChecks) {
 
 TEST(PatcherTest, LoadMD5) {
 	MockPatchDAO dao(true);
-	const auto meta = Patcher::load_patches("test_data/patches/", dao, nullptr);
+	const auto meta = Patcher::load_patches("test_data/patches/", dao);
 	ASSERT_EQ(dao.update_count, 4);
 	ASSERT_EQ(meta.size(), 4);
 
@@ -129,7 +129,7 @@ TEST(PatcherTest, IncrementalPatch) {
 	// the algorithm will choose the rollup as the optimal path
 	// if it finds one (1 patch vs 3)
 	MockPatchDAO dao(false);
-	const auto meta = Patcher::load_patches("test_data/patches/", dao, nullptr);
+	const auto meta = Patcher::load_patches("test_data/patches/", dao);
 	Patcher patcher(supported, meta);
 
 	auto patch = patcher.find_patch(
@@ -163,7 +163,7 @@ TEST(PatcherTest, RollupPatch) {
 	};
 
 	MockPatchDAO dao(true);
-	const auto meta = Patcher::load_patches("test_data/patches/", dao, nullptr);
+	const auto meta = Patcher::load_patches("test_data/patches/", dao);
 	Patcher patcher(supported, meta);
 
 	const auto patch = patcher.find_patch(

@@ -237,7 +237,7 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 	LOG_INFO(logger) << "Loading patch data..." << LOG_SYNC;
 
 	auto patches = Patcher::load_patches(
-		args["patches.bin_path"].as<std::string>(), patch_dao, &logger
+		args["patches.bin_path"].as<std::string>(), patch_dao
 	);
 
 	Patcher patcher(allowed_clients, patches);
