@@ -27,7 +27,7 @@ namespace ember {
 
 namespace be = boost::endian;
 
-PINAuthenticator::PINAuthenticator(std::uint32_t seed, log::Logger& logger) : logger_(logger) {
+PINAuthenticator::PINAuthenticator(std::uint32_t seed) {
 	remap_pin_grid(seed);
 }
 
@@ -36,8 +36,6 @@ PINAuthenticator::PINAuthenticator(std::uint32_t seed, log::Logger& logger) : lo
  * {1, 6, 7, 8, 5} used during the hashing process.
  */
 void PINAuthenticator::pin_to_bytes(std::uint32_t pin) {
-	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
-
 	pin_bytes_.clear();
 
 	while(pin != 0) {
@@ -64,8 +62,6 @@ void PINAuthenticator::pin_to_bytes(std::uint32_t pin) {
  * '0, 4, 1, 6, 2, 3' then the expected input sequence becomes '245'.
  */
 void PINAuthenticator::remap_pin_grid(std::uint32_t grid_seed) {
-	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
-
 	std::array<std::uint8_t, GRID_SIZE> grid { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
 	std::uint8_t* remapped_index = remapped_grid.data();
@@ -93,8 +89,6 @@ void PINAuthenticator::remap_pin_grid(std::uint32_t grid_seed) {
  * will press on the game's numpad.
  */
 void PINAuthenticator::remap_pin() {
-	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
-
 	for(auto& pin_byte : pin_bytes_) {
 		const auto index = std::ranges::find(remapped_grid, pin_byte);
 		pin_byte = std::distance(remapped_grid.begin(), index);
@@ -107,8 +101,6 @@ void PINAuthenticator::remap_pin() {
  * The client processes the digits as ASCII, so we must do the same.
  */
 void PINAuthenticator::pin_to_ascii() {
-	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
-
 	std::ranges::transform(pin_bytes_, pin_bytes_.begin(), [](auto pin_byte) {
 		return pin_byte += 0x30;
 	});
@@ -117,8 +109,6 @@ void PINAuthenticator::pin_to_ascii() {
 auto PINAuthenticator::calculate_hash(const SaltBytes& server_salt,
 									  const SaltBytes& client_salt,
 									  const std::uint32_t pin) -> HashBytes {
-	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
-
 	pin_to_bytes(pin); // convert to byte array
 	remap_pin();       // calculate the expected input sequence
 	pin_to_ascii();
@@ -141,8 +131,6 @@ bool PINAuthenticator::validate_pin(const SaltBytes& server_salt,
                                     const SaltBytes& client_salt,
                                     std::span<const std::uint8_t> client_hash,
                                     const std::uint32_t pin) {
-	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
-
 	const auto& hash = calculate_hash(server_salt, client_salt, pin);
 	return std::ranges::equal(hash, client_hash);
 }

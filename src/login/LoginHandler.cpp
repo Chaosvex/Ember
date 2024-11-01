@@ -322,7 +322,7 @@ bool LoginHandler::validate_pin(const grunt::client::LoginProof& packet) const {
 		return false;
 	}
 
-	PINAuthenticator pin_auth(pin_grid_seed_, logger_);
+	PINAuthenticator pin_auth(pin_grid_seed_);
 	bool result = false;
 
 	if(user_->pin_method() == PINMethod::TOTP) {
