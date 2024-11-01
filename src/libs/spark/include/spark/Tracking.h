@@ -33,7 +33,7 @@ class Tracking final {
 
 	std::chrono::seconds frequency_ { 5 }; // temp
 	boost::asio::steady_timer timer_;
-	log::Logger* logger_;
+	log::Logger& logger_;
 
 	void start_timer();
 	void expired(const boost::system::error_code& ec);
@@ -41,7 +41,7 @@ class Tracking final {
 	void cancel(Request& request);
 
 public:
-	Tracking(boost::asio::io_context& io_context, log::Logger* logger);
+	Tracking(boost::asio::io_context& io_context, log::Logger& logger);
 	~Tracking();
 
 	void track(Token token, TrackedState state, std::chrono::seconds ttl);

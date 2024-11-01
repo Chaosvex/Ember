@@ -16,7 +16,7 @@
 
 namespace ember::dns {
 
-Server::Server(std::unique_ptr<Socket> socket, log::Logger* logger)
+Server::Server(std::unique_ptr<Socket> socket, log::Logger& logger)
                : socket_(std::move(socket)), logger_(logger) {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
     socket_->register_handler(this);

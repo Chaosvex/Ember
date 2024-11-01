@@ -48,7 +48,7 @@ class CharacterHandler final {
 	const std::locale locale_;
 
 	ThreadPool& pool_;
-	log::Logger* logger_;
+	log::Logger& logger_;
 
 	protocol::Result validate_name(const utf8_string& name) const;
 	bool validate_options(const ember::Character& character, std::uint32_t account_id) const;
@@ -87,7 +87,7 @@ public:
 	                 std::vector<util::pcre::Result> reserved_names,
 	                 std::vector<util::pcre::Result> spam_names,
 	                 const dbc::Storage& dbc, const dal::CharacterDAO& dao,
-	                 ThreadPool& pool, const std::locale& locale, log::Logger* logger)
+	                 ThreadPool& pool, const std::locale& locale, log::Logger& logger)
 		: profane_names_(std::move(profane_names)),
 		  reserved_names_(std::move(reserved_names)),
 		  spam_names_(std::move(spam_names)),

@@ -35,7 +35,7 @@ class ClientHandler final {
 	const ClientUUID uuid_;
 	boost::asio::steady_timer timer_;
 	protocol::ClientOpcode opcode_;
-	log::Logger* logger_;
+	log::Logger& logger_;
 
 	mutable std::string client_id_;
 	mutable std::string client_id_ext_;
@@ -44,7 +44,7 @@ class ClientHandler final {
 
 public:
 	ClientHandler(ClientConnection& connection, ClientUUID uuid,
-	              executor executor, log::Logger* logger);
+	              executor executor, log::Logger& logger);
 
 	void start();
 	void stop();

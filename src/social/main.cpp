@@ -37,8 +37,8 @@ namespace po = boost::program_options;
 namespace ba = boost::asio;
 using namespace std::chrono_literals;
 
-void print_lib_versions(el::Logger* logger);
-int launch(const po::variables_map& args, el::Logger* logger);
+void print_lib_versions(el::Logger& logger);
+int launch(const po::variables_map& args, el::Logger& logger);
 po::variables_map parse_arguments(int argc, const char* argv[]);
 
 /*
@@ -58,8 +58,8 @@ int main(int argc, const char* argv[]) try {
 	el::global_logger(logger);
 	LOG_INFO(logger) << "Logger configured successfully" << LOG_SYNC;
 
-	print_lib_versions(&logger);
-	const auto ret = launch(args, &logger);
+	print_lib_versions(logger);
+	const auto ret = launch(args, logger);
 	LOG_INFO(logger) << "Social daemon terminated" << LOG_SYNC;
 	return ret;
 } catch(const std::exception& e) {
@@ -67,7 +67,7 @@ int main(int argc, const char* argv[]) try {
 	return EXIT_FAILURE;
 }
 
-int launch(const po::variables_map& args, el::Logger* logger) try {
+int launch(const po::variables_map& args, el::Logger& logger) try {
 #ifdef DEBUG_NO_THREADS
 	LOG_WARN(logger) << "Compiled with DEBUG_NO_THREADS!" << LOG_SYNC;
 #endif
@@ -97,7 +97,7 @@ int launch(const po::variables_map& args, el::Logger* logger) try {
 		);
 	}
 
-	service.dispatch([logger]() {
+	service.dispatch([&]() {
 		LOG_INFO(logger) << "Social daemon started successfully" << LOG_SYNC;
 	});
 
@@ -180,7 +180,7 @@ po::variables_map parse_arguments(int argc, const char* argv[]) {
 }
 
 
-void print_lib_versions(el::Logger* logger) {
+void print_lib_versions(el::Logger& logger) {
 	LOG_DEBUG(logger)
 		<< "Compiled with library versions: " << "\n"
 		<< " - Boost " << BOOST_VERSION / 100000 << "."

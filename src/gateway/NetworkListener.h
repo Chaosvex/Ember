@@ -32,13 +32,13 @@ class NetworkListener final {
 	ServicePool& pool_;
 	std::size_t index_;
 	tcp_socket socket_;
-	log::Logger* logger_;
+	log::Logger& logger_;
 
 	void accept_connection();
 
 public:
 	NetworkListener(ServicePool& pool, const std::string& interface, std::uint16_t port,
-	                bool tcp_no_delay, log::Logger* logger)
+	                bool tcp_no_delay, log::Logger& logger)
 	                : acceptor_(
 	                      pool.get(), 
 	                      bai::tcp::endpoint(bai::address::from_string(interface), port)

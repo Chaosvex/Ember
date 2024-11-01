@@ -26,7 +26,7 @@ class ThreadPool;
 class LoginSession final : public NetworkSession<LoginSession> {
 	ThreadPool& pool_;
 	LoginHandler handler_;
-	log::Logger* logger_;
+	log::Logger& logger_;
 	grunt::Handler grunt_handler_;
 
 	void async_completion(Action& action);
@@ -34,7 +34,7 @@ class LoginSession final : public NetworkSession<LoginSession> {
 	void execute_async(std::unique_ptr<Action> action);
 
 public:
-	LoginSession(SessionManager& sessions, tcp_socket socket, log::Logger* logger,
+	LoginSession(SessionManager& sessions, tcp_socket socket, log::Logger& logger,
 	             ThreadPool& pool, const LoginHandlerBuilder& builder);
 
 	bool handle_packet(spark::io::pmr::Buffer& buffer);

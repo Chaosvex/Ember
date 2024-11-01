@@ -269,7 +269,7 @@ void ClientConnection::log_packets(bool enable) {
 		packet_logger_ = std::make_unique<PacketLogger>();
 		packet_logger_->add_sink(std::make_unique<FBSink>("temp", "gateway", remote_address()));
 		packet_logger_->add_sink(
-			std::make_unique<LogSink>(*logger_, log::Severity::INFO, remote_address())
+			std::make_unique<LogSink>(logger_, log::Severity::INFO, remote_address())
 		);
 	} else {
 		packet_logger_.reset();

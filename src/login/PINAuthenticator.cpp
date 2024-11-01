@@ -27,7 +27,7 @@ namespace ember {
 
 namespace be = boost::endian;
 
-PINAuthenticator::PINAuthenticator(std::uint32_t seed, log::Logger* logger) : logger_(logger) {
+PINAuthenticator::PINAuthenticator(std::uint32_t seed, log::Logger& logger) : logger_(logger) {
 	remap_pin_grid(seed);
 }
 

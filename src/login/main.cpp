@@ -73,14 +73,14 @@ namespace po = boost::program_options;
 using namespace ember;
 using namespace std::chrono_literals;
 
-void print_lib_versions(log::Logger* logger);
+void print_lib_versions(log::Logger& logger);
 std::vector<ember::GameVersion> client_versions();
-unsigned int check_concurrency(log::Logger* logger);
+unsigned int check_concurrency(log::Logger& logger);
 void launch(const po::variables_map& args, boost::asio::io_context& service, 
-            std::binary_semaphore& sem, log::Logger* logger);
-int asio_launch(const po::variables_map& args, log::Logger* logger);
+            std::binary_semaphore& sem, log::Logger& logger);
+int asio_launch(const po::variables_map& args, log::Logger& logger);
 po::variables_map parse_arguments(int argc, const char* argv[]);
-void pool_log_callback(ep::Severity, std::string_view message, log::Logger* logger);
+void pool_log_callback(ep::Severity, std::string_view message, log::Logger& logger);
 
 std::exception_ptr eptr = nullptr;
 
@@ -110,8 +110,8 @@ int main(int argc, const char* argv[]) try {
 	log::global_logger(logger);
 	LOG_INFO(logger) << "Logger configured successfully" << LOG_SYNC;
 
-	print_lib_versions(&logger);
-	const auto ret = asio_launch(args, &logger);
+	print_lib_versions(logger);
+	const auto ret = asio_launch(args, logger);
 	LOG_INFO_SYNC(logger, "{} terminated", APP_NAME);
 	return ret;
 } catch(const std::exception& e) {
@@ -127,7 +127,7 @@ int main(int argc, const char* argv[]) try {
  * services can cleanly shut down upon destruction without requiring
  * explicit shutdown() calls in a signal handler.
  */
-int asio_launch(const po::variables_map& args, log::Logger* logger) try {
+int asio_launch(const po::variables_map& args, log::Logger& logger) try {
 	unsigned int concurrency = check_concurrency(logger);
 	boost::asio::io_context service(concurrency);
 	std::binary_semaphore flag(0);
@@ -168,7 +168,7 @@ int asio_launch(const po::variables_map& args, log::Logger* logger) try {
 }
 
 void launch(const po::variables_map& args, boost::asio::io_context& service,
-            std::binary_semaphore& sem, log::Logger* logger) try {
+            std::binary_semaphore& sem, log::Logger& logger) try {
 #ifdef DEBUG_NO_THREADS
 	LOG_WARN(logger) << "Compiled with DEBUG_NO_THREADS!" << LOG_SYNC;
 #endif
@@ -179,7 +179,7 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 	std::future<stun::MappedResult> stun_res;
 
 	if(stun_enabled) {
-		stun.log_callback([logger](const stun::Verbosity verbosity, const stun::Error reason) {
+		stun.log_callback([&logger](const stun::Verbosity verbosity, const stun::Error reason) {
 			stun_log_callback(verbosity, reason, logger);
 		});
 
@@ -212,7 +212,7 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 		driver, min_conns, max_conns, 30s
 	);
 
-	pool.logging_callback([logger](auto severity, auto message) {
+	pool.logging_callback([&](auto severity, auto message) {
 		pool_log_callback(severity, message, logger);
 	});
 
@@ -237,7 +237,7 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 	LOG_INFO(logger) << "Loading patch data..." << LOG_SYNC;
 
 	auto patches = Patcher::load_patches(
-		args["patches.bin_path"].as<std::string>(), patch_dao, logger
+		args["patches.bin_path"].as<std::string>(), patch_dao, &logger
 	);
 
 	Patcher patcher(allowed_clients, patches);
@@ -265,8 +265,8 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 
 	LOG_INFO(logger) << "Starting RPC services..." << LOG_SYNC;
 	spark::Server spark(service, "login", s_address, s_port, logger);
-	AccountClient acct_svc(spark, *logger);
-	RealmClient realm_svcv2(spark, realm_list, *logger);
+	AccountClient acct_svc(spark, logger);
+	RealmClient realm_svcv2(spark, realm_list, logger);
 
 	// Start metrics service
 	auto metrics = std::make_unique<Metrics>();
@@ -363,7 +363,7 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 	}
 
 	// All done setting up
-	service.dispatch([logger]() {
+	service.dispatch([&]() {
 		LOG_INFO_SYNC(logger, "{} started successfully", APP_NAME);
 	});
 	
@@ -471,7 +471,7 @@ po::variables_map parse_arguments(int argc, const char* argv[]) {
  * in the machine but the standard doesn't guarantee that it won't be zero.
  * In that case, we just set the minimum concurrency level to one.
  */
-unsigned int check_concurrency(log::Logger* logger) {
+unsigned int check_concurrency(log::Logger& logger) {
 	unsigned int concurrency = std::thread::hardware_concurrency();
 
 	if(!concurrency) {
@@ -482,7 +482,7 @@ unsigned int check_concurrency(log::Logger* logger) {
 	return concurrency;
 }
 
-void print_lib_versions(log::Logger* logger) {
+void print_lib_versions(log::Logger& logger) {
 	LOG_DEBUG(logger)
 		<< "Compiled with library versions: " << "\n"
 	    << " - Boost " << BOOST_VERSION / 100000 << "."
@@ -495,7 +495,7 @@ void print_lib_versions(log::Logger* logger) {
 		<< " - Zlib " << ZLIB_VERSION << LOG_SYNC;
 }
 
-void pool_log_callback(ep::Severity severity, std::string_view message, log::Logger* logger) {
+void pool_log_callback(ep::Severity severity, std::string_view message, log::Logger& logger) {
 	switch(severity) {
 		case ep::Severity::DEBUG:
 			LOG_DEBUG_FILTER(logger, LF_DB_CONN_POOL) << message << LOG_ASYNC;

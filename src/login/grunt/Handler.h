@@ -38,7 +38,7 @@ class Handler final {
 	Packet* curr_packet_ = nullptr;
 	State state_ = State::NEW_PACKET;
 
-	log::Logger* logger_;
+	log::Logger& logger_;
 
 	template<typename T> void create_packet();
 	void handle_new_packet(spark::io::pmr::Buffer& buffer);
@@ -50,7 +50,7 @@ class Handler final {
 public:
 	using PacketRef = std::reference_wrapper<const Packet>;
 
-	explicit Handler(log::Logger* logger) : logger_(logger) { }
+	explicit Handler(log::Logger& logger) : logger_(logger) { }
 
 	std::optional<const PacketRef> process_buffer(spark::io::pmr::Buffer& buffer);
 };

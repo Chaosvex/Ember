@@ -19,14 +19,14 @@ struct Query;
 
 class Server final : public Handler {
     std::unique_ptr<Socket> socket_;
-    log::Logger* logger_;
+    log::Logger& logger_;
 
     void handle_question(const Query& query);
     void handle_response(const Query& query);
     void handle_datagram(std::span<const std::uint8_t> datagram) override;
 
 public:
-    Server(std::unique_ptr<Socket> socket, log::Logger* logger);
+    Server(std::unique_ptr<Socket> socket, log::Logger& logger);
 	~Server();
 
 	void shutdown();

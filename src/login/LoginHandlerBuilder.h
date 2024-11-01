@@ -14,7 +14,7 @@
 namespace ember {
 
 class LoginHandlerBuilder final {
-	log::Logger* logger_;
+	log::Logger& logger_;
 	const Patcher& patcher_;
 	const RealmList& realm_list_;
 	const dal::UserDAO& user_dao_;
@@ -26,7 +26,7 @@ class LoginHandlerBuilder final {
 	bool integrity_enforce_;
 
 public:
-	LoginHandlerBuilder(log::Logger* logger, const Patcher& patcher, const Survey& survey,
+	LoginHandlerBuilder(log::Logger& logger, const Patcher& patcher, const Survey& survey,
 	                    const IntegrityData& exe_data, const dal::UserDAO& user_dao,
 	                    const AccountClient& acct_svc, const RealmList& realm_list,
 	                    Metrics& metrics, bool locale_enforce, bool integrity_enforce)

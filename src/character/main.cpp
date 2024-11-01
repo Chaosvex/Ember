@@ -47,11 +47,11 @@ using namespace ember;
 using namespace std::chrono_literals;
 
 void launch(const po::variables_map& args, boost::asio::io_context& service,
-            std::binary_semaphore& sem, log::Logger* logger);
-int asio_launch(const po::variables_map& args, log::Logger* logger);
-unsigned int check_concurrency(log::Logger* logger); // todo, move
+            std::binary_semaphore& sem, log::Logger& logger);
+int asio_launch(const po::variables_map& args, log::Logger& logger);
+unsigned int check_concurrency(log::Logger& logger); // todo, move
 po::variables_map parse_arguments(int argc, const char* argv[]);
-void pool_log_callback(ep::Severity, std::string_view message, log::Logger* logger);
+void pool_log_callback(ep::Severity, std::string_view message, log::Logger& logger);
 
 std::exception_ptr eptr = nullptr;
 
@@ -75,7 +75,7 @@ int main(int argc, const char* argv[]) try {
 	log::global_logger(logger);
 	LOG_INFO(logger) << "Logger configured successfully" << LOG_SYNC;
 
-	const auto ret = asio_launch(args, &logger);
+	const auto ret = asio_launch(args, logger);
 	LOG_INFO(logger) << APP_NAME << " terminated" << LOG_SYNC;
 	return ret;
 } catch(const std::exception& e) {
@@ -91,7 +91,7 @@ int main(int argc, const char* argv[]) try {
  * services can cleanly shut down upon destruction without requiring
  * explicit shutdown() calls in a signal handler.
  */
-int asio_launch(const po::variables_map& args, log::Logger* logger) try {
+int asio_launch(const po::variables_map& args, log::Logger& logger) try {
 	boost::asio::io_context service(BOOST_ASIO_CONCURRENCY_HINT_UNSAFE_IO);
 	std::binary_semaphore flag(0);
 
@@ -126,7 +126,7 @@ int asio_launch(const po::variables_map& args, log::Logger* logger) try {
 }
 
 void launch(const po::variables_map& args, boost::asio::io_context& service,
-            std::binary_semaphore& sem, log::Logger* logger) try {
+            std::binary_semaphore& sem, log::Logger& logger) try {
 #ifdef DEBUG_NO_THREADS
 	LOG_WARN(logger) << "Compiled with DEBUG_NO_THREADS!" << LOG_SYNC;
 #endif
@@ -179,7 +179,7 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 	LOG_INFO(logger) << "Initialising database connection pool..." << LOG_SYNC;
 	ep::Pool<decltype(driver), ep::CheckinClean, ep::ExponentialGrowth> pool(driver, min_conns, max_conns, 30s);
 	
-	pool.logging_callback([logger](auto severity, auto message) {
+	pool.logging_callback([&](auto severity, auto message) {
 		pool_log_callback(severity, message, logger);
 	});
 
@@ -198,9 +198,9 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 
 	LOG_INFO(logger) << "Starting RPC services..." << LOG_SYNC;
 	spark::Server spark(service, "character", s_address, s_port, logger);
-	CharacterService char_service(spark, handler, *logger);
+	CharacterService char_service(spark, handler, logger);
 	
-	service.dispatch([&, logger]() {
+	service.dispatch([&]() {
 		LOG_INFO_SYNC(logger, "{} started successfully", APP_NAME);
 	});
 
@@ -278,7 +278,7 @@ po::variables_map parse_arguments(int argc, const char* argv[]) {
 	return options;
 }
 
-void pool_log_callback(ep::Severity severity, std::string_view message, log::Logger* logger) {
+void pool_log_callback(ep::Severity severity, std::string_view message, log::Logger& logger) {
 	#undef ERROR // Windows moment
 
 	switch(severity) {
@@ -308,7 +308,7 @@ void pool_log_callback(ep::Severity severity, std::string_view message, log::Log
  * in the machine but the standard doesn't guarantee that it won't be zero.
  * In that case, we just set the minimum concurrency level to one.
  */
-unsigned int check_concurrency(log::Logger* logger) {
+unsigned int check_concurrency(log::Logger& logger) {
 	unsigned int concurrency = std::thread::hardware_concurrency();
 
 	if(!concurrency) {

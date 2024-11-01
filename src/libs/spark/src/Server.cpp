@@ -29,7 +29,7 @@ namespace ember::spark {
 namespace ba = boost::asio;
 
 Server::Server(boost::asio::io_context& context, std::string_view name,
-               const std::string& iface, const std::uint16_t port, log::Logger* logger)
+               const std::string& iface, const std::uint16_t port, log::Logger& logger)
 	: ctx_(context),
 	  acceptor_(context, ba::ip::tcp::endpoint(ba::ip::address::from_string(iface), port)),
 	  resolver_(context),
@@ -93,7 +93,7 @@ ba::awaitable<void> Server::accept(boost::asio::ip::tcp::socket socket) try {
 	auto ep = socket.remote_endpoint();
 	const auto key = std::format("{}:{}", ep.address().to_string(), std::to_string(ep.port()));
 
-	Connection connection(std::move(socket), *logger_, [this, key]() {
+	Connection connection(std::move(socket), logger_, [this, key]() {
 		close_peer(key);
 	});
 
@@ -146,7 +146,7 @@ Server::connect(std::string_view host, const std::uint16_t port) try {
 
 	const auto key = std::format("{}:{}", host, port);
 
-	Connection connection(std::move(socket), *logger_, [this, key]() {
+	Connection connection(std::move(socket), logger_, [this, key]() {
 		close_peer(key);
 	});
 

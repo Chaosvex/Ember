@@ -23,7 +23,7 @@ namespace ember::spark {
 RemotePeer::RemotePeer(boost::asio::io_context& ctx,
                        Connection connection, std::string banner,
                        std::string remote_banner, HandlerRegistry& registry,
-                       log::Logger* log)
+                       log::Logger& log)
 	: ctx_(ctx),
 	  banner_(std::move(banner)),
 	  remote_banner_(std::move(remote_banner)),

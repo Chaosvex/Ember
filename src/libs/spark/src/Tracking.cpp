@@ -20,7 +20,7 @@ using namespace std::chrono_literals;
 
 namespace ember::spark {
 
-Tracking::Tracking(boost::asio::io_context& ctx, log::Logger* logger)
+Tracking::Tracking(boost::asio::io_context& ctx, log::Logger& logger)
 	: timer_(ctx),
 	  logger_(logger) {
 	start_timer();

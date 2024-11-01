@@ -49,10 +49,10 @@ namespace po = boost::program_options;
 using namespace ember;
 
 void launch(const po::variables_map& args, boost::asio::io_context& service,
-            std::binary_semaphore& sem, log::Logger* logger);
-int asio_launch(const po::variables_map& args, log::Logger* logger);
+            std::binary_semaphore& sem, log::Logger& logger);
+int asio_launch(const po::variables_map& args, log::Logger& logger);
 po::variables_map parse_arguments(int argc, const char* argv[]);
-void pool_log_callback(ep::Severity, std::string_view message, el::Logger* logger);
+void pool_log_callback(ep::Severity, std::string_view message, el::Logger& logger);
 
 std::exception_ptr eptr = nullptr;
 
@@ -75,7 +75,7 @@ int main(int argc, const char* argv[]) try {
 	log::global_logger(logger);
 	LOG_INFO(logger) << "Logger configured successfully" << LOG_SYNC;
 
-	const auto ret = asio_launch(args, &logger);
+	const auto ret = asio_launch(args, logger);
 	LOG_INFO_SYNC(logger, "{} terminated", APP_NAME);
 	return ret;
 } catch(const std::exception& e) {
@@ -91,7 +91,7 @@ int main(int argc, const char* argv[]) try {
  * services can cleanly shut down upon destruction without requiring
  * explicit shutdown() calls in a signal handler.
  */
-int asio_launch(const po::variables_map& args, log::Logger* logger) try {
+int asio_launch(const po::variables_map& args, log::Logger& logger) try {
 	boost::asio::io_context service(BOOST_ASIO_CONCURRENCY_HINT_UNSAFE_IO);
 	std::binary_semaphore flag(0);
 
@@ -126,7 +126,7 @@ int asio_launch(const po::variables_map& args, log::Logger* logger) try {
 }
 
 void launch(const po::variables_map& args, boost::asio::io_context& service,
-            std::binary_semaphore& sem, log::Logger* logger) try {
+            std::binary_semaphore& sem, log::Logger& logger) try {
 	constexpr auto concurrency = 1u; // temp
 	LOG_INFO_SYNC(logger, "Starting thread pool with {} threads...", concurrency);
 	ThreadPool thread_pool(concurrency);
@@ -143,7 +143,7 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 		driver, min_conns, max_conns, 30s
 	);
 
-	pool.logging_callback([logger](auto severity, auto message) {
+	pool.logging_callback([&](auto severity, auto message) {
 		pool_log_callback(severity, message, logger);
 	});
 
@@ -161,9 +161,9 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 	Sessions sessions(true);
 
 	spark::Server sparkv2(service, "account", s_address, s_port, logger); // temp port
-	AccountService acct_service(sparkv2, handler, sessions, *logger);
+	AccountService acct_service(sparkv2, handler, sessions, logger);
 
-	service.dispatch([logger]() {
+	service.dispatch([&]() {
 		LOG_INFO_SYNC(logger, "{} started successfully", APP_NAME);
 	});
 
@@ -243,7 +243,7 @@ po::variables_map parse_arguments(int argc, const char* argv[]) {
 	return options;
 }
 
-void pool_log_callback(ep::Severity severity, std::string_view message, el::Logger* logger) {
+void pool_log_callback(ep::Severity severity, std::string_view message, el::Logger& logger) {
 	switch(severity) {
 		case ep::Severity::DEBUG:
 			LOG_DEBUG_FILTER(logger, LF_DB_CONN_POOL) << message << LOG_ASYNC;

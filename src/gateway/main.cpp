@@ -66,13 +66,13 @@ using namespace std::chrono_literals;
 using namespace std::placeholders;
 
 void launch(const po::variables_map& args, ServicePool& service_pool,
-            std::binary_semaphore& sem, log::Logger* logger);
-int asio_launch(const po::variables_map& args, log::Logger* logger);
-std::optional<Realm> load_realm(const po::variables_map& args, log::Logger* logger);
-void print_lib_versions(log::Logger* logger);
-unsigned int check_concurrency(log::Logger* logger); // todo, move
+            std::binary_semaphore& sem, log::Logger& logger);
+int asio_launch(const po::variables_map& args, log::Logger& logger);
+std::optional<Realm> load_realm(const po::variables_map& args, log::Logger& logger);
+void print_lib_versions(log::Logger& logger);
+unsigned int check_concurrency(log::Logger& logger); // todo, move
 po::variables_map parse_arguments(int argc, const char* argv[]);
-void pool_log_callback(ep::Severity, std::string_view message, log::Logger* logger);
+void pool_log_callback(ep::Severity, std::string_view message, log::Logger& logger);
 std::string_view category_name(const Realm& realm, const dbc::DBCMap<dbc::Cfg_Categories>& dbc);
 
 std::exception_ptr eptr = nullptr;
@@ -97,8 +97,8 @@ int main(int argc, const char* argv[]) try {
 	log::global_logger(logger);
 	LOG_INFO(logger) << "Logger configured successfully" << LOG_SYNC;
 
-	print_lib_versions(&logger);
-	const auto ret = asio_launch(args, &logger);
+	print_lib_versions(logger);
+	const auto ret = asio_launch(args, logger);
 	LOG_INFO_SYNC(logger, "{} terminated", APP_NAME);
 	return ret;
 } catch(const std::exception& e) {
@@ -114,7 +114,7 @@ int main(int argc, const char* argv[]) try {
  * services can cleanly shut down upon destruction without requiring
  * explicit shutdown() calls in a signal handler.
  */
-int asio_launch(const po::variables_map& args, log::Logger* logger) try {
+int asio_launch(const po::variables_map& args, log::Logger& logger) try {
 	unsigned int concurrency = check_concurrency(logger);
 
 	// Start ASIO service pool
@@ -149,7 +149,7 @@ int asio_launch(const po::variables_map& args, log::Logger* logger) try {
 }
 
 void launch(const po::variables_map& args, ServicePool& service_pool,
-            std::binary_semaphore& sem, log::Logger* logger) try {
+            std::binary_semaphore& sem, log::Logger& logger) try {
 #ifdef DEBUG_NO_THREADS
 	LOG_WARN(logger) << "Compiled with DEBUG_NO_THREADS!" << LOG_SYNC;
 #endif
@@ -160,7 +160,7 @@ void launch(const po::variables_map& args, ServicePool& service_pool,
 	std::future<stun::MappedResult> stun_res;
 
 	if(stun_enabled) {
-		stun.log_callback([logger](const stun::Verbosity verbosity, const stun::Error reason) {
+		stun.log_callback([&](const stun::Verbosity verbosity, const stun::Error reason) {
 			stun_log_callback(verbosity, reason, logger);
 		});
 
@@ -270,14 +270,14 @@ void launch(const po::variables_map& args, ServicePool& service_pool,
 	
 	LOG_INFO(logger) << "Starting RPC services..." << LOG_SYNC;
 	spark::Server spark(service_pool.get(), "realm", s_address, s_port, logger);
-	RealmService realm_svc(spark, *realm, *logger);
-	AccountClient acct_svc(spark, *logger);
-	CharacterClient char_svc(spark, config, *logger);
+	RealmService realm_svc(spark, *realm, logger);
+	AccountClient acct_svc(spark, logger);
+	CharacterClient char_svc(spark, config, logger);
 
 	const auto nsd_host = args["nsd.host"].as<std::string>();
 	const auto nsd_port = args["nsd.port"].as<std::uint16_t>();
 
-	NetworkServiceDiscovery nds(spark, nsd_host, nsd_port, *logger);
+	NetworkServiceDiscovery nds(spark, nsd_host, nsd_port, logger);
 
 	// set services - not the best design pattern but it'll do for now
 	Locator::set(&dispatcher);
@@ -314,7 +314,7 @@ void launch(const po::variables_map& args, ServicePool& service_pool,
  * loading the initial realm information. If the gateway requires
  * connections elsewhere in the future, this should be merged back.
  */
-std::optional<Realm> load_realm(const po::variables_map& args, log::Logger* logger) {
+std::optional<Realm> load_realm(const po::variables_map& args, log::Logger& logger) {
 	LOG_INFO(logger) << "Initialising database driver..." << LOG_SYNC;
 	const auto& db_config_path = args["database.config_path"].as<std::string>();
 	auto driver(drivers::init_db_driver(db_config_path, "login"));
@@ -322,7 +322,7 @@ std::optional<Realm> load_realm(const po::variables_map& args, log::Logger* logg
 	LOG_INFO(logger) << "Initialising database connection pool..." << LOG_SYNC;
 	ep::Pool<decltype(driver), ep::CheckinClean, ep::ExponentialGrowth> pool(driver, 1, 1, 30s);
 	
-	pool.logging_callback([logger](auto severity, auto message) {
+	pool.logging_callback([&](auto severity, auto message) {
 		pool_log_callback(severity, message, logger);
 	});
 
@@ -425,7 +425,7 @@ po::variables_map parse_arguments(int argc, const char* argv[]) {
 	return options;
 }
 
-void pool_log_callback(ep::Severity severity, std::string_view message, log::Logger* logger) {
+void pool_log_callback(ep::Severity severity, std::string_view message, log::Logger& logger) {
 	switch(severity) {
 		case ep::Severity::DEBUG:
 			LOG_DEBUG_FILTER(logger, LF_DB_CONN_POOL) << message << LOG_ASYNC;
@@ -453,7 +453,7 @@ void pool_log_callback(ep::Severity severity, std::string_view message, log::Log
  * in the machine but the standard doesn't guarantee that it won't be zero.
  * In that case, we just set the minimum concurrency level to one.
  */
-unsigned int check_concurrency(log::Logger* logger) {
+unsigned int check_concurrency(log::Logger& logger) {
 	unsigned int concurrency = std::thread::hardware_concurrency();
 
 	if(!concurrency) {
@@ -464,7 +464,7 @@ unsigned int check_concurrency(log::Logger* logger) {
 	return concurrency;
 }
 
-void print_lib_versions(log::Logger* logger) {
+void print_lib_versions(log::Logger& logger) {
 	LOG_DEBUG(logger)
 		<< "Compiled with library versions: " << "\n"
 		<< " - Boost " << BOOST_VERSION / 100000 << "."

@@ -19,12 +19,12 @@ using namespace std::chrono_literals;
 
 class NetworkListener;
 
-void install_net_monitor(Monitor& monitor, const NetworkListener& server, log::Logger* logger);
+void install_net_monitor(Monitor& monitor, const NetworkListener& server, log::Logger& logger);
 void monitor_log_callback(const Monitor::Source& source, Monitor::Severity severity,
-                          std::intmax_t value, log::Logger* logger);
+                          std::intmax_t value, log::Logger& logger);
 
 template<typename T>
-void install_pool_monitor(Monitor& monitor, const T& pool, log::Logger* logger) {
+void install_pool_monitor(Monitor& monitor, const T& pool, log::Logger& logger) {
 	Monitor::Source source{ "db_pool_size", std::bind(&T::size, &pool),
 		30s, 0,
 		[](std::intmax_t value, std::intmax_t threshold) {

@@ -137,7 +137,7 @@ std::string_view ClientHandler::client_identify() const {
 }
 
 ClientHandler::ClientHandler(ClientConnection& connection, ClientUUID uuid,
-                             executor executor, log::Logger* logger)
+                             executor executor, log::Logger& logger)
                              : context_{},
                                connection_(connection),
                                opcode_{},

@@ -37,7 +37,7 @@ class NetworkListener final {
 
 	SessionManager sessions_;
 	const NetworkSessionBuilder& session_builder_;
-	log::Logger* logger_;
+	log::Logger& logger_;
 	Metrics& metrics_;
 	IPBanCache& ban_list_;
 
@@ -92,7 +92,7 @@ class NetworkListener final {
 public:
 	NetworkListener(boost::asio::io_context& io_context, const std::string& interface, std::uint16_t port,
 	                bool tcp_no_delay, const NetworkSessionBuilder& session_create, IPBanCache& bans,
-	                log::Logger* logger, Metrics& metrics)
+	                log::Logger& logger, Metrics& metrics)
 	                : acceptor_(io_context, boost::asio::ip::tcp::endpoint(
 	                            boost::asio::ip::address::from_string(interface), port)),
 	                  io_context(io_context),

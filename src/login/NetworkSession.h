@@ -51,7 +51,7 @@ private:
 	bool write_in_progress_;
 	bool is_active_;
 
-	log::Logger* logger_;
+	log::Logger& logger_;
 	bool stopped_;
 	boost::asio::ip::address address_;
 
@@ -176,7 +176,7 @@ private:
 	}
 
 public:
-	NetworkSession(SessionManager& sessions, tcp_socket socket, log::Logger* logger)
+	NetworkSession(SessionManager& sessions, tcp_socket socket, log::Logger& logger)
 	               : sessions_(sessions),
 	                 socket_(std::move(socket)),
 	                 timer_(socket_.get_executor()),

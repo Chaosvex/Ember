@@ -33,7 +33,7 @@ public:
 private:
 	std::array<std::uint8_t, GRID_SIZE> remapped_grid;
 	std::inplace_vector<std::uint8_t, MAX_PIN_LENGTH> pin_bytes_;
-	log::Logger* logger_;
+	log::Logger& logger_;
 
 	void pin_to_ascii();
 	void remap_pin_grid(std::uint32_t seed);
@@ -41,7 +41,7 @@ private:
 	void remap_pin();
 
 public:
-	PINAuthenticator(std::uint32_t seed, log::Logger* logger);
+	PINAuthenticator(std::uint32_t seed, log::Logger& logger);
 
 	HashBytes calculate_hash(const SaltBytes& server_salt,
 	                         const SaltBytes& client_salt,

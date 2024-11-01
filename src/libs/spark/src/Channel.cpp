@@ -18,7 +18,7 @@ namespace ember::spark {
 Channel::Channel(boost::asio::io_context& ctx, std::uint8_t id,
                  std::string banner, std::string service,
                  Handler* handler, std::shared_ptr<Connection> connection,
-                 log::Logger* logger)
+                 log::Logger& logger)
 	: tracking_(ctx, logger),
 	  channel_id_(id),
 	  handler_(handler),

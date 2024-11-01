@@ -33,7 +33,7 @@ namespace ember::util {
  */
 class PortForward final {
 	boost::asio::io_context& ctx_;
-	log::Logger* logger_;
+	log::Logger& logger_;
 	std::uint16_t port_;
 	std::atomic_bool mapping_active_;
 	std::unique_ptr<ports::Client> client_;
@@ -167,7 +167,7 @@ public:
 		UPNP, PMP_PCP, AUTO
 	};
 
-	PortForward(log::Logger* logger, boost::asio::io_context& ctx, Mode mode,
+	PortForward(log::Logger& logger, boost::asio::io_context& ctx, Mode mode,
 				const std::string& iface, const std::string& gateway, std::uint16_t port)
 		: ctx_(ctx), logger_(logger), port_(port), mapping_active_(false), cb_sem_(0), sem_(0) {
 		switch(mode) {

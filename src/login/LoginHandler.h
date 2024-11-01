@@ -51,7 +51,7 @@ class LoginHandler final {
 
 	LoginState state_ { LoginState::INITIAL_CHALLENGE };
 	Metrics& metrics_;
-	log::Logger* logger_;
+	log::Logger& logger_;
 	const Patcher& patcher_;
 	const RealmList& realm_list_;
 	const dal::UserDAO& user_src_;
@@ -123,7 +123,7 @@ public:
 	void on_chunk_complete();
 
 	LoginHandler(const dal::UserDAO& users, const AccountClient& acct_svc, const Patcher& patcher,
-	             const IntegrityData& bin_data, const Survey& survey, log::Logger* logger,
+	             const IntegrityData& bin_data, const Survey& survey, log::Logger& logger,
 	             const RealmList& realm_list, std::string source, Metrics& metrics,
 	             bool locale_enforce, bool integrity_enforce)
 	             : user_src_(users), patcher_(patcher), logger_(logger), acct_svc_(acct_svc),

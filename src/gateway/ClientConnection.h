@@ -54,7 +54,7 @@ class ClientConnection final {
 	protocol::SizeType msg_size_;
 	SessionManager& sessions_;
 	ASIOAllocator<thread_unsafe> allocator_; // todo - should be shared & passed in
-	log::Logger* logger_;
+	log::Logger& logger_;
 	bool write_in_progress_;
 	unsigned int compression_level_;
 	std::unique_ptr<PacketLogger> packet_logger_;
@@ -80,7 +80,7 @@ class ClientConnection final {
 	void completion_check(const StaticBuffer& buffer);
 
 public:
-	ClientConnection(SessionManager& sessions, tcp_socket socket, ClientUUID uuid, log::Logger* logger)
+	ClientConnection(SessionManager& sessions, tcp_socket socket, ClientUUID uuid, log::Logger& logger)
 	                 : sessions_(sessions),
 	                   socket_(std::move(socket)),
 	                   remote_ep_(socket_.remote_endpoint()),

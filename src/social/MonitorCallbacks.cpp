@@ -13,7 +13,7 @@
 namespace ember {
 
 void monitor_log_callback(const Monitor::Source& source, Monitor::Severity severity,
-                          std::intmax_t value, log::Logger* logger) {
+                          std::intmax_t value, log::Logger& logger) {
 	std::stringstream message;
 	message << source.key << ":v:" << value << ":t:" << source.threshold << " - ";
 

@@ -30,7 +30,7 @@ struct Message {
 using MessageResult = std::expected<std::span<const std::uint8_t>, Result>;
 
 using TrackedState = std::function<void(
-	const spark::Link& link, MessageResult 
+	const spark::Link& link, MessageResult
 )>;
 
 } // spark, ember

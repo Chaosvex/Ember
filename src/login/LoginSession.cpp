@@ -20,7 +20,7 @@
 
 namespace ember {
 
-LoginSession::LoginSession(SessionManager& sessions, tcp_socket socket, log::Logger* logger,
+LoginSession::LoginSession(SessionManager& sessions, tcp_socket socket, log::Logger& logger,
                            ThreadPool& pool, const LoginHandlerBuilder& builder)
                            : NetworkSession(sessions, std::move(socket), logger),
                              handler_(builder.create(remote_address())),

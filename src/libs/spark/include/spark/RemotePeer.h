@@ -41,7 +41,7 @@ class RemotePeer final {
 	std::string remote_banner_;
 	HandlerRegistry& registry_;
 	std::array<std::shared_ptr<Channel>, 256> channels_{};
-	log::Logger* log_;
+	log::Logger& log_;
 
 	std::uint32_t ping_sequence_ = 0;
 	std::chrono::steady_clock::time_point ping_time_;
@@ -66,7 +66,7 @@ class RemotePeer final {
 public:
 	RemotePeer(boost::asio::io_context& ctx, Connection connection,
 	           std::string banner, std::string remote_banner,
-	           HandlerRegistry& registry, log::Logger* log);
+	           HandlerRegistry& registry, log::Logger& log);
 	~RemotePeer();
 
 	RemotePeer(RemotePeer&& peer) = delete;

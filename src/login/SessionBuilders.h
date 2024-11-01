@@ -26,7 +26,7 @@ class NetworkSessionBuilder {
 public:
 	virtual std::shared_ptr<LoginSession> create(SessionManager& sessions,
 	                                             tcp_socket socket,
-	                                             log::Logger* logger) const = 0;
+	                                             log::Logger& logger) const = 0;
 
 	virtual ~NetworkSessionBuilder() = default;
 };
@@ -41,7 +41,7 @@ public:
 
 	std::shared_ptr<LoginSession> create(SessionManager& sessions,
 	                                     tcp_socket socket,
-	                                     log::Logger* logger) const override {
+	                                     log::Logger& logger) const override {
 		return std::make_shared<LoginSession>(sessions, std::move(socket), logger, pool_, builder_);
 	}
 };
