@@ -24,8 +24,8 @@ namespace ember {
  * allowing for a trace to be generated for debugging.
  */
 class Watchdog final {
-	log::Logger& logger_;
 	const std::chrono::seconds max_idle_;
+	log::Logger& logger_;
 	std::atomic_bool timeout_;
 	std::chrono::steady_clock::time_point prev_;
 	std::jthread worker_;

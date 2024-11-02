@@ -19,8 +19,8 @@ using namespace std::chrono_literals;
 namespace ember {
 
 Watchdog::Watchdog(std::chrono::seconds max_idle, log::Logger& logger)
-	: logger_(logger),
-	  max_idle_(std::move(max_idle)),
+	: max_idle_(std::move(max_idle)),
+	  logger_(logger),
 	  timeout_(false),
 	  prev_(std::chrono::steady_clock::now()),
 	  worker_(std::jthread(std::bind_front(&Watchdog::run, this))) { 
