@@ -30,7 +30,7 @@ void print_maps(std::span<const std::int32_t> maps,
                 const dbc::DBCMap<dbc::Map>& dbc,
                 log::Logger& logger);
 
-void print_tip(const dbc::DBCMap<dbc::GameTips>& tips, log::Logger& logger);
+std::string random_tip(const dbc::DBCMap<dbc::GameTips>& tips);
 
 int launch(const boost::program_options::variables_map& args, log::Logger& logger) {
 	LOG_INFO(logger) << "Loading DBC data..." << LOG_SYNC;
@@ -44,7 +44,11 @@ int launch(const boost::program_options::variables_map& args, log::Logger& logge
 	LOG_INFO(logger) << "Resolving DBC references..." << LOG_SYNC;
 	dbc::link(dbc_store);
 
-	print_tip(dbc_store.game_tips, logger);
+	const auto tip = random_tip(dbc_store.game_tips);
+
+	if(!tip.empty()) {
+		LOG_INFO_SYNC(logger, "Tip: {}", tip);
+	}
 
 	const auto& maps = args["world.map_id"].as<std::vector<std::int32_t>>();
 
@@ -57,13 +61,13 @@ int launch(const boost::program_options::variables_map& args, log::Logger& logge
 	return EXIT_SUCCESS;
 }
 
-void print_tip(const dbc::DBCMap<dbc::GameTips>& tips, log::Logger& logger) {
+std::string random_tip(const dbc::DBCMap<dbc::GameTips>& tips) {
 	boost::container::static_vector<dbc::GameTips, 1> out;
 	std::mt19937 gen{std::random_device{}()};
 	std::ranges::sample(tips.values(), std::back_inserter(out), 1, gen);
 
 	if(out.empty()) {
-		return;
+		return {};
 	}
 
 	// trim any leading formatting that we can't make use of
@@ -79,7 +83,7 @@ void print_tip(const dbc::DBCMap<dbc::GameTips>& tips, log::Logger& logger) {
 		text = text.substr(0, pos);
 	}
 
-	LOG_INFO_SYNC(logger, "Tip: {}", text);
+	return std::string(text);
 }
 
 bool validate_maps(std::span<const std::int32_t> maps,
