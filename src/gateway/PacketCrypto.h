@@ -62,7 +62,11 @@ public:
 		}
 	}
 
-	void decrypt(auto& data, const std::size_t length) {
+	void decrypt(auto& data) {
+		decrypt(&data, sizeof(data));
+	}
+
+	void decrypt(auto* data, const std::size_t length) {
 		const auto key_size = gsl::narrow_cast<std::uint8_t>(key_.size());
 
 		for(std::size_t t = 0; t < length; ++t) {

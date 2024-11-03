@@ -28,7 +28,7 @@ void ClientConnection::parse_header(StaticBuffer& buffer) {
 	}
 
 	if(crypt_) [[likely]] {
-		crypt_->decrypt(buffer, protocol::ClientHeader::WIRE_SIZE);
+		crypt_->decrypt(buffer.read_ptr(), protocol::ClientHeader::WIRE_SIZE);
 	}
 
 	BinaryStream stream(buffer);
