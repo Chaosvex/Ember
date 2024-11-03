@@ -54,6 +54,8 @@ class Patcher final {
 	const PatchMeta* locate_rollup(std::span<const PatchMeta> patches,
 	                               std::uint16_t from, std::uint16_t to) const;
 
+	static void load_patch(PatchMeta& patch, const dal::PatchDAO& dao, const std::string& path);
+
 public:
 	enum class PatchLevel { OK, TOO_OLD, TOO_NEW };
 

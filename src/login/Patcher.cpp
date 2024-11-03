@@ -145,47 +145,51 @@ auto Patcher::check_version(const GameVersion& client_version) const -> PatchLev
 	return PatchLevel::TOO_NEW;
 }
 
+void Patcher::load_patch(PatchMeta& patch, const dal::PatchDAO& dao, const std::string& path) {
+	bool dirty = false;
+	patch.file_meta.path = path;
+
+	// we open each patch to make sure that it at least exists
+	std::ifstream file(path + patch.file_meta.name, std::ios::binary);
+
+	if(!file) {
+		throw std::runtime_error("Error opening patch " + path + patch.file_meta.name);
+	}
+
+	if(patch.file_meta.size == 0) {
+		std::error_code ec;
+		const auto size = std::filesystem::file_size(path + patch.file_meta.name, ec);
+
+		if(ec) {
+			throw std::runtime_error("Unable determine patch size for " + path + patch.file_meta.name);
+		}
+
+		patch.file_meta.size = static_cast<std::uint64_t>(size);
+		dirty = true;
+	}
+
+	// check whether the hash is all zeroes and calculate it if so
+	const auto calc_md5 = std::ranges::all_of(patch.file_meta.md5, [](const auto& byte) {
+		return byte == 0;
+	});
+
+	if(calc_md5) {
+		const auto md5 = util::generate_md5(path + patch.file_meta.name);
+		assert(md5.size() == patch.file_meta.md5.size());
+		std::ranges::copy(md5, patch.file_meta.md5.data());
+		dirty = true;
+	}
+
+	if(dirty) {
+		dao.update(patch);
+	}
+}
+
 std::vector<PatchMeta> Patcher::load_patches(const std::string& path, const dal::PatchDAO& dao) {
 	auto patches = dao.fetch_patches();
 
 	for(auto& patch : patches) {
-		bool dirty = false;
-		patch.file_meta.path = path;
-
-		// we open each patch to make sure that it at least exists
-		std::ifstream file(path + patch.file_meta.name, std::ios::binary);
-
-		if(!file) {
-			throw std::runtime_error("Error opening patch " + path + patch.file_meta.name);
-		}
-
-		if(patch.file_meta.size == 0) {
-			std::error_code ec;
-			const auto size = std::filesystem::file_size(path + patch.file_meta.name, ec);
-
-			if(ec) {
-				throw std::runtime_error("Unable determine patch size for " + path + patch.file_meta.name);
-			}
-
-			patch.file_meta.size = static_cast<std::uint64_t>(size);
-			dirty = true;
-		}
-
-		// check whether the hash is all zeroes and calculate it if so
-		const auto calc_md5 = std::ranges::all_of(patch.file_meta.md5, [](const auto& byte) {
-			return byte == 0;
-		});
-
-		if(calc_md5) {
-			const auto md5 = util::generate_md5(path + patch.file_meta.name);
-			assert(md5.size() == patch.file_meta.md5.size());
-			std::ranges::copy(md5, patch.file_meta.md5.data());
-			dirty = true;
-		}
-
-		if(dirty) {
-			dao.update(patch);
-		}
+		load_patch(patch, dao, path);
 	}
 
 	return patches;

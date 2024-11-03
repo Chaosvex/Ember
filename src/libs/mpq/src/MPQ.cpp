@@ -68,7 +68,7 @@ LocateResult locate_archive(const std::filesystem::path& path) try {
 		return std::unexpected(ErrorCode::FILE_NOT_FOUND);
 	}
 
-	std::error_code ec{};
+	std::error_code ec;
 	const auto size = std::filesystem::file_size(path, ec);
 
 	if(ec) {
