@@ -56,6 +56,7 @@ set(LIBRARY_HDR
     ExecutablesChecksum.h
     PatchGraph.h
     IntegrityData.h
+    IntegrityPlatforms.h
     LocaleMap.h
 	LoginState.h
 	Survey.h

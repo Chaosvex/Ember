@@ -50,7 +50,7 @@ class IntegrityData final {
 	boost::unordered_flat_map<detail::Key, std::vector<std::byte>, detail::KeyHash> data_;
 
 	void load_binaries(std::string_view path, std::uint16_t build,
-	                   std::span<std::string_view> files,
+	                   std::span<const std::string_view> files,
 	                   grunt::System system, grunt::Platform platform);
 
 public:

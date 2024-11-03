@@ -7,8 +7,8 @@
  */
 
 #include "IntegrityData.h"
+#include "IntegrityPlatforms.h"
 #include <algorithm>
-#include <array>
 #include <filesystem>
 #include <format>
 #include <fstream>
@@ -18,18 +18,7 @@ namespace fs = std::filesystem;
 
 namespace ember {
 
-void IntegrityData::add_version(const GameVersion& version, std::string_view path) {
-	std::array<std::string_view, 5> winx86 { "WoW.exe", "fmod.dll", "ijl15.dll",
-	                                         "dbghelp.dll", "unicows.dll" };
-
-	std::array<std::string_view, 5> macx86 { "MacOS/World of Warcraft", "Info.plist",
-	                                         "Resources/Main.nib/objects.xib",
-	                                         "Resources/wow.icns", "PkgInfo" };
-
-	std::array<std::string_view, 5> macppc { "MacOS/World of Warcraft", "Info.plist",
-	                                         "Resources/Main.nib/objects.xib",
-	                                         "Resources/wow.icns", "PkgInfo" };
-	
+void IntegrityData::add_version(const GameVersion& version, std::string_view path) {	
 	load_binaries(path, version.build, winx86, grunt::System::Win, grunt::Platform::x86);
 	load_binaries(path, version.build, macx86, grunt::System::OSX, grunt::Platform::x86);
 	load_binaries(path, version.build, macppc, grunt::System::OSX, grunt::Platform::PPC);
@@ -57,7 +46,7 @@ auto IntegrityData::lookup(const GameVersion version,
 }
 
 void IntegrityData::load_binaries(std::string_view path, std::uint16_t build,
-                                  std::span<std::string_view> files,
+                                  std::span<const std::string_view> files,
                                   const grunt::System system,
                                   const grunt::Platform platform) {
 	auto full_path = std::format("{}{}_{}_{}", path, grunt::to_string(system),
