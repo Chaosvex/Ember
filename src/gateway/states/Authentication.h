@@ -16,7 +16,7 @@
 namespace ember::authentication {
 
 using namespace std::chrono_literals;
-constexpr std::chrono::seconds AUTH_TIMEOUT = 30s;
+constexpr auto AUTH_TIMEOUT = 30s;
 
 void enter(ClientContext& ctx);
 void handle_packet(ClientContext& ctx, protocol::ClientOpcode opcode);
