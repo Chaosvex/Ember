@@ -86,10 +86,8 @@ std::optional<PatchMeta> Patcher::find_patch(const GameVersion& client_version,
 
 	// couldn't find a patch path, find the best rollup patch that'll cover the client
 	if(!path) {
-		const PatchMeta* meta = nullptr;
-
 		for(auto& version : versions_) {
-			meta = locate_rollup(p_it->second, client_version.build, version.build);
+			const auto meta = locate_rollup(p_it->second, client_version.build, version.build);
 
 			// check to see whether there's a patch path from this rollup
 			if(meta && g_it->second.is_path(meta->build_from, version.build)) {
