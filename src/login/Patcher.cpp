@@ -160,8 +160,8 @@ std::vector<PatchMeta> Patcher::load_patches(const std::string& path, const dal:
 		}
 
 		if(patch.file_meta.size == 0) {
-			std::error_code ec{};
-			const auto size = std::filesystem::file_size(path + patch.file_meta.name);
+			std::error_code ec;
+			const auto size = std::filesystem::file_size(path + patch.file_meta.name, ec);
 
 			if(ec) {
 				throw std::runtime_error("Unable determine patch size for " + path + patch.file_meta.name);
