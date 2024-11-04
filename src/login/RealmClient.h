@@ -12,6 +12,8 @@
 #include <logger/Logger.h>
 #include <RealmClientStub.h>
 #include <unordered_map>
+#include <string>
+#include <cstdint>
 
 namespace ember {
 
@@ -27,10 +29,7 @@ class RealmClient final : public services::RealmClient {
 	void request_realm_status(const spark::Link& link);
 	void mark_realm_offline(const spark::Link& link);
 
-	void handle_get_status_response(
-		const spark::Link& link,
-		const rpc::Realm::Status& msg
-	) override;
+	void handle_get_status_response(const spark::Link& link, const rpc::Realm::Status& msg) override;
 
 public:
 	RealmClient(spark::Server& server, RealmList& realmlist, log::Logger& logger);

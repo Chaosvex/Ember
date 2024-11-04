@@ -54,9 +54,7 @@ void RealmClient::mark_realm_offline(const spark::Link& link) {
 	LOG_INFO_ASYNC(logger_, "Set realm {} to offline", realm->name);
 }
 
-void RealmClient::handle_get_status_response(
-	const spark::Link& link,
-	const Status& msg) {
+void RealmClient::handle_get_status_response(const spark::Link& link, const Status& msg) {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 
 	if(!msg.name() || !msg.id() || !msg.ip() || !msg.address()) {
@@ -78,7 +76,7 @@ void RealmClient::handle_get_status_response(
 		.region = static_cast<dbc::Cfg_Categories::Region>(msg.region())
 	};
 
-	LOG_INFO_ASYNC(logger_, "Updated realm information for {} ({}:)", realm.name, realm.address);
+	LOG_INFO_ASYNC(logger_, "Updated realm information for {} ({})", realm.name, realm.address);
 	realmlist_.add_realm(std::move(realm));
 
 	// keep track of this link's realm ID so we can mark it as offline if it disappears
