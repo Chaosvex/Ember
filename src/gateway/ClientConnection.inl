@@ -11,6 +11,7 @@
 #include <spark/buffers/BinaryStream.h>
 #include <gsl/gsl_util>
 #include <algorithm>
+#include <type_traits>
 
 void ClientConnection::send(const protocol::is_packet auto& packet) {
 	using Type = std::remove_reference_t<decltype(packet)>;
