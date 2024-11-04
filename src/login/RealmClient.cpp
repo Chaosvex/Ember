@@ -7,6 +7,7 @@
  */
 
 #include "RealmClient.h"
+#include <algorithm>
 
 namespace ember {
 
@@ -39,29 +40,28 @@ void RealmClient::request_realm_status(const spark::Link& link) {
 }
 
 void RealmClient::mark_realm_offline(const spark::Link& link) {
-	auto it = realms_.find(link.peer_banner);
+	auto it = std::ranges::find_if(realms_, [&](const auto& val) {
+		return val.second == link.peer_banner;
+	});
 
-	// if we connected but didn't get its information, return
+	// if there's no realm associated with this peer, return
 	if(it == realms_.end()) {
 		return;
 	}
 
-	std::optional<Realm> realm = realmlist_.get_realm(it->second);
+	const auto& [realm_id, banner] = *it;
+	std::optional<Realm> realm = realmlist_.get_realm(realm_id);
 	assert(realm);
 	realm->flags |= Realm::Flags::OFFLINE;
 	realmlist_.add_realm(*realm);
-
 	LOG_INFO_ASYNC(logger_, "Set realm {} to offline", realm->name);
 }
 
-void RealmClient::handle_get_status_response(const spark::Link& link, const Status& msg) {
-	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
+bool RealmClient::validate_status(const Status& msg) const {
+	return msg.name() && msg.id() && msg.ip() && msg.address();
+}
 
-	if(!msg.name() || !msg.id() || !msg.ip() || !msg.address()) {
-		LOG_WARN_ASYNC(logger_, "Incompatible realm status update from {}", link.peer_banner);
-		return;
-	}
-
+void RealmClient::update_realm(const Status& msg) {
 	// update everything rather than bothering to only set changed fields
 	Realm realm {
 		.id = msg.id(),
@@ -78,9 +78,28 @@ void RealmClient::handle_get_status_response(const spark::Link& link, const Stat
 
 	LOG_INFO_ASYNC(logger_, "Updated realm information for {} ({})", realm.name, realm.address);
 	realmlist_.add_realm(std::move(realm));
+}
 
-	// keep track of this link's realm ID so we can mark it as offline if it disappears
-	realms_[link.peer_banner] = msg.id();
+void RealmClient::handle_get_status_response(const spark::Link& link, const Status& msg) {
+	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
+
+	if(!validate_status(msg)) {
+		LOG_WARN_ASYNC(logger_, "Incompatible realm update from {}", link.peer_banner);
+		return;
+	}
+
+	// realm may have gone down unexpectedly and restarted before the prior link has terminated
+	if(auto it = realms_.find(msg.id()); it != realms_.end()) {
+		if(link.peer_banner != it->second) {
+			LOG_WARN_ASYNC(logger_, "Realm associated with {} will now be associated with {}",
+			               it->second, link.peer_banner);
+		}
+	}
+
+	update_realm(msg);
+
+	// keep track of this realm's associated peer
+	realms_[msg.id()] = link.peer_banner;
 }
 
 } // ember

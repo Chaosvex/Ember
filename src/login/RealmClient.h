@@ -20,7 +20,7 @@ namespace ember {
 class RealmClient final : public services::RealmClient {
 	RealmList& realmlist_;
 	log::Logger& logger_;
-	std::unordered_map<std::string, std::uint32_t> realms_;
+	std::unordered_map<std::uint32_t, std::string> realms_;
 
 	void on_link_up(const spark::Link& link) override;
 	void on_link_down(const spark::Link& link) override;
@@ -30,6 +30,8 @@ class RealmClient final : public services::RealmClient {
 	void mark_realm_offline(const spark::Link& link);
 
 	void handle_get_status_response(const spark::Link& link, const rpc::Realm::Status& msg) override;
+	bool validate_status(const rpc::Realm::Status& msg) const;
+	void update_realm(const rpc::Realm::Status& msg);
 
 public:
 	RealmClient(spark::Server& server, RealmList& realmlist, log::Logger& logger);
