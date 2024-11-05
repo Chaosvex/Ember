@@ -66,8 +66,6 @@ bool validate_maps(std::span<const std::int32_t> maps, const dbc::DBCMap<dbc::Ma
 }
 
 void print_maps(std::span<const std::int32_t> maps, const dbc::DBCMap<dbc::Map>& dbc, log::Logger& logger) {
-	LOG_INFO_SYNC(logger, "Serving as world server for maps:");
-
 	for(auto id : maps) {
 		LOG_INFO_SYNC(logger, " - {}", dbc[id]->map_name.en_gb);
 	}
