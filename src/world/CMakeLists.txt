@@ -13,6 +13,7 @@ set(LIBRARY_HDR
     Watchdog.h
     utilities/DeltaTimer.h
     Weather.h
+    utilities/Utility.h
     )
 
 set(LIBRARY_SRC
@@ -21,6 +22,7 @@ set(LIBRARY_SRC
     Watchdog.cpp
     utilities/DeltaTimer.cpp
     Weather.cpp
+    utilities/Utility.cpp
     )
 
 add_library(${LIBRARY_NAME} ${LIBRARY_HDR} ${LIBRARY_SRC})

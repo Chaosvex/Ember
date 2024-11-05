@@ -8,29 +8,16 @@
 
 #include "Launch.h"
 #include "MapRunner.h"
+#include "utilities/Utility.h"
 #include <dbcreader/DBCReader.h>
-#include <boost/container/static_vector.hpp>
 #include <boost/program_options.hpp>
-#include <algorithm>
-#include <random>
-#include <span>
-#include <string_view>
 #include <vector>
+#include <cstdint>
 #include <cstdlib>
 
 namespace po = boost::program_options;
 
 namespace ember::world {
-
-bool validate_maps(std::span<const std::int32_t> maps,
-                   const dbc::DBCMap<dbc::Map>& dbc,
-                   log::Logger& logger);
-
-void print_maps(std::span<const std::int32_t> maps,
-                const dbc::DBCMap<dbc::Map>& dbc,
-                log::Logger& logger);
-
-std::string random_tip(const dbc::DBCMap<dbc::GameTips>& tips);
 
 int launch(const boost::program_options::variables_map& args, log::Logger& logger) {
 	LOG_INFO(logger) << "Loading DBC data..." << LOG_SYNC;
@@ -56,71 +43,12 @@ int launch(const boost::program_options::variables_map& args, log::Logger& logge
 		return EXIT_FAILURE;
 	}
 
-	print_maps(maps, dbc_store.map, logger);
-	run(logger);
-	return EXIT_SUCCESS;
-}
-
-std::string random_tip(const dbc::DBCMap<dbc::GameTips>& tips) {
-	boost::container::static_vector<dbc::GameTips, 1> out;
-	std::mt19937 gen{std::random_device{}()};
-	std::ranges::sample(tips.values(), std::back_inserter(out), 1, gen);
-
-	if(out.empty()) {
-		return {};
-	}
-
-	// trim any leading formatting that we can't make use of
-	std::string_view text(out.front().text.en_gb);
-	std::string_view needle("|cffffd100Tip:|r ");
-	
-	if(text.find(needle) != text.npos) {
-		text = text.substr(needle.size(), text.size());
-	}
-
-	// trim any trailing newlines that we don't want to print
-	if(auto pos = text.find_first_of('\n'); pos != text.npos) {
-		text = text.substr(0, pos);
-	}
-
-	return std::string(text);
-}
-
-bool validate_maps(std::span<const std::int32_t> maps,
-                   const dbc::DBCMap<dbc::Map>& dbc,
-                   log::Logger& logger) {
-	const auto validate = [&](const auto id) {
-		auto it = std::ranges::find_if(dbc, [&](auto& record) {
-			return record.second.id == id;
-		});
-
-		if(it == dbc.end()) {
-			LOG_ERROR_SYNC(logger, "Unknown map ID ({}) specified", id);
-			return false;
-		}
-
-		auto& [_, map] = *it;
-
-		if(map.instance_type != dbc::Map::InstanceType::NORMAL) {
-			LOG_ERROR_SYNC(logger, "Map {} ({}) is not an open world area",
-			               map.id, map.map_name.en_gb);
-			return false;
-		}
-
-		return true;
-	};
-
-	return std::ranges::find(maps, false, validate) == maps.end();
-}
-
-void print_maps(std::span<const std::int32_t> maps,
-                const dbc::DBCMap<dbc::Map>& dbc,
-                log::Logger& logger) {
 	LOG_INFO_SYNC(logger, "Serving as world server for maps:");
+	print_maps(maps, dbc_store.map, logger);
 
-	for(auto id : maps) {
-		LOG_INFO_SYNC(logger, " - {}", dbc[id]->map_name.en_gb);
-	}
+	run(logger);
+
+	return EXIT_SUCCESS;
 }
 
 po::options_description options() {

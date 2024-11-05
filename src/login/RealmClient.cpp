@@ -49,7 +49,7 @@ void RealmClient::mark_realm_offline(const spark::Link& link) {
 		return;
 	}
 
-	const auto& [realm_id, banner] = *it;
+	const auto& [realm_id, _] = *it;
 	std::optional<Realm> realm = realmlist_.get_realm(realm_id);
 	assert(realm);
 	realm->flags |= Realm::Flags::OFFLINE;
@@ -76,7 +76,7 @@ void RealmClient::update_realm(const Status& msg) {
 		.region = static_cast<dbc::Cfg_Categories::Region>(msg.region())
 	};
 
-	LOG_INFO_ASYNC(logger_, "Updated realm information for {} ({})", realm.name, realm.address);
+	LOG_INFO_ASYNC(logger_, "Updating status for realm {} ({}, {})", realm.id, realm.name, realm.address);
 	realmlist_.add_realm(std::move(realm));
 }
 
