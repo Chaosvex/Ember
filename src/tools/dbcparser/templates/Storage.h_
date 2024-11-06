@@ -12,7 +12,7 @@
  * parser's templates/DBC definitions and rerunning.
  */
 
-#include <dbcreader/DBCMap.h>
+#include <dbcreader/Store.h>
 #include <dbcreader/MemoryDefs.h>
 #include <type_traits>
 

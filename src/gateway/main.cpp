@@ -73,7 +73,7 @@ void print_lib_versions(log::Logger& logger);
 unsigned int check_concurrency(log::Logger& logger); // todo, move
 po::variables_map parse_arguments(int argc, const char* argv[]);
 void pool_log_callback(ep::Severity, std::string_view message, log::Logger& logger);
-std::string_view category_name(const Realm& realm, const dbc::DBCMap<dbc::Cfg_Categories>& dbc);
+std::string_view category_name(const Realm& realm, const dbc::Store<dbc::Cfg_Categories>& dbc);
 
 std::exception_ptr eptr = nullptr;
 
@@ -333,7 +333,7 @@ std::optional<Realm> load_realm(const po::variables_map& args, log::Logger& logg
 	return realm_dao.get_realm(args["realm.id"].as<unsigned int>());
 }
 
-std::string_view category_name(const Realm& realm, const dbc::DBCMap<dbc::Cfg_Categories>& dbc) {
+std::string_view category_name(const Realm& realm, const dbc::Store<dbc::Cfg_Categories>& dbc) {
 	for(auto&& [_, record] : dbc) {
 		if(record.category == realm.category && record.region == realm.region) {
 			return record.name.en_gb;

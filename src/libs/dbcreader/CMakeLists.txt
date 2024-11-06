@@ -26,7 +26,7 @@ build_dbc_loaders(DBC_HDR DBC_SRC
 add_library(${LIBRARY_NAME} ${DBC_HDR} ${DBC_SRC}
             include/dbcreader/DBCReader.h
             include/dbcreader/DBCHeader.h
-            include/dbcreader/DBCMap.h
+            include/dbcreader/Store.h
             include/dbcreader/DiskLoader.h
             include/dbcreader/Linker.h
             include/dbcreader/Loader.h

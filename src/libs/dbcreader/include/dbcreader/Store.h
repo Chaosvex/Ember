@@ -17,7 +17,7 @@
 namespace ember::dbc {
 
 template<typename T>
-class DBCMap final {
+class Store final {
 	boost::container::flat_map<std::size_t, T> storage;
 
 public:

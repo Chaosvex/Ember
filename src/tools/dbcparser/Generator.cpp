@@ -637,7 +637,7 @@ void generate_storage(const types::Definitions& defs, const std::string& output,
 		}
 
 		std::string store_name = dbc->alias.empty()? pascal_to_underscore(dbc->name) : dbc->alias;
-		declarations << "\tDBCMap<" << dbc->name << "> " << store_name << ";\n";
+		declarations << "\tStore<" << dbc->name << "> " << store_name << ";\n";
 	}
 
 	std::string replace_pattern("$1" + declarations.str() + "$2");

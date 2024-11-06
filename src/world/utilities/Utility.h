@@ -16,8 +16,8 @@
 
 namespace ember {
 
-std::string random_tip(const dbc::DBCMap<dbc::GameTips>& tips);
-bool validate_maps(std::span<const std::int32_t> maps, const dbc::DBCMap<dbc::Map>& dbc, log::Logger& logger);
-void print_maps(std::span<const std::int32_t> maps, const dbc::DBCMap<dbc::Map>& dbc, log::Logger& logger);
+std::string random_tip(const dbc::Store<dbc::GameTips>& tips);
+bool validate_maps(std::span<const std::int32_t> maps, const dbc::Store<dbc::Map>& dbc, log::Logger& logger);
+void print_maps(std::span<const std::int32_t> maps, const dbc::Store<dbc::Map>& dbc, log::Logger& logger);
 
 } // ember

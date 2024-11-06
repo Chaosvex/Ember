@@ -15,7 +15,7 @@
 
 namespace ember {
 
-std::string random_tip(const dbc::DBCMap<dbc::GameTips>& tips) {
+std::string random_tip(const dbc::Store<dbc::GameTips>& tips) {
 	boost::container::static_vector<dbc::GameTips, 1> out;
 	std::mt19937 gen{std::random_device{}()};
 	std::ranges::sample(tips.values(), std::back_inserter(out), 1, gen);
@@ -40,7 +40,7 @@ std::string random_tip(const dbc::DBCMap<dbc::GameTips>& tips) {
 	return std::string(text);
 }
 
-bool validate_maps(std::span<const std::int32_t> maps, const dbc::DBCMap<dbc::Map>& dbc, log::Logger& logger) {
+bool validate_maps(std::span<const std::int32_t> maps, const dbc::Store<dbc::Map>& dbc, log::Logger& logger) {
 	const auto validate = [&](const auto id) {
 		auto it = std::ranges::find_if(dbc, [&](auto& record) {
 			return record.second.id == id;
@@ -65,7 +65,7 @@ bool validate_maps(std::span<const std::int32_t> maps, const dbc::DBCMap<dbc::Ma
 	return std::ranges::find(maps, false, validate) == maps.end();
 }
 
-void print_maps(std::span<const std::int32_t> maps, const dbc::DBCMap<dbc::Map>& dbc, log::Logger& logger) {
+void print_maps(std::span<const std::int32_t> maps, const dbc::Store<dbc::Map>& dbc, log::Logger& logger) {
 	for(auto id : maps) {
 		LOG_INFO_SYNC(logger, " - {}", dbc[id]->map_name.en_gb);
 	}
