@@ -13,7 +13,7 @@
  */
 
 #include <dbcreader/DiskLoader.h>
-#include <dbcreader/DBCHeader.h>
+#include <dbcreader/Header.h>
 #include <dbcreader/Storage.h>
 #include <dbcreader/DiskDefs.h>
 #include <dbcreader/MemoryDefs.h>

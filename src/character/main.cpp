@@ -9,7 +9,7 @@
 #include "FilterTypes.h"
 #include "CharacterHandler.h"
 #include "CharacterService.h"
-#include <dbcreader/DBCReader.h>
+#include <dbcreader/Reader.h>
 #include <spark/Server.h>
 #include <conpool/ConnectionPool.h>
 #include <conpool/Policies.h>

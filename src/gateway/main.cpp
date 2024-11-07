@@ -18,7 +18,7 @@
 #include <conpool/ConnectionPool.h>
 #include <conpool/Policies.h>
 #include <conpool/drivers/AutoSelect.h>
-#include <dbcreader/DBCReader.h>
+#include <dbcreader/Reader.h>
 #include <logger/Logger.h>
 #include <nsd/NSD.h>
 #include <spark/Server.h>

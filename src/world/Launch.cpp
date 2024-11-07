@@ -9,7 +9,7 @@
 #include "Launch.h"
 #include "MapRunner.h"
 #include "utilities/Utility.h"
-#include <dbcreader/DBCReader.h>
+#include <dbcreader/Reader.h>
 #include <boost/program_options.hpp>
 #include <vector>
 #include <cstdint>

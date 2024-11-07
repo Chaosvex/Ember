@@ -20,7 +20,7 @@ namespace be = boost::endian;
 
 constexpr std::uint32_t DBC_MAGIC = util::make_mcc("WDBC");
 
-struct DBCHeader {
+struct Header {
 	be::big_uint32_t magic;
 	be::little_uint32_t records;
 	be::little_uint32_t fields;

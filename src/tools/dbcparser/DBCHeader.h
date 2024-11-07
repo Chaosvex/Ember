@@ -23,7 +23,7 @@ namespace be = boost::endian;
 
 namespace ember::dbc {
 
-struct DBCHeader {
+struct Header {
 	be::big_uint32_t magic;
 	be::little_uint32_t records;
 	be::little_uint32_t fields;
@@ -31,7 +31,7 @@ struct DBCHeader {
 	be::little_uint32_t string_block_size;
 };
 
-inline void validate_dbc(std::string_view name, const DBCHeader& header, const std::size_t expect_size,
+inline void validate_dbc(std::string_view name, const Header& header, const std::size_t expect_size,
                          const std::size_t expect_fields, const std::size_t dbc_size) {
 	if(header.magic != DBC_MAGIC) {
 		std::stringstream err;
@@ -48,7 +48,7 @@ inline void validate_dbc(std::string_view name, const DBCHeader& header, const s
 	}
 
 	const std::size_t calculated_size =
-		sizeof(DBCHeader) + header.string_block_size + (header.record_size * header.records);
+		sizeof(Header) + header.string_block_size + (header.record_size * header.records);
 
 	if(calculated_size != dbc_size) {
 		std::stringstream err;

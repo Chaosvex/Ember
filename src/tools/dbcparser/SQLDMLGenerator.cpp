@@ -201,7 +201,7 @@ void write_dbc_dml(const types::Struct& dbc, std::ofstream& out, std::vector<std
 	spark::io::pmr::BufferAdaptor buffer(data);
 	spark::io::pmr::BinaryStream stream(buffer);
 
-	DBCHeader header;
+	Header header;
 	stream >> header.magic;
 	stream >> header.records;
 	stream >> header.fields;

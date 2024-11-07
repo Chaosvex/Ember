@@ -24,8 +24,8 @@ build_dbc_loaders(DBC_HDR DBC_SRC
                   ${FILE_LOG_VERBOSITY})
 
 add_library(${LIBRARY_NAME} ${DBC_HDR} ${DBC_SRC}
-            include/dbcreader/DBCReader.h
-            include/dbcreader/DBCHeader.h
+            include/dbcreader/Reader.h
+            include/dbcreader/Header.h
             include/dbcreader/Store.h
             include/dbcreader/DiskLoader.h
             include/dbcreader/Linker.h
