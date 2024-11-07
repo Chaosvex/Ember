@@ -37,7 +37,7 @@ namespace detail {
 
 template<typename T>
 struct MappedDBC {
-	const DBCHeader* header;
+	const Header* header;
 	const T* records;
 	const char* strings;
 };
@@ -47,13 +47,13 @@ struct MappedDBC {
 template<typename T>
 const MappedDBC<T> get_offsets(const void* start) {
 	const char* data = static_cast<const char*>(start);
-	auto dbc = std::start_lifetime_as<const DBCHeader>(data);
-	auto records = std::start_lifetime_as<const T>(data + sizeof(DBCHeader));
-	auto string_block = data + sizeof(DBCHeader) + (dbc->record_size * dbc->records);
+	auto dbc = std::start_lifetime_as<const Header>(data);
+	auto records = std::start_lifetime_as<const T>(data + sizeof(Header));
+	auto string_block = data + sizeof(Header) + (dbc->record_size * dbc->records);
 	return MappedDBC<T>{dbc, records, string_block};
 }
 
-void validate_dbc(const char* name, const DBCHeader* header, std::size_t expect_size,
+void validate_dbc(const char* name, const Header* header, std::size_t expect_size,
                   std::size_t expect_fields, std::size_t dbc_size) {
 	if(header->magic != DBC_MAGIC) {
 		std::stringstream err;
@@ -69,7 +69,7 @@ void validate_dbc(const char* name, const DBCHeader* header, std::size_t expect_
 		throw std::runtime_error(err.str());
 	}
 
-	std::size_t calculated_size = sizeof(DBCHeader) + header->string_block_len
+	std::size_t calculated_size = sizeof(Header) + header->string_block_len
 	                              + (header->record_size * header->records);
 
 	if(calculated_size != dbc_size) {
