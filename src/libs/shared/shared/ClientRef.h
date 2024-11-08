@@ -28,9 +28,7 @@ class ClientRef final {
 	static constexpr std::size_t UUID_SIZE = 16;
 	static constexpr std::size_t SERVICE_BYTE = 0;
 
-	mutable std::size_t hash_ = 0;
 	std::array<std::uint8_t, UUID_SIZE> data_;
-	mutable bool hashed_ = false;
 
 	void generate(const std::size_t service_index) {
 		for(std::size_t i = 0; i < sizeof(data_); ++i) {
@@ -54,13 +52,8 @@ public:
 	}
 
 	inline std::size_t hash() const {
-		if(!hashed_) {
-			FNVHash hasher;
-			hash_ = hasher.update(data_.begin(), data_.end());
-			hashed_ = true;
-		}
-
-		return hash_;
+		FNVHash hasher;
+		return hasher.update(data_.begin(), data_.end());
 	}
 
 	inline std::uint8_t service() const {
