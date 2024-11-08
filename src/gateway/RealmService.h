@@ -16,7 +16,7 @@
 
 namespace ember {
 
-class RealmService : public services::RealmService {
+class RealmService final : public services::RealmService {
 	std::vector<spark::Link> links_;
 
 	Realm realm_;
