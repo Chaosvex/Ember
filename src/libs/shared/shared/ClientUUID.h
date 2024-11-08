@@ -13,27 +13,32 @@
 #include <boost/functional/hash.hpp>
 #include <gsl/gsl_util>
 #include <algorithm>
+#include <array>
+#include <span>
 #include <iomanip>
 #include <string>
 #include <sstream>
+#include <stdexcept>
 #include <cstdint>
 #include <cstddef>
 
 namespace ember {
 
 class ClientUUID final {
+	static constexpr std::size_t UUID_SIZE = 16;
+
 	mutable std::size_t hash_ = 0;
-	mutable bool hashed_ = false;
 
 	union {
-		std::uint8_t data_[16];
+		std::array<std::uint8_t, UUID_SIZE> data_;
 
 		struct {
 			std::uint8_t service_;
-			std::uint8_t rand_[15];
+			std::array<std::uint8_t, 15> rand_;
 		};
 	};
 
+	mutable bool hashed_ = false;
 public:
 	inline std::size_t hash() const {
 		if(!hashed_) {
@@ -61,9 +66,14 @@ public:
 		return stream.str();
 	}
 
-	static ClientUUID from_bytes(const std::array<std::uint8_t, 16>& data) {
+	static ClientUUID from_bytes(std::span<const std::uint8_t> data) {
 		ClientUUID uuid;
-		std::ranges::copy(data, uuid.data_);
+
+		if(data.size() != uuid.data_.size()) {
+			throw std::invalid_argument("bad client uuid size");
+		}
+
+		std::ranges::copy(data, uuid.data_.data());
 		return uuid;
 	}
 
@@ -78,6 +88,9 @@ public:
 		return uuid;
 	}
 
+	static constexpr auto size() {
+		return UUID_SIZE;
+	}
 
 	friend bool operator==(const ClientUUID& rhs, const ClientUUID& lhs);
 };
