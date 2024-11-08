@@ -45,7 +45,7 @@ public:
 
 	explicit ClientRef(std::span<const std::uint8_t> data) {
 		if(data.size() != data_.size()) {
-			throw std::invalid_argument("bad client uuid size");
+			throw std::invalid_argument("bad client data size");
 		}
 
 		std::ranges::copy(data, data_.data());

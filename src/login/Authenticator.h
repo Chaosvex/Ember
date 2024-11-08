@@ -26,7 +26,7 @@ class ReconnectAuthenticator final {
 public:
 	ReconnectAuthenticator(utf8_string username,
 	                       const Botan::BigInt& session_key,
-	                       std::span<const std::uint8_t> salt);
+	                       std::span<const std::uint8_t, CHECKSUM_SALT_LEN> salt);
 
 	bool proof_check(std::span<const std::uint8_t> salt,
 	                 std::span<const std::uint8_t> proof) const;
