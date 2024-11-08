@@ -16,7 +16,7 @@
 
 namespace ember {
 
-constexpr auto CHECKSUM_SALT_LEN = 16u;
+constexpr std::size_t CHECKSUM_SALT_LEN = 16u; // todo, UZ when supported across the board
 
 class ReconnectAuthenticator final {
 	utf8_string username_;

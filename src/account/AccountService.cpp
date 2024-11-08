@@ -93,6 +93,7 @@ AccountService::handle_account_id_fetch(const LookupID& msg, const Link& link, c
 				.status = Status::UNKNOWN_ERROR
 			};
 
+			send(response, link, token);
 			return;
 		}
 
