@@ -85,7 +85,7 @@ class LoginHandler final {
 	void send_reconnect_challenge(const FetchSessionKeyAction& action);
 	void send_reconnect_proof(grunt::Result result);
 	void send_realm_list(const grunt::Packet& packet);
-	void build_login_challenge(grunt::server::LoginChallenge& packet);
+	grunt::server::LoginChallenge build_login_challenge();
 
 	void on_character_data(const FetchCharacterCounts& action);
 	void on_session_write(const RegisterSessionAction& action);

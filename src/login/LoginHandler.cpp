@@ -208,9 +208,10 @@ void LoginHandler::reject_client(const GameVersion& version) {
 	send(response);
 }
 
-void LoginHandler::build_login_challenge(grunt::server::LoginChallenge& packet) {	
+grunt::server::LoginChallenge LoginHandler::build_login_challenge() {	
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 
+	grunt::server::LoginChallenge packet;
 	const auto& authenticator = std::get<LoginAuthenticator>(state_data_);
 	const auto& values = authenticator.challenge_reply();
 	packet.B = values.B;
@@ -229,18 +230,19 @@ void LoginHandler::build_login_challenge(grunt::server::LoginChallenge& packet) 
 
 	Botan::AutoSeeded_RNG().randomize(checksum_salt_.data(), checksum_salt_.size());
 	packet.checksum_salt = checksum_salt_;
+	return packet;
 }
 
 void LoginHandler::send_login_challenge(const FetchUserAction& action) {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 
 	grunt::server::LoginChallenge response;
-	response.result = grunt::Result::SUCCESS;
 
 	try {
 		if((user_ = action.get_result())) {
 			state_data_.emplace<LoginAuthenticator>(*user_);
-			build_login_challenge(response);
+			response = build_login_challenge();
+			response.result = grunt::Result::SUCCESS;
 			update_state(LoginState::LOGIN_PROOF);
 		} else {
 			// leaks information on whether the account exists (could send challenge anyway?)
