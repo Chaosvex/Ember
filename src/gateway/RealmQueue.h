@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <shared/ClientUUID.h>
+#include <shared/ClientRef.h>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/steady_timer.hpp>
 #include <chrono>
@@ -29,7 +29,7 @@ class RealmQueue final {
 
 	struct QueueEntry {
 		int priority;
-		ClientUUID client;
+		ClientRef client;
 		UpdateQueueCB on_update;
 		LeaveQueueCB on_leave;
 
@@ -58,9 +58,9 @@ public:
 	                    std::chrono::milliseconds frequency = DEFAULT_FREQUENCY)
 	                    : timer_(service), frequency_(frequency), dirty_(false) { }
 
-	void enqueue(ClientUUID client, UpdateQueueCB on_update_cb,
+	void enqueue(ClientRef client, UpdateQueueCB on_update_cb,
 	             LeaveQueueCB on_leave_cb, int priority = 0);
-	void dequeue(const ClientUUID& client);
+	void dequeue(const ClientRef& client);
 	void free_slot();
 	void shutdown();
 	std::size_t size() const;

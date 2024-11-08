@@ -17,7 +17,7 @@
 #include "SocketType.h"
 #include <logger/LoggerFwd.h>
 #include <spark/buffers/DynamicBuffer.h>
-#include <shared/ClientUUID.h>
+#include <shared/ClientRef.h>
 #include <shared/memory/ASIOAllocator.h>
 #include <botan/bigint.h>
 #include <boost/asio/ip/tcp.hpp>
@@ -80,7 +80,7 @@ class ClientConnection final {
 	void completion_check(const StaticBuffer& buffer);
 
 public:
-	ClientConnection(SessionManager& sessions, tcp_socket socket, ClientUUID uuid, log::Logger& logger)
+	ClientConnection(SessionManager& sessions, tcp_socket socket, ClientRef uuid, log::Logger& logger)
 	                 : sessions_(sessions),
 	                   socket_(std::move(socket)),
 	                   remote_ep_(socket_.remote_endpoint()),

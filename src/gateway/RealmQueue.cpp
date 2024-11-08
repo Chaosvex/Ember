@@ -43,7 +43,7 @@ void RealmQueue::update_clients() {
 	dirty_ = false;
 }
 
-void RealmQueue::enqueue(ClientUUID client, UpdateQueueCB on_update_cb,
+void RealmQueue::enqueue(ClientRef client, UpdateQueueCB on_update_cb,
                          LeaveQueueCB on_leave_cb, int priority) {
 	std::lock_guard guard(lock_);
 
@@ -63,7 +63,7 @@ void RealmQueue::enqueue(ClientUUID client, UpdateQueueCB on_update_cb,
  * Signals that a currently queued player has decided to disconnect rather
  * hang around in the queue
  */
-void RealmQueue::dequeue(const ClientUUID& client) {
+void RealmQueue::dequeue(const ClientRef& client) {
 	std::lock_guard guard(lock_);
 
 	if(auto it = std::ranges::find(queue_, client, &QueueEntry::client); it != queue_.end()) {

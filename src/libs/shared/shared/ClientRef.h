@@ -24,26 +24,39 @@
 
 namespace ember {
 
-class ClientUUID final {
+class ClientRef final {
 	static constexpr std::size_t UUID_SIZE = 16;
+	static constexpr std::size_t SERVICE_BYTE = 0;
 
 	mutable std::size_t hash_ = 0;
-
-	union {
-		std::array<std::uint8_t, UUID_SIZE> data_;
-
-		struct {
-			std::uint8_t service_;
-			std::array<std::uint8_t, 15> rand_;
-		};
-	};
-
+	std::array<std::uint8_t, UUID_SIZE> data_;
 	mutable bool hashed_ = false;
+
+	void generate(const std::size_t service_index) {
+		for(std::size_t i = 0; i < sizeof(data_); ++i) {
+			data_[i] = gsl::narrow_cast<std::uint8_t>(rng::xorshift::next());
+		}
+
+		data_[SERVICE_BYTE] = gsl::narrow<std::uint8_t>(service_index);
+	}
+
 public:
+	explicit ClientRef(std::size_t service_index) {
+		generate(service_index);
+	}
+
+	explicit ClientRef(std::span<const std::uint8_t> data) {
+		if(data.size() != data_.size()) {
+			throw std::invalid_argument("bad client uuid size");
+		}
+
+		std::ranges::copy(data, data_.data());
+	}
+
 	inline std::size_t hash() const {
 		if(!hashed_) {
 			FNVHash hasher;
-			hash_ = hasher.update(std::begin(data_), std::end(data_));
+			hash_ = hasher.update(data_.begin(), data_.end());
 			hashed_ = true;
 		}
 
@@ -51,7 +64,7 @@ public:
 	}
 
 	inline std::uint8_t service() const {
-		return service_;
+		return data_[SERVICE_BYTE];
 	}
 
 	// don't really care about efficiency here, it's for debugging
@@ -66,48 +79,26 @@ public:
 		return stream.str();
 	}
 
-	static ClientUUID from_bytes(std::span<const std::uint8_t> data) {
-		ClientUUID uuid;
-
-		if(data.size() != uuid.data_.size()) {
-			throw std::invalid_argument("bad client uuid size");
-		}
-
-		std::ranges::copy(data, uuid.data_.data());
-		return uuid;
-	}
-
-	static ClientUUID generate(std::size_t service_index) {
-		ClientUUID uuid;
-
-		for(std::size_t i = 0; i < sizeof(data_); ++i) {
-			uuid.data_[i] = gsl::narrow_cast<std::uint8_t>(rng::xorshift::next());
-		}
-
-		uuid.service_ = gsl::narrow<std::uint8_t>(service_index);
-		return uuid;
-	}
-
 	static constexpr auto size() {
 		return UUID_SIZE;
 	}
 
-	friend bool operator==(const ClientUUID& rhs, const ClientUUID& lhs);
+	friend bool operator==(const ClientRef& rhs, const ClientRef& lhs);
 };
 
-inline bool operator==(const ClientUUID& rhs, const ClientUUID& lhs) {
+inline bool operator==(const ClientRef& rhs, const ClientRef& lhs) {
 	return rhs.hash() == lhs.hash();
 }
 
-inline std::size_t hash_value(const ClientUUID& uuid) {
+inline std::size_t hash_value(const ClientRef& uuid) {
 	return uuid.hash();
 }
 
 } // ember
 
 template <>
-struct std::hash<ember::ClientUUID> {
-	std::size_t operator()(const ember::ClientUUID& uuid) const {
+struct std::hash<ember::ClientRef> {
+	std::size_t operator()(const ember::ClientRef& uuid) const {
 		return uuid.hash();
 	}
 };

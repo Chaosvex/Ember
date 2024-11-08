@@ -11,7 +11,7 @@
 #include "Event.h"
 #include "ClientHandler.h"
 #include <shared/threading/ServicePool.h>
-#include <shared/ClientUUID.h>
+#include <shared/ClientRef.h>
 #include <boost/unordered/unordered_flat_map.hpp>
 #include <concepts>
 #include <memory>
@@ -21,7 +21,7 @@ namespace ember {
 
 class EventDispatcher final {
 	using HandlerMap = boost::unordered_flat_map<
-		ClientUUID, ClientHandler*, boost::hash<ClientUUID>
+		ClientRef, ClientHandler*, boost::hash<ClientRef>
 	>;
 
 	const ServicePool& pool_;
@@ -30,7 +30,7 @@ class EventDispatcher final {
 public:
 	explicit EventDispatcher(const ServicePool& pool) : pool_(pool) {}
 
-	void exec(const ClientUUID& client, auto work) const {
+	void exec(const ClientRef& client, auto work) const {
 		auto service = pool_.get_if(client.service());
 
 		// bad service index encoded in the UUID
@@ -49,7 +49,7 @@ public:
 		});
 	}
 
-	auto post_event(const ClientUUID& client, std::derived_from<Event> auto event) const {
+	auto post_event(const ClientRef& client, std::derived_from<Event> auto event) const {
 		auto service = pool_.get_if(client.service());
 
 		// bad service index encoded in the UUID
@@ -68,8 +68,8 @@ public:
 		});
 	}
 
-	void post_event(const ClientUUID& client, std::unique_ptr<Event> event) const;
-	void broadcast_event(std::vector<ClientUUID> clients, std::shared_ptr<const Event> event) const;
+	void post_event(const ClientRef& client, std::unique_ptr<Event> event) const;
+	void broadcast_event(std::vector<ClientRef> clients, std::shared_ptr<const Event> event) const;
 	void register_handler(ClientHandler* handler);
 	void remove_handler(const ClientHandler* handler);
 };
