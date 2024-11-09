@@ -95,10 +95,9 @@ void CharacterClient::rename_character(std::uint32_t account_id,
 	});
 }
 
-void CharacterClient::handle_create_reply(
-	const spark::Link& link,
-	std::expected<const CreateResponse*, spark::Result> res,
-	ResponseCB cb) const {
+void CharacterClient::handle_create_reply(const spark::Link& link,
+                                          std::expected<const CreateResponse*, spark::Result> res,
+                                          ResponseCB cb) const {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 
 	if(!res) {
@@ -110,10 +109,9 @@ void CharacterClient::handle_create_reply(
 	cb(protocol::Result(msg->result()));
 }
 
-void CharacterClient::handle_rename_reply(
-	const spark::Link& link,
-	std::expected<const RenameResponse*, spark::Result> res,
-	RenameCB cb) const {
+void CharacterClient::handle_rename_reply(const spark::Link& link,
+                                          std::expected<const RenameResponse*, spark::Result> res,
+                                          RenameCB cb) const {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 
 	if(!res) {
@@ -131,10 +129,9 @@ void CharacterClient::handle_rename_reply(
 	cb(protocol::Result(msg->result()), msg->character_id(), msg->name()->str());
 }
 
-void CharacterClient::handle_retrieve_reply(
-	const spark::Link& link,
-	std::expected<const RetrieveResponse*, spark::Result> res,
-	RetrieveCB cb) const {
+void CharacterClient::handle_retrieve_reply(const spark::Link& link,
+                                            std::expected<const RetrieveResponse*, spark::Result> res,
+                                            RetrieveCB cb) const {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 
 	if(!res) {
@@ -187,10 +184,9 @@ void CharacterClient::handle_retrieve_reply(
 	cb(Status::OK, std::move(characters));
 }
 
-void CharacterClient::handle_delete_reply(
-	const spark::Link& link,
-	std::expected<const DeleteResponse*, spark::Result> res,
-	ResponseCB cb) const {
+void CharacterClient::handle_delete_reply(const spark::Link& link,
+                                          std::expected<const DeleteResponse*, spark::Result> res,
+                                          ResponseCB cb) const {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 
 	if(!res) {

@@ -61,9 +61,8 @@ void AccountClient::register_session(const std::uint32_t account_id,
 	});
 }
 
-void AccountClient::handle_register_response(
-	std::expected<const RegisterResponse*, spark::Result> res,
-	const RegisterCB& cb) const {
+void AccountClient::handle_register_response(std::expected<const RegisterResponse*, spark::Result> res,
+                                             const RegisterCB& cb) const {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 
 	if(!res) {
@@ -74,9 +73,8 @@ void AccountClient::handle_register_response(
 	}
 }
 
-void AccountClient::handle_locate_response(
-	std::expected<const SessionResponse*, spark::Result> res,
-	const LocateCB& cb) const {
+void AccountClient::handle_locate_response(std::expected<const SessionResponse*, spark::Result> res,
+                                           const LocateCB& cb) const {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 
 	if(!res) {

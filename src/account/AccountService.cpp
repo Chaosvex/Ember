@@ -28,10 +28,7 @@ void AccountService::on_link_down(const Link& link) {
 }
 
 std::optional<SessionResponseT>
-AccountService::handle_session_fetch(
-	const SessionLookup& msg,
-	const Link& link,
-	const Token& token) {
+AccountService::handle_session_fetch(const SessionLookup& msg, const Link& link, const Token& token) {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 
 	SessionResponseT response;
@@ -111,13 +108,13 @@ AccountService::handle_account_id_fetch(const LookupID& msg, const Link& link, c
 }
 
 std::optional<DisconnectSessionResponseT>
-AccountService::handle_disconnect_by_session(const DisconnectSession& msg,	const Link& link, const Token& token) {
+AccountService::handle_disconnect_by_session(const DisconnectSession& msg, const Link& link, const Token& token) {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 	return std::nullopt;
 }
 
 std::optional<DisconnectResponseT>
-AccountService::handle_disconnect_by_id(const DisconnectID& msg, const Link& link,	const Token& token) {
+AccountService::handle_disconnect_by_id(const DisconnectID& msg, const Link& link, const Token& token) {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 	return std::nullopt; 
 }

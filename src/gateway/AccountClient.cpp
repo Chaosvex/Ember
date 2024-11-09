@@ -70,9 +70,8 @@ void AccountClient::handle_lookup_response(
 	cb(msg->status(), msg->account_id());
 }
 
-void AccountClient::handle_locate_response(
-	std::expected<const SessionResponse*, spark::Result> res,
-	const LocateCB& cb) const {
+void AccountClient::handle_locate_response(std::expected<const SessionResponse*, spark::Result> res,
+                                           const LocateCB& cb) const {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 
 	if(!res) {
