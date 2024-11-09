@@ -37,7 +37,6 @@
 
 #include <mpq/Compression.h>
 #include <mpq/Exception.h>
-#include <shared/util/polyfill/start_lifetime_as>
 #include <pklib/pklib.h>
 #include <memory>
 #include <stdexcept>
@@ -63,7 +62,7 @@ struct CallbackInfo {
 // implode/explode should terminate when it returns zero 
 // (based on original SDK sample code I managed to dig up, which this is based on)
 static unsigned int read_input_data(char* buf, unsigned int* size, void* param) {
-	CallbackInfo* info = std::start_lifetime_as<CallbackInfo>(param);
+	CallbackInfo* info = static_cast<CallbackInfo*>(param);
 	auto max_read_size = info->input_buffer.size() - info->in_offset;
 	auto read_size = *size;
 
@@ -85,7 +84,7 @@ static unsigned int read_input_data(char* buf, unsigned int* size, void* param) 
 //   unsigned int* size - Number of bytes to write
 //   void* param        - User data, parameter of implode/explode
 static void write_output_data(char* buf, unsigned int* size, void* param) {
-	CallbackInfo* info = std::start_lifetime_as<CallbackInfo>(param);
+	CallbackInfo* info = static_cast<CallbackInfo*>(param);
 	auto max_write_size = info->output_buffer.size_bytes() - info->out_offset;
 	auto write_size = *size;
 
