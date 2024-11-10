@@ -132,7 +132,7 @@ struct TLSBlockAllocator final {
 #endif
 
 	template<typename ...Args>
-	inline _ty* allocate(Args&&... args) {
+	[[nodiscard]] inline _ty* allocate(Args&&... args) {
 #ifdef _DEBUG_TLS_BLOCK_ALLOCATOR
 		++total_allocs;
 		++active_allocs;
