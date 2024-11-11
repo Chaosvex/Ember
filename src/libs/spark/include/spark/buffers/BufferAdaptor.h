@@ -42,8 +42,10 @@ private:
 	size_type write_;
 
 public:
-	BufferAdaptor(buf_type& buffer)
-		: buffer_(buffer), read_(0), write_(buffer.size()) {}
+	BufferAdaptor(buf_type& buffer) :
+		buffer_(buffer),
+		read_(0),
+		write_(buffer.size()) {}
 
 	template<typename T>
 	void read(T* destination) {

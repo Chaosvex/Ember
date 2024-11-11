@@ -9,13 +9,15 @@
 #pragma once
 
 #include <shared/util/Utility.h>
-#include <bitset>
+#include <shared/util/polyfill/start_lifetime_as>
 #include <memory>
 #include <new>
 #include <utility>
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
+
+#include <iostream>
 
 namespace ember::spark::io {
 
@@ -25,11 +27,23 @@ enum class PagePolicy {
 
 namespace {
 
+struct FreeBlock {
+	FreeBlock* next;
+};
+
+template<std::size_t size>
+concept gt_zero = size > 0;
+
+template<typename _ty>
+concept gte_freeblock = sizeof(_ty) >= sizeof(FreeBlock);
+
 template<typename _ty, std::size_t _elements, PagePolicy _policy>
+requires gt_zero<_elements> && gte_freeblock<_ty>
 struct Allocator {
-	std::unique_ptr<char[]> storage;
-	std::size_t index = 0;
-	std::bitset<_elements> used_set;
+	std::unique_ptr<char[]> storage_;
+	FreeBlock* head_ = nullptr;
+	std::uintptr_t upper_ = 0;
+	std::uintptr_t lower_ = 0;
 
 #ifdef _DEBUG_TLS_BLOCK_ALLOCATOR
 	std::size_t storage_active_count = 0;
@@ -38,58 +52,69 @@ struct Allocator {
 	std::size_t total_deallocs = 0;
 #endif
 
+	void link_blocks() {
+		auto storage = storage_.get();
+
+		for(std::size_t i = 0; i < _elements; ++i) {
+			auto block = std::start_lifetime_as<FreeBlock>(storage + (sizeof(_ty) * i));
+			block->next = reinterpret_cast<FreeBlock*>(storage + (sizeof(_ty) * (i + 1)));
+		}
+
+		auto tail = reinterpret_cast<FreeBlock*>(storage + (sizeof(_ty) * (_elements - 1)));
+		tail->next = nullptr;
+		head_ = reinterpret_cast<FreeBlock*>(storage);
+	}
+
+	void add_block(FreeBlock* block) {
+		assert(block);
+		block->next = head_;
+		head_ = block;
+	}
+
+	void remove_block(const FreeBlock* block) {
+		assert(block);
+		head_ = block->next;
+	}
+
 	template<typename ...Args>
 	[[nodiscard]] inline _ty* allocate(Args&&... args) {
 		// lazy allocation to prevent every created thread allocating
-		if(!storage) [[unlikely]] {
-			storage = std::make_unique<char[]>(sizeof(_ty) * _elements);
+		if(!storage_) [[unlikely]] {
+			storage_ = std::make_unique<char[]>(sizeof(_ty) * _elements);
 
 			if constexpr(_policy == PagePolicy::lock) {
-				util::page_lock(storage.get(), sizeof(_ty) * _elements);
+				util::page_lock(storage_.get(), sizeof(_ty) * _elements);
 			}
+
+			link_blocks();
+
+			lower_ = reinterpret_cast<std::uintptr_t>(storage_.get());
+			upper_ = lower_ + (sizeof(_ty) * _elements);
 		}
 
-		for(std::size_t i = 0; i < _elements; ++i) {
-			if(!used_set[index]) {
-				used_set[index] = true;
+		auto block = head_;
 
+		if(!block) {
 #ifdef _DEBUG_TLS_BLOCK_ALLOCATOR
-				++storage_active_count;
-				++total_allocs;
+			++new_active_count;
+			++total_allocs;
 #endif
-
-				auto res = &storage[sizeof(_ty) * index];
-
-				++index;
-
-				if(index >= _elements) {
-					index = 0;
-				}
-
-				return new (res) _ty(std::forward<Args>(args)...);
-			}
-
-			++index;
-
-			if(index >= _elements) {
-				index = 0;
-			}
+			return new _ty(std::forward<Args>(args)...);
 		}
 
 #ifdef _DEBUG_TLS_BLOCK_ALLOCATOR
-		++new_active_count;
+		++storage_active_count;
 		++total_allocs;
 #endif
 
-		return new _ty(std::forward<Args>(args)...);
+		remove_block(block);
+		return new (block) _ty(std::forward<Args>(args)...);
 	}
 
 	inline void deallocate(_ty* t) {
-		const auto lower_bound = reinterpret_cast<std::uintptr_t>(storage.get());
-		const auto upper_bound = lower_bound + (sizeof(_ty) * _elements);
 		const auto t_ptr = reinterpret_cast<std::uintptr_t>(t);
 
-		if(t_ptr < lower_bound || t_ptr >= upper_bound) [[unlikely]] {
+		if(t_ptr >= upper_ || t_ptr < lower_) [[unlikely]] {
 #ifdef _DEBUG_TLS_BLOCK_ALLOCATOR
 			--new_active_count;
 			++total_deallocs;
@@ -98,11 +123,8 @@ struct Allocator {
 			return;
 		}
 
-		const auto offset = t_ptr - lower_bound;
-		const auto index = static_cast<std::size_t>(offset / sizeof(_ty));
-		assert(used_set[index]);
-		used_set[index] = false;
 		t->~_ty();
+		add_block(reinterpret_cast<FreeBlock*>(t));
 
 #ifdef _DEBUG_TLS_BLOCK_ALLOCATOR
 		--storage_active_count;
@@ -112,7 +134,7 @@ struct Allocator {
 
 	~Allocator() {
 		if constexpr(_policy == PagePolicy::lock) {
-			util::page_unlock(storage.get(), sizeof(_ty) * _elements);
+			util::page_unlock(storage_.get(), sizeof(_ty) * _elements);
 		}
 #ifdef _DEBUG_TLS_BLOCK_ALLOCATOR
 		assert(!storage_active_count && !new_active_count);
