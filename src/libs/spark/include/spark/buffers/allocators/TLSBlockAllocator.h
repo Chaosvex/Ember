@@ -17,8 +17,6 @@
 #include <cstddef>
 #include <cstdint>
 
-#include <iostream>
-
 namespace ember::spark::io {
 
 enum class PagePolicy {
