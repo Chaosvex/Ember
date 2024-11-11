@@ -63,13 +63,13 @@ struct Allocator {
 		head_ = reinterpret_cast<FreeBlock*>(storage);
 	}
 
-	void add_block(FreeBlock* block) {
+	inline void add_block(FreeBlock* block) {
 		assert(block);
 		block->next = head_;
 		head_ = block;
 	}
 
-	void remove_block(const FreeBlock* block) {
+	inline void remove_block(const FreeBlock* block) {
 		assert(block);
 		head_ = block->next;
 	}
