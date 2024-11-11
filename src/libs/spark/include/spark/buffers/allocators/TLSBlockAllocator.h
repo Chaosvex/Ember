@@ -122,7 +122,9 @@ struct Allocator {
 		}
 
 		t->~_ty();
-		add_block(reinterpret_cast<FreeBlock*>(t));
+
+		auto block = std::start_lifetime_as<FreeBlock>(t);
+		add_block(block);
 
 #ifdef _DEBUG_TLS_BLOCK_ALLOCATOR
 		--storage_active_count;
@@ -134,6 +136,7 @@ struct Allocator {
 		if constexpr(_policy == PagePolicy::lock) {
 			util::page_unlock(storage_.get(), sizeof(_ty) * _elements);
 		}
+
 #ifdef _DEBUG_TLS_BLOCK_ALLOCATOR
 		assert(!storage_active_count && !new_active_count);
 		assert(total_allocs == total_deallocs);
