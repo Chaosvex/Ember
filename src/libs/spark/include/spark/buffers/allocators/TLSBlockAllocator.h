@@ -46,10 +46,10 @@ struct Allocator {
 	FreeBlock* head_ = nullptr;
 
 #ifdef _DEBUG_TLS_BLOCK_ALLOCATOR
-	std::size_t storage_active_count = 0;
-	std::size_t new_active_count = 0;
-	std::size_t total_allocs = 0;
-	std::size_t total_deallocs = 0;
+	auto storage_active_count = 0ull;
+	auto new_active_count = 0ull;
+	auto total_allocs = 0ull;
+	auto total_deallocs = 0ull;
 #endif
 
 	void link_blocks() {
@@ -156,9 +156,9 @@ struct Allocator {
 template<typename _ty, std::size_t _elements, PagePolicy policy = PagePolicy::lock>
 struct TLSBlockAllocator final {
 #ifdef _DEBUG_TLS_BLOCK_ALLOCATOR
-	std::size_t total_allocs = 0;
-	std::size_t total_deallocs = 0;
-	std::size_t active_allocs = 0;
+	auto total_allocs = 0ull;
+	auto total_deallocs = 0ull;
+	auto active_allocs = 0ull;
 #endif
 
 	template<typename ...Args>
