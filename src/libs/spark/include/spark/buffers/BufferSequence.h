@@ -25,9 +25,8 @@ class const_iterator {
 	using Node = typename BufferType::node_type;
 
 public:
-	const_iterator(const BufferType* buffer, const Node* curr_node) :
-		buffer_(buffer),
-		curr_node_(curr_node) {}
+	const_iterator(const BufferType* buffer, const Node* curr_node)
+		: buffer_(buffer), curr_node_(curr_node) {}
 
 	const_iterator& operator++() {
 		curr_node_ = curr_node_->next;
