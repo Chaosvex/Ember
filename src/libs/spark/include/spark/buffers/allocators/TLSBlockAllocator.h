@@ -44,8 +44,6 @@ requires gt_zero<_elements> && gte_freeblock<_ty>
 struct Allocator {
 	std::unique_ptr<char[]> storage_;
 	FreeBlock* head_ = nullptr;
-	std::uintptr_t upper_ = 0;
-	std::uintptr_t lower_ = 0;
 
 #ifdef _DEBUG_TLS_BLOCK_ALLOCATOR
 	std::size_t storage_active_count = 0;
@@ -73,9 +71,10 @@ struct Allocator {
 		head_ = block;
 	}
 
-	inline void remove_block(const FreeBlock* block) {
+	inline FreeBlock* remove_block(FreeBlock* block) {
 		assert(block);
 		head_ = block->next;
+		return block;
 	}
 
 	void init() {
@@ -86,9 +85,6 @@ struct Allocator {
 		}
 
 		link_blocks();
-
-		lower_ = reinterpret_cast<std::uintptr_t>(storage_.get());
-		upper_ = lower_ + (sizeof(_ty) * _elements);
 	}
 
 	template<typename ...Args>
@@ -98,29 +94,32 @@ struct Allocator {
 			init();
 		}
 
-		auto block = head_;
+#ifdef _DEBUG_TLS_BLOCK_ALLOCATOR
+			++total_allocs;
+#endif
 
-		if(!block) {
+		if(head_) {
+#ifdef _DEBUG_TLS_BLOCK_ALLOCATOR
+			++storage_active_count;
+#endif
+			auto block = remove_block(head_);
+			return new (block) _ty(std::forward<Args>(args)...);
+		} else {
 #ifdef _DEBUG_TLS_BLOCK_ALLOCATOR
 			++new_active_count;
-			++total_allocs;
 #endif
 			return new _ty(std::forward<Args>(args)...);
 		}
-
-#ifdef _DEBUG_TLS_BLOCK_ALLOCATOR
-		++storage_active_count;
-		++total_allocs;
-#endif
-
-		remove_block(block);
-		return new (block) _ty(std::forward<Args>(args)...);
 	}
 
 	inline void deallocate(_ty* t) {
-		const auto t_ptr = reinterpret_cast<std::uintptr_t>(t);
+		const auto lower = storage_.get();
+		const auto upper = lower + (sizeof(_ty) * _elements);
+		const auto t_ptr = reinterpret_cast<const char*>(t);
 
-		if(t_ptr >= upper_ || t_ptr < lower_) [[unlikely]] {
+		// later allocations that didn't come from the pool will *probably* be
+		// at a higher address, so check that first
+		if(t_ptr >= upper || t_ptr < lower) [[unlikely]] {
 #ifdef _DEBUG_TLS_BLOCK_ALLOCATOR
 			--new_active_count;
 			++total_deallocs;
