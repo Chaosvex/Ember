@@ -17,6 +17,10 @@
 #include <cstddef>
 #include <cstdint>
 
+#ifndef NDEBUG
+	#define _DEBUG_TLS_BLOCK_ALLOCATOR
+#endif
+
 namespace ember::spark::io {
 
 enum class PagePolicy {
