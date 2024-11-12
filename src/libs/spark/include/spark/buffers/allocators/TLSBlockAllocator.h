@@ -78,20 +78,24 @@ struct Allocator {
 		head_ = block->next;
 	}
 
+	void init() {
+		storage_ = std::make_unique<char[]>(sizeof(_ty) * _elements);
+
+		if constexpr(_policy == PagePolicy::lock) {
+			util::page_lock(storage_.get(), sizeof(_ty) * _elements);
+		}
+
+		link_blocks();
+
+		lower_ = reinterpret_cast<std::uintptr_t>(storage_.get());
+		upper_ = lower_ + (sizeof(_ty) * _elements);
+	}
+
 	template<typename ...Args>
 	[[nodiscard]] inline _ty* allocate(Args&&... args) {
 		// lazy allocation to prevent every created thread allocating
 		if(!storage_) [[unlikely]] {
-			storage_ = std::make_unique<char[]>(sizeof(_ty) * _elements);
-
-			if constexpr(_policy == PagePolicy::lock) {
-				util::page_lock(storage_.get(), sizeof(_ty) * _elements);
-			}
-
-			link_blocks();
-
-			lower_ = reinterpret_cast<std::uintptr_t>(storage_.get());
-			upper_ = lower_ + (sizeof(_ty) * _elements);
+			init();
 		}
 
 		auto block = head_;
