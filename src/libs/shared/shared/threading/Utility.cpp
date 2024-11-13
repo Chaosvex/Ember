@@ -28,6 +28,11 @@ constexpr auto MAX_NAME_LEN = 16u; // includes null term
 
 namespace ember::thread {
 
+#ifdef _WIN32
+typedef HRESULT (__stdcall *SetThreadDescription)(HANDLE hThread, PCWSTR lpThreadDescription);
+typedef HRESULT (__stdcall *GetThreadDescription)(HANDLE hThread, PWSTR* ppszThreadDescription);
+#endif
+
 void set_affinity(auto thread, unsigned int core) {
 #ifdef _WIN32
 	if(SetThreadAffinityMask(thread, 1u << core) == 0) {
@@ -61,9 +66,22 @@ void set_name([[maybe_unused]] auto& handle, const char* name) {
 	if(strlen(name) >= MAX_NAME_LEN) {
 		throw std::runtime_error("set_name: thread name too long");
 	}
-#if defined _WIN32 && defined THREAD_DESC // todo, temporarily disabled on Windows
+
+#if defined _WIN32
+	auto lib = LoadLibrary("Kernel32.dll");
+
+	if(!lib) {
+		return;
+	}
+
+	auto set_thread_desc = reinterpret_cast<SetThreadDescription>(GetProcAddress(lib, "SetThreadDescription"));
+
+	if(!set_thread_desc) {
+		return;
+	}
+
 	const std::wstring wstr(name, name + strlen(name));
-	auto ret = SetThreadDescription(handle, wstr.c_str());
+	auto ret = set_thread_desc(handle, wstr.c_str());
 
 	if(FAILED(ret)) {
 		throw std::runtime_error("Unable to set thread name, error code" + std::to_string(ret));
@@ -114,10 +132,22 @@ void set_name(const char* name) {
 }
 
 std::wstring get_name(auto& thread) {
-#if defined _WIN32 && defined THREAD_DESC // todo, temporarily disabled on Windows
+#if defined _WIN32
+	auto lib = LoadLibrary("Kernel32.dll");
+
+	if(!lib) {
+		return L"unsupported";
+	}
+
+	auto get_thread_desc = reinterpret_cast<GetThreadDescription>(GetProcAddress(lib, "GetThreadDescription"));
+
+	if(!get_thread_desc) {
+		return L"unsupported";
+	}
+
 	std::array<wchar_t, BUFFER_LEN> buffer{};
 	wchar_t* pbuffer = buffer.data();
-	auto res = GetThreadDescription(thread, &pbuffer);
+	auto res = get_thread_desc(thread, &pbuffer);
 
 	if(FAILED(res)) {
 		throw std::runtime_error("Unable to get thread name, error code" + std::to_string(res));
@@ -143,7 +173,7 @@ std::wstring get_name(auto& thread) {
 
 	return std::wstring(buffer.data(), buffer.data() + strlen(buffer.data()));
 #else
-	return {}; // default, not implemented
+	return L"unsupported"; // default, not implemented
 #endif
 }
 
@@ -153,7 +183,7 @@ std::wstring get_name(std::jthread& thread) {
 	return get_name(handle);
 #else
 	// not implemented, MacOS POSIX functions don't take a thread arg (might for getter, not sure)
-	return {};
+	return L"unsupported";
 #endif
 }
 
@@ -163,7 +193,7 @@ std::wstring get_name(std::thread& thread) {
 	return get_name(handle);
 #else
 	// not implemented, MacOS POSIX functions don't take a thread arg (might for getter, not sure)
-	return {};
+	return L"unsupported";
 #endif
 }
 
