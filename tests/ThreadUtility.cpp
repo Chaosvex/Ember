@@ -18,14 +18,16 @@ using namespace ember;
 // only running on Linux/Unix distros for now
 TEST(ThreadUtility, Self_GetSetName) {
 	const char* set_name = "Test Name";
-	thread::set_name(set_name);
+	
+	if(thread::set_name(set_name) == thread::Result::unsupported) {
+		GTEST_SKIP_("unsupported on platform");
+	}
+
 	const std::wstring wname(set_name, set_name + strlen(set_name));
 	const auto name = thread::get_name();
 
-	// todo: bit hacky
-	if(name == L"unsupported") {
-		ASSERT_TRUE(true);
-		return;
+	if(!name && name.error() == thread::Result::unsupported) {
+		GTEST_SKIP_("unsupported on platform");
 	}
 
 	ASSERT_EQ(name, wname);
@@ -37,22 +39,24 @@ TEST(ThreadUtility, GetSetName) {
 	const char* set_name = "Test Name";
 	const std::wstring wname(set_name, set_name + strlen(set_name));
 
-	std::thread thread([&]() {
+	std::jthread thread([&]() {
 		sem.acquire();
 	});
 
-	thread::set_name(thread, set_name);
+	if(thread::set_name(thread, set_name) == thread::Result::unsupported) {
+		sem.release();
+		GTEST_SKIP_("unsupported on platform");
+	}
+
 	const auto name = thread::get_name(thread);
 
-	// todo: bit hacky
-	if(name == L"unsupported") {
-		ASSERT_TRUE(true);
-		return;
+	if(!name && name.error() == thread::Result::unsupported) {
+		sem.release();
+		GTEST_SKIP_("unsupported on platform");
 	}
 
 	ASSERT_EQ(name, wname);
 	sem.release();
-	thread.join();
 }
 
 TEST(ThreadUtility, MaxNameLen) {

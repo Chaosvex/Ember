@@ -62,7 +62,7 @@ void set_affinity(std::jthread& thread, unsigned int core) {
 	set_affinity(thread.native_handle(), core);
 }
 
-void set_name([[maybe_unused]] auto& handle, const char* name) {
+Result set_name([[maybe_unused]] auto& handle, const char* name) {
 	if(strlen(name) >= MAX_NAME_LEN) {
 		throw std::runtime_error("set_name: thread name too long");
 	}
@@ -71,13 +71,13 @@ void set_name([[maybe_unused]] auto& handle, const char* name) {
 	auto lib = LoadLibrary("Kernel32.dll");
 
 	if(!lib) {
-		return;
+		return Result::unsupported;
 	}
 
 	auto set_thread_desc = reinterpret_cast<SetThreadDescription>(GetProcAddress(lib, "SetThreadDescription"));
 
 	if(!set_thread_desc) {
-		return;
+		return Result::unsupported;
 	}
 
 	const std::wstring wstr(name, name + strlen(name));
@@ -99,50 +99,55 @@ void set_name([[maybe_unused]] auto& handle, const char* name) {
 		throw std::runtime_error("Unable to set thread name, error code" + std::to_string(ret));
 	}
 #endif
+
+	return Result::ok;
 }
 
-void set_name(std::jthread& thread, const char* name) {
+Result set_name(std::jthread& thread, const char* name) {
 #ifndef TARGET_OS_MAC
 	const auto handle = thread.native_handle();
-	set_name(handle, name);
+	return set_name(handle, name);
 #else
 #pragma message WARN("Setting thread names is not implemented for this platform. Implement it, please!");
+	return Result::unsupported;
 #endif
 }
 
-void set_name(std::thread& thread, const char* name) {
+Result set_name(std::thread& thread, const char* name) {
 #ifndef TARGET_OS_MAC
 	const auto handle = thread.native_handle();
-	set_name(handle, name);
+	return set_name(handle, name);
 #else
 #pragma message WARN("Setting thread names is not implemented for this platform. Implement it, please!");
+	return Result::unsupported;
 #endif
 }
 
-void set_name(const char* name) {
+Result set_name(const char* name) {
 #ifdef _WIN32
 	auto handle = GetCurrentThread();
-	set_name(handle, name);
+	return set_name(handle, name);
 #elif defined __linux__ || defined __unix__ || defined TARGET_OS_MAC
 	auto handle = pthread_self();
-	set_name(handle, name);
+	return set_name(handle, name);
 #else
 #pragma message WARN("Setting thread names is not implemented for this platform. Implement it, please!");
+	return Result::unsupported;
 #endif
 }
 
-std::wstring get_name(auto& thread) {
+std::expected<std::wstring, Result> get_name(auto& thread) {
 #if defined _WIN32
 	auto lib = LoadLibrary("Kernel32.dll");
 
 	if(!lib) {
-		return L"unsupported";
+		return std::unexpected(Result::unsupported);
 	}
 
 	auto get_thread_desc = reinterpret_cast<GetThreadDescription>(GetProcAddress(lib, "GetThreadDescription"));
 
 	if(!get_thread_desc) {
-		return L"unsupported";
+		return std::unexpected(Result::unsupported);
 	}
 
 	std::array<wchar_t, BUFFER_LEN> buffer{};
@@ -173,31 +178,31 @@ std::wstring get_name(auto& thread) {
 
 	return std::wstring(buffer.data(), buffer.data() + strlen(buffer.data()));
 #else
-	return L"unsupported"; // default, not implemented
+	return std::unexpected(Result::unsupported);
 #endif
 }
 
-std::wstring get_name(std::jthread& thread) {
+std::expected<std::wstring, Result> get_name(std::jthread& thread) {
 #ifndef TARGET_OS_MAC
 	const auto handle = thread.native_handle();
 	return get_name(handle);
 #else
 	// not implemented, MacOS POSIX functions don't take a thread arg (might for getter, not sure)
-	return L"unsupported";
+	return std::unexpected(Result::unsupported);
 #endif
 }
 
-std::wstring get_name(std::thread& thread) {
+std::expected<std::wstring, Result> get_name(std::thread& thread) {
 #ifndef TARGET_OS_MAC
 	const auto handle = thread.native_handle();
 	return get_name(handle);
 #else
 	// not implemented, MacOS POSIX functions don't take a thread arg (might for getter, not sure)
-	return L"unsupported";
+	return std::unexpected(Result::unsupported);
 #endif
 }
 
-std::wstring get_name() {
+std::expected<std::wstring, Result> get_name() {
 #ifdef _WIN32
 	auto handle = GetCurrentThread();
 	return get_name(handle);
@@ -206,7 +211,7 @@ std::wstring get_name() {
 	return get_name(handle);
 #else
 #pragma message WARN("Getting thread names is not implemented for this platform. Implement it, please!");
-	return get_name(0); // just return a default, empty string
+	return std::unexpected(Result::unsupported);
 #endif
 }
 

@@ -8,20 +8,25 @@
 
 #pragma once
 
+#include <expected>
 #include <string>
 #include <thread>
 
 namespace ember::thread {
 
+enum Result {
+	ok, unsupported
+};
+
 void set_affinity(std::thread& thread, unsigned int core);
 void set_affinity(std::jthread& thread, unsigned int core);
 
-void set_name(const char* ascii_name);
-void set_name(std::thread& thread, const char* ascii_name);
-void set_name(std::jthread& thread, const char* ascii_name);
+Result set_name(const char* ascii_name);
+Result set_name(std::thread& thread, const char* ascii_name);
+Result set_name(std::jthread& thread, const char* ascii_name);
 
-std::wstring get_name(std::thread& thread);
-std::wstring get_name(std::jthread& thread);
-std::wstring get_name();
+std::expected<std::wstring, Result> get_name(std::thread& thread);
+std::expected<std::wstring, Result> get_name(std::jthread& thread);
+std::expected<std::wstring, Result> get_name();
 
 } // thread, ember
