@@ -36,6 +36,7 @@ port = 6010
 enabled = true
 server = stunserver2024.stunprotocol.org
 port = 3479
+protocol = udp
 
 # Auto port forwarding configuration
 # This is only functional if STUN is also enabled and detects a NAT gateway
