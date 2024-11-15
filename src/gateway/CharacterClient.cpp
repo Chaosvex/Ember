@@ -17,7 +17,7 @@ CharacterClient::CharacterClient(spark::Server& server, Config& config, log::Log
 	: services::CharacterClient(server),
 	  config_(config),
 	  logger_(logger) {
-	connect("127.0.0.1", 8003); // temp
+	connect("127.0.0.1", 6001); // temp
 }
 
 void CharacterClient::on_link_up(const spark::Link& link) {

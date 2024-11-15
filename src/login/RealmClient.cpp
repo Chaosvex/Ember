@@ -17,7 +17,7 @@ RealmClient::RealmClient(spark::Server& server, RealmList& realmlist, log::Logge
 	: services::RealmClient(server),
 	  realmlist_(realmlist),
 	  logger_(logger) {
-	connect("127.0.0.1", 8002); // temp
+	connect("127.0.0.1", 6002); // temp
 }
 
 void RealmClient::on_link_up(const spark::Link& link) {

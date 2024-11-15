@@ -16,7 +16,7 @@ using namespace rpc::Account;
 AccountClient::AccountClient(spark::Server& spark, log::Logger& logger)
 	: services::AccountClient(spark),
 	  logger_(logger) {
-	connect("127.0.0.1", 8000); // temp
+	connect("127.0.0.1", 6003); // temp
 }
 
 void AccountClient::connect_failed(std::string_view ip, std::uint16_t port) {
