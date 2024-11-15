@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 5.6.17, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.16, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: ember
+-- Host: 127.0.0.1    Database: ember_login
 -- ------------------------------------------------------
--- Server version	5.6.21
+-- Server version	8.0.16
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+ SET NAMES utf8 ;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -21,7 +21,7 @@
 
 DROP TABLE IF EXISTS `architectures`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `architectures` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `value` varchar(45) NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE `architectures` (
 
 DROP TABLE IF EXISTS `bans`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `bans` (
   `user_id` int(10) unsigned NOT NULL,
   `by_id` int(10) unsigned NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE `bans` (
 
 DROP TABLE IF EXISTS `characters`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `characters` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `account_id` int(11) unsigned NOT NULL,
@@ -90,7 +90,7 @@ CREATE TABLE `characters` (
   KEY `realm_ref_idx` (`realm_id`),
   CONSTRAINT `account_ref` FOREIGN KEY (`account_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `realm_ref` FOREIGN KEY (`realm_id`) REFERENCES `realms` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,7 +99,7 @@ CREATE TABLE `characters` (
 
 DROP TABLE IF EXISTS `guild_characters`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `guild_characters` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `character_id` int(11) unsigned NOT NULL,
@@ -119,7 +119,7 @@ CREATE TABLE `guild_characters` (
 
 DROP TABLE IF EXISTS `guilds`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `guilds` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `realm_id` int(10) unsigned NOT NULL,
@@ -127,7 +127,7 @@ CREATE TABLE `guilds` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_name` (`realm_id`,`name`),
   KEY `realm_ref2_idx` (`realm_id`),
-  CONSTRAINT `realm_ref2` FOREIGN KEY (`realm_id`) REFERENCES `realms` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `realm_ref2` FOREIGN KEY (`realm_id`) REFERENCES `realms` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -137,7 +137,7 @@ CREATE TABLE `guilds` (
 
 DROP TABLE IF EXISTS `ip_bans`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `ip_bans` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `ip` varchar(45) NOT NULL,
@@ -153,7 +153,7 @@ CREATE TABLE `ip_bans` (
 
 DROP TABLE IF EXISTS `locales`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `locales` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `value` varchar(45) NOT NULL,
@@ -168,7 +168,7 @@ CREATE TABLE `locales` (
 
 DROP TABLE IF EXISTS `operating_systems`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `operating_systems` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `value` varchar(45) NOT NULL,
@@ -183,7 +183,7 @@ CREATE TABLE `operating_systems` (
 
 DROP TABLE IF EXISTS `patches`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `patches` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -213,7 +213,7 @@ CREATE TABLE `patches` (
 
 DROP TABLE IF EXISTS `realms`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `realms` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
@@ -224,8 +224,49 @@ CREATE TABLE `realms` (
   `creation_setting` tinyint(3) unsigned NOT NULL,
   `category` int(11) NOT NULL DEFAULT '1',
   `region` int(11) NOT NULL DEFAULT '1',
+  `port` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `realms1`
+--
+
+DROP TABLE IF EXISTS `realms1`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `realms1` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `ip` varchar(45) NOT NULL,
+  `port` int(10) unsigned NOT NULL,
+  `type` int(11) NOT NULL,
+  `flags` int(11) NOT NULL,
+  `population` float NOT NULL,
+  `creation_setting` tinyint(3) unsigned NOT NULL,
+  `category` int(11) NOT NULL DEFAULT '1',
+  `region` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `schema_history`
+--
+
+DROP TABLE IF EXISTS `schema_history`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `schema_history` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `core_version` varchar(45) NOT NULL,
+  `commit` varchar(45) NOT NULL,
+  `install_date` datetime NOT NULL,
+  `installed_by` varchar(45) NOT NULL,
+  `file` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -234,13 +275,13 @@ CREATE TABLE `realms` (
 
 DROP TABLE IF EXISTS `survey_results`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `survey_results` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `survey_id` int(10) unsigned NOT NULL,
   `data` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -249,7 +290,7 @@ CREATE TABLE `survey_results` (
 
 DROP TABLE IF EXISTS `suspensions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `suspensions` (
   `user_id` int(10) unsigned NOT NULL,
   `by_id` int(10) unsigned NOT NULL,
@@ -269,7 +310,7 @@ CREATE TABLE `suspensions` (
 
 DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL,
@@ -283,23 +324,8 @@ CREATE TABLE `users` (
   `totp_key` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
-DROP TABLE IF EXISTS `schema_history`;
-CREATE TABLE `schema_history` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `core_version` varchar(45) NOT NULL,
-  `commit` varchar(45) NOT NULL,
-  `install_date` datetime NOT NULL,
-  `installed_by` varchar(45) NOT NULL,
-  `file` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-# Default realm
-INSERT INTO `realms` (`name`, `ip`, `type`, `flags`, `population`, `creation_setting`, `category`, `region`) VALUES ('Ember', '127.0.0.1', '1', '0', '0', '0', '1', '3');
-
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -310,4 +336,4 @@ INSERT INTO `realms` (`name`, `ip`, `type`, `flags`, `population`, `creation_set
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-10-01  8:59:23
+-- Dump completed on 2024-11-15  4:29:44
