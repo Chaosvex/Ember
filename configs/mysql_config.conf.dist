@@ -1,6 +1,6 @@
 # Sample MySQL configuration
 
-[mysql]
+[mysql.db.login]
 username = default_user
 password = default_password
 database = default_database
