@@ -230,28 +230,6 @@ CREATE TABLE `realms` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `realms1`
---
-
-DROP TABLE IF EXISTS `realms1`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
-CREATE TABLE `realms1` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  `ip` varchar(45) NOT NULL,
-  `port` int(10) unsigned NOT NULL,
-  `type` int(11) NOT NULL,
-  `flags` int(11) NOT NULL,
-  `population` float NOT NULL,
-  `creation_setting` tinyint(3) unsigned NOT NULL,
-  `category` int(11) NOT NULL DEFAULT '1',
-  `region` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `schema_history`
 --
 
@@ -324,7 +302,7 @@ CREATE TABLE `users` (
   `totp_key` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -336,4 +314,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-15  4:29:44
+-- Dump completed on 2024-11-15  4:33:21
