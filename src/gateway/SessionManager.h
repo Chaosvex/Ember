@@ -25,7 +25,7 @@ class SessionManager final {
 			return std::hash<ClientConnection*>{}(p);
 		}
 
-		auto operator()(const std::unique_ptr<ClientConnection>& p) const {
+		auto operator()(std::unique_ptr<ClientConnection>& p) const {
 			return std::hash<ClientConnection*>{}(p.get()); 
 		}
 	};
