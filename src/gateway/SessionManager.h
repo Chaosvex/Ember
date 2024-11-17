@@ -21,11 +21,11 @@ class SessionManager final {
 	struct Hasher {
 		using is_transparent = void;
 
-		auto operator()(ClientConnection* p) const {
+		std::size_t operator()(ClientConnection* p) const {
 			return std::hash<ClientConnection*>{}(p);
 		}
 
-		auto operator()(const std::unique_ptr<ClientConnection>& p) const {
+		std::size_t operator()(const std::unique_ptr<ClientConnection>& p) const {
 			return std::hash<const ClientConnection*>{}(p.get()); 
 		}
 	};
