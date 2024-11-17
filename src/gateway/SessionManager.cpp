@@ -25,10 +25,8 @@ void SessionManager::start(std::unique_ptr<ClientConnection> session) {
 void SessionManager::stop(ClientConnection* session) {
 	std::lock_guard guard(sessions_lock_);
 
-	auto it = std::ranges::find_if(sessions_, [session](auto& value) {
-		return session == value.get();
-	});
-
+	auto it = sessions_.find(session);
+	
 	if(it == sessions_.end()) {
 		return;
 	}

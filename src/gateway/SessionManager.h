@@ -18,7 +18,37 @@ namespace ember {
 struct ConnectionStats;
 
 class SessionManager final {
-	std::unordered_set<std::unique_ptr<ClientConnection>> sessions_;
+	struct Hasher {
+		using is_transparent = void;
+
+		std::size_t operator()(ClientConnection* p) const {
+			return std::hash<ClientConnection*>{}(p);
+		}
+
+		std::size_t operator()(const std::unique_ptr<ClientConnection>& p) const {
+			return std::hash<const ClientConnection*>{}(p.get()); 
+		}
+	};
+
+	struct KeyEqual {
+		using is_transparent = void;
+
+		template<typename _lhs, typename _rhs>
+		auto operator()(const _lhs& lhs, const _rhs& rhs) const {
+			return to_ptr(lhs) == to_ptr(rhs);
+		}
+
+	private:
+		static const ClientConnection* to_ptr(const ClientConnection* p) {
+			return p; 
+		}
+
+		static const ClientConnection* to_ptr(const std::unique_ptr<ClientConnection>& p) {
+			return p.get(); 
+		}
+	};
+
+	std::unordered_set<std::unique_ptr<ClientConnection>, Hasher, KeyEqual> sessions_;
 	mutable std::mutex sessions_lock_;
 
 public:
