@@ -7,11 +7,11 @@
 set(LIBRARY_NAME    game)
 
 set(LIBRARY_HDR
-   
+    Weather.h
     )
 
 set(LIBRARY_SRC
-
+    Weather.cpp
     )
 
 
