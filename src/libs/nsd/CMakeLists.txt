@@ -6,10 +6,15 @@
 
 set(LIBRARY_NAME nsd)
 
-add_library(${LIBRARY_NAME}
+set(LIBRARY_HDR
     include/nsd/NSD.h
+    )
+
+set(LIBRARY_SRC
     src/NSD.cpp
-)
+    )
+
+add_library(${LIBRARY_NAME} ${LIBRARY_HDR} ${LIBRARY_SRC})
 
 add_dependencies(${LIBRARY_NAME} FB_SCHEMA_COMPILE)
 target_link_libraries(${LIBRARY_NAME} shared spark ${Boost_LIBRARIES})
