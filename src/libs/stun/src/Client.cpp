@@ -254,7 +254,7 @@ void Client::rearm_transaction(State state, std::size_t key,
                                Transaction::TestData data) {
 	tx_->state = state;
 	tx_->key = key;
-	tx_->retry_buffer = buffer;
+	tx_->retry_buffer = std::move(buffer);
 	tx_->data = std::move(data);
 }
 
