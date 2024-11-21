@@ -557,8 +557,7 @@ void LoginHandler::send_realm_list(const grunt::Packet& packet) {
 		return;
 	}
 
-	auto& [_, region] = *it;
-
+	const auto& [_, region] = *it;
 	const std::shared_ptr<const RealmMap> realms = realm_list_.realms();
 	const auto& char_count = std::get<CharacterCount>(state_data_);
 	grunt::server::RealmList response;
