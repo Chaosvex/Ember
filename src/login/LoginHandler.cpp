@@ -21,8 +21,9 @@
 #include <shared/util/EnumHelper.h>
 #include <boost/container/small_vector.hpp>
 #include <gsl/gsl_util>
+#include <ranges>
 #include <stdexcept>
- 
+
 namespace ember {
 
 bool LoginHandler::update_state(const grunt::Packet& packet) try {
@@ -562,7 +563,7 @@ void LoginHandler::send_realm_list(const grunt::Packet& packet) {
 	const auto& char_count = std::get<CharacterCount>(state_data_);
 	grunt::server::RealmList response;
 
-	for(const auto& [_, realm] : *realms) {
+	for(const auto& realm : *realms | std::views::values) {
 		if(!locale_enforce_ || realm.region == region) {
 			if(auto count = char_count.find(realm.id); count != char_count.end()) {
 				response.realms.emplace_back(realm, count->second);

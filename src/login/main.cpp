@@ -54,6 +54,7 @@
 #include <functional>
 #include <iostream>
 #include <memory>
+#include <ranges>
 #include <semaphore>
 #include <string>
 #include <span>
@@ -255,7 +256,7 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 
 	LOG_INFO_SYNC(logger, "Added {} realm(s)", realm_list.realms()->size());
 
-	for(const auto& [_, realm] : *realm_list.realms()) {
+	for(const auto& realm : *realm_list.realms() | std::views::values) {
 		LOG_DEBUG_SYNC(logger, "#{} {}", realm.id, realm.name);
 	}
 

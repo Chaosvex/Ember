@@ -12,6 +12,7 @@
 #include <boost/asio/detached.hpp>
 #include <format>
 #include <utility>
+#include <ranges>
 #include <regex>
 
 namespace ember::ports::upnp {
@@ -326,8 +327,8 @@ ErrorCode IGDevice::validate_soap_arguments(const UPnPActionArgs& args) {
 		bool found = false;
 
 		// didn't originally have a use for a map
-		for(const auto& [k, _]: args.arguments) {
-			if(k == arg) {
+		for(const auto& key : args.arguments | std::views::keys) {
+			if(key == arg) {
 				found = true;
 				break;
 			}
