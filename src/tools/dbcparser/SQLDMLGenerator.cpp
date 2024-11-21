@@ -135,7 +135,7 @@ public:
 			components = it->second;
 		} else {
 			components = extract_components(type);	
-			ccache_[type] = components;
+			ccache_.insert_or_assign(type, components);
 		}
 
 		// handle primitive types

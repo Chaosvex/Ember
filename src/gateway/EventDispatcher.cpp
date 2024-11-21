@@ -83,7 +83,7 @@ void EventDispatcher::register_handler(ClientHandler* handler) {
 	auto& service = pool_.get(handler->uuid().service());
 
 	service.dispatch([=] {
-		handlers_[handler->uuid()] = handler;
+		handlers_.insert_or_assign(handler->uuid(), handler);
 	});
 }
 

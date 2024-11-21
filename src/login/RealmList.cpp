@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 - 2022 Ember
+ * Copyright (c) 2015 - 2024 Ember
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -23,7 +23,7 @@ void RealmList::add_realm(std::span<const Realm> realms) {
 	auto copy = std::make_shared<RealmMap>(*realm_map);
 	
 	for(const auto& realm : realms) {
-		(*copy)[realm.id] = realm;
+		copy->insert_or_assign(realm.id, realm);
 	}
 
 	realms_ = copy;
@@ -35,7 +35,7 @@ void RealmList::add_realm(Realm realm) {
 
 	auto realm_map = realms_.load();
 	auto copy = std::make_shared<RealmMap>(*realm_map);
-	(*copy)[realm.id] = std::move(realm);
+	copy->insert_or_assign(realm.id, std::move(realm));
 
 	realms_ = copy;
 }

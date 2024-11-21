@@ -44,8 +44,8 @@ void Survey::add_data(const grunt::Platform platform, const grunt::System os, co
 		.os = os,
 	};
 
-	meta_[key] = std::move(fmeta);
-	data_[key] = std::move(buffer);
+	meta_.insert_or_assign(key, std::move(fmeta));
+	data_.insert_or_assign(key, std::move(buffer));
 }
 
 std::optional<std::reference_wrapper<const FileMeta>>

@@ -398,7 +398,7 @@ void Validator::validate_enum_options(const types::Enum* def) {
 			               << ": " << option.second << LOG_ASYNC;
 		}
 
-		options[option.first] = option.second;
+		options.insert_or_assign(option.first, option.second);
 	}
 }
 

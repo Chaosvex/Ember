@@ -78,7 +78,7 @@ void Client::log_callback(LogCB callback) {
 
 void Client::connect(const std::string& host, const std::uint16_t port,
                      Transport::OnConnect&& cb) {
-	dest_hist_[host] = std::chrono::steady_clock::now();
+	dest_hist_.insert_or_assign(host, std::chrono::steady_clock::now());
 
 	// wrap the callback to save error checking and locking duplication
 	transport_->connect(host, port, 

@@ -95,7 +95,7 @@ std::unordered_map<SizeType, std::string_view> make_enum_map(std::source_locatio
         }
     
 		current_enum_entry = trim_whitespace(current_enum_entry);
-		name_map[current_enum_value] = current_enum_entry;
+		name_map.insert_or_assign(current_enum_value, current_enum_entry);
         ++current_enum_value;
     }
 

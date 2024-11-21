@@ -99,7 +99,7 @@ void RealmClient::handle_get_status_response(const spark::Link& link, const Stat
 	update_realm(msg);
 
 	// keep track of this realm's associated peer
-	realms_[msg.id()] = link.peer_banner;
+	realms_.insert_or_assign(msg.id(), link.peer_banner);
 }
 
 } // ember

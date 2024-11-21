@@ -44,7 +44,7 @@ void walk_dbc_fields(T& visitor, const types::Struct* dbc, const types::Base* pa
 				components = it->second;
 			} else {
 				components = extract_components(f.underlying_type);	
-				(*ccache)[f.underlying_type] = components;
+				ccache->insert_or_assign(f.underlying_type, components);
 			}
 		} else {
 			components = extract_components(f.underlying_type);

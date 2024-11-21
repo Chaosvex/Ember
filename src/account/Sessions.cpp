@@ -19,7 +19,7 @@ bool Sessions::register_session(std::uint32_t account_id, const Botan::BigInt& k
 		return false;
 	}
 
-	sessions_[account_id] = key;
+	sessions_.insert_or_assign(account_id, key);
 	return true;
 }
 
