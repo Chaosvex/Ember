@@ -88,8 +88,8 @@ std::deque<PatchGraph::Node> PatchGraph::path(std::uint16_t from, std::uint16_t 
 
 		for(auto& e : edges) {
 			if(distance.at(next.from) + e.filesize < distance.at(e.build_to)) {
-				distance.emplace(e.build_to, distance.at(next.from) + e.filesize);
-				prev.emplace(e.build_to, next);
+				distance.insert_or_assign(e.build_to, distance.at(next.from) + e.filesize);
+				prev.insert_or_assign(e.build_to, next);
 				queue.emplace(e.build_to, distance.at(e.build_to));
 			}
 		}
