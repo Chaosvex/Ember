@@ -59,7 +59,8 @@ void launch(const po::variables_map& args) {
 
 	// remove any duplicate entries
 	std::ranges::sort(sorted);
-	sorted.erase(std::ranges::unique(sorted).begin(), sorted.end());
+	auto ret = std::ranges::unique(sorted);
+	sorted.erase(ret.begin(), ret.end());
 
 	for(const auto& output : sorted) {
 		if(output.get() == "console") {
