@@ -98,7 +98,7 @@ CharacterService::handle_enumerate(const Retrieve& msg, const Link& link, const 
 }
 
 void CharacterService::send_rename(const protocol::Result& res,
-                                   std::optional<ember::Character>& character,
+                                   const std::optional<ember::Character>& character,
                                    const Link& link,
                                    const Token& token) const {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
@@ -117,7 +117,7 @@ void CharacterService::send_rename(const protocol::Result& res,
 }
 
 void CharacterService::send_characters(const bool result,
-                                       std::span<ember::Character> characters,
+                                       std::span<const ember::Character> characters,
                                        const Link& link,
                                        const Token& token) const {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;

@@ -22,12 +22,12 @@ class CharacterService final : public services::CharacterService {
 	log::Logger& logger_;
 
 	void send_rename(const protocol::Result& res,
-	                 std::optional<ember::Character>& character,
+	                 const std::optional<ember::Character>& character,
 	                 const spark::Link& link,
 	                 const spark::Token& token) const;
 
 	void send_characters(bool result,
-	                     std::span<ember::Character> characters,
+	                     std::span<const ember::Character> characters,
 	                     const spark::Link& link,
 	                     const spark::Token& token) const;
 
