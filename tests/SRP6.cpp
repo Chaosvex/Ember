@@ -34,7 +34,7 @@ public:
 
 	std::string identifier_, password_;
 	Botan::BigInt verifier_;
-	std::array<std::uint8_t, 32> salt_;
+	std::array<std::uint8_t, 32> salt_{};
 	std::unique_ptr<srp::Generator> gen_;
 	std::unique_ptr<srp::Server> server_;
 	std::unique_ptr<srp::Client> client_;

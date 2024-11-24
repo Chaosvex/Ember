@@ -20,7 +20,7 @@ using namespace std::chrono_literals;
 
 template<typename ConType>
 struct ConnDetail {
-	ConType conn;
+	ConType conn{};
 	sc::seconds idle = 0s;
 	unsigned int id = 0;
 	bool empty_slot   : 1 = true;
