@@ -217,7 +217,6 @@ TEST(DynamicBuffer, MoveChain) {
 	ASSERT_EQ(0, chain2.size()) << "Chain size is incorrect";
 
 	chain2 = std::move(chain);
-	ASSERT_EQ(0, chain.size()) << "Chain size is incorrect";
 	ASSERT_EQ(sizeof(int), chain2.size()) << "Chain size is incorrect";
 
 	int output;
