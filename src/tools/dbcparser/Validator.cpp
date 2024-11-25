@@ -23,7 +23,7 @@ namespace ember::dbc {
  * Searches DBC definitions for the given foreign key. 
  * Only child structs of the root node are considered for matches.
  */
-std::optional<const types::Field*> Validator::locate_fk_parent(const std::string& parent) {
+std::optional<std::reference_wrapper<const types::Field>> Validator::locate_fk_parent(const std::string& parent) {
 	LOG_TRACE_GLOB << log_func << LOG_ASYNC;
 
 	for(auto& def : *definitions_) {
@@ -40,7 +40,7 @@ std::optional<const types::Field*> Validator::locate_fk_parent(const std::string
 		for(const auto& field : def_s->fields) {
 			for(const auto& key : field.keys) {
 				if(key.type == "primary") {
-					return std::optional<const types::Field*>(&field);
+					return std::optional<std::reference_wrapper<const types::Field>>(field);
 				}
 			}
 		}
@@ -54,18 +54,20 @@ void Validator::check_foreign_keys(const types::Field& field) {
 
 	for(const auto& key : field.keys) {
 		if(key.type == "foreign") {
-			std::optional<const types::Field*> pk = locate_fk_parent(key.parent);
-			auto components(extract_components(field.underlying_type));
+			const auto pk = locate_fk_parent(key.parent);
+			const auto components = extract_components(field.underlying_type);
 
 			if(!pk) {
 				throw exception(field.name + " references a primary key in "
 				                + key.parent + " that does not exist");
 			}
 
-			if(!key.ignore_type_mismatch && (*pk)->underlying_type != components.first) {
+			const auto& pk_ref = pk->get();
+
+			if(!key.ignore_type_mismatch && pk_ref.underlying_type != components.first) {
 				throw exception(":" + field.name + " => "+ key.parent +
 				                " types do not match. Expected " + components.first +
-				                ", found " + (*pk)->underlying_type);
+				                ", found " + pk_ref.underlying_type);
 			}
 		}
 	}

@@ -12,6 +12,7 @@
 #include "Types.h"
 #include "TypeUtils.h"
 #include "TreeNode.h"
+#include <functional>
 #include <optional>
 #include <string>
 #include <vector>
@@ -61,7 +62,7 @@ private:
 	void check_multiple_definitions(const types::Base* def);
 	void check_key_types(const types::Field& def);
 	void check_foreign_keys(const types::Field& def);
-	std::optional<const types::Field*> locate_fk_parent(const std::string& parent);
+	std::optional<std::reference_wrapper<const types::Field>> locate_fk_parent(const std::string& parent);
 
 	void build_type_tree();
 	void recursive_type_parse(TreeNode<std::string>* parent, const types::Base* def);
