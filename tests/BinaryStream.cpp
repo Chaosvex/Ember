@@ -306,6 +306,7 @@ TEST(BinaryStream, StringViewStream) {
 	ASSERT_EQ(trailing, trailing_output);
 	
 	// make a sly modification to the buffer and check the string_view matches
+	ASSERT_FALSE(buffer.empty());
 	buffer[0] = 'A';
 	ASSERT_EQ(buffer[0], output[0]);
 	ASSERT_NE(input, output);
