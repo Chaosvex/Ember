@@ -240,10 +240,8 @@ void ClientConnection::terminate() {
 	if(!stopped_) {
 		close_session_sync();
 
-		while(!stopped_) {
-			std::unique_lock guard(stop_lock_);
-			stop_condvar_.wait(guard);
-		}
+		std::unique_lock guard(stop_lock_);
+		stop_condvar_.wait(guard, [&] { return stopped_.load(); });
 	}
 }
 
