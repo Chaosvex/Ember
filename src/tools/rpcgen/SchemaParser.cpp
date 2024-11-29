@@ -84,16 +84,21 @@ void SchemaParser::process(const reflection::Schema* schema, const reflection::S
 	data["root"] = remove_fbs_ns(schema->root_table()->name()->str());
 
 	for(auto call : *service->calls()) {
+		const auto& name_str = call->name()->str();
+		const auto& req_str = call->request()->name()->str();
+		const auto& resp_str = call->response()->name()->str();
+
+
 		data["handlers"].push_back(
 			{
-				{"call", call->name()->str() },
-				{"name", call->name()->str() },
-				{"request_ns", to_cpp_ns(call->request()->name()->str())},
-				{"request_sn", remove_fbs_ns(call->request()->name()->str())},
-				{"request", remove_fbs_ns(call->request()->name()->str())},
-				{"response_ns", to_cpp_ns(call->response()->name()->str())},
-				{"response_sn", remove_fbs_ns(call->response()->name()->str())},
-				{"response", remove_fbs_ns(call->response()->name()->str())},
+				{"call", name_str },
+				{"name", name_str },
+				{"request_ns", to_cpp_ns(req_str)},
+				{"request_sn", remove_fbs_ns(req_str)},
+				{"request", remove_fbs_ns(req_str)},
+				{"response_ns", to_cpp_ns(resp_str)},
+				{"response_sn", remove_fbs_ns(resp_str)},
+				{"response", remove_fbs_ns(resp_str)},
 			}
 		);
 	}
