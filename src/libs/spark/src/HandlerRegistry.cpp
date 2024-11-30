@@ -44,7 +44,7 @@ void HandlerRegistry::register_service(Handler* service) {
 Handler* HandlerRegistry::service(const std::string& name) const {
 	std::lock_guard guard(mutex_);
 
-	for(auto& [_, v] : services_) {
+	for(const auto& v : services_ | std::views::values) {
 		for(auto& service : v) {
 			if(service->name() == name) {
 				return service;
@@ -54,7 +54,6 @@ Handler* HandlerRegistry::service(const std::string& name) const {
 
 	return nullptr;
 }
-
 
 Handler* HandlerRegistry::service(const std::string& name, const std::string& type) const {
 	std::lock_guard guard(mutex_);
