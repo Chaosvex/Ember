@@ -124,9 +124,9 @@ void RemotePeer::send_close_channel(const std::uint8_t id) {
 	conn_->send(std::move(msg));
 }
 
-Handler* RemotePeer::find_handler(const core::OpenChannel* msg) {
-	const auto sname = msg->service_name();
-	const auto stype = msg->service_type();
+Handler* RemotePeer::find_handler(const core::OpenChannel& msg) {
+	const auto sname = msg.service_name();
+	const auto stype = msg.service_type();
 
 	if(sname && stype) {
 		return registry_.service(sname->str(), stype->str());
@@ -151,7 +151,7 @@ Handler* RemotePeer::find_handler(const core::OpenChannel* msg) {
 void RemotePeer::handle_open_channel(const core::OpenChannel* msg) {
 	LOG_TRACE(log_) << log_func << LOG_ASYNC;
 
-	auto handler = find_handler(msg);
+	auto handler = find_handler(*msg);
 
 	if(!handler) {
 		LOG_DEBUG_ASYNC(log_, "[spark] Requested service handler ({}) does not exist",
