@@ -27,13 +27,14 @@ class Watchdog final {
 	const std::chrono::seconds max_idle_;
 	log::Logger& logger_;
 	std::atomic_bool timeout_;
+	std::chrono::nanoseconds delta_;
 	std::chrono::steady_clock::time_point prev_;
 	std::jthread worker_;
 
 	void run(const std::stop_token stop);
-	void check_timeout();
+	bool check_timeout();
 
-	[[noreturn]] void timeout(const std::chrono::nanoseconds& delta) const;
+	[[noreturn]] void terminate() const;
 
 public:
 	Watchdog(std::chrono::seconds max_idle, log::Logger& logger);

@@ -22,10 +22,11 @@ Watchdog::Watchdog(std::chrono::seconds max_idle, log::Logger& logger)
 	: max_idle_(std::move(max_idle)),
 	  logger_(logger),
 	  timeout_(false),
+	  delta_(0s),
 	  prev_(std::chrono::steady_clock::now()),
 	  worker_(std::jthread(std::bind_front(&Watchdog::run, this))) { 
 	if(max_idle_ <= 0s) {
-		throw std::runtime_error("max_idle must be > 0");
+		throw std::invalid_argument("max_idle must be > 0");
 	}
 
 	thread::set_name(worker_, "Watchdog");
@@ -38,33 +39,36 @@ void Watchdog::run(const std::stop_token token) {
 	auto cond_var = std::condition_variable_any();
 
 	while(!token.stop_requested()) {
-		check_timeout();
-		cond_var.wait_for(mutex, token, max_idle_, [] { return false; });
+		cond_var.wait_for(mutex, token, max_idle_, [&] {
+			return check_timeout();
+		});
+
+		if(timeout_) [[unlikely]] {
+			terminate();
+		} else {
+			timeout_ = true;
+		}
 	}
 
 	LOG_DEBUG_ASYNC(logger_, "Watchdog stopped");
 }
 
-void Watchdog::check_timeout() {
+bool Watchdog::check_timeout() {
 	const auto curr = std::chrono::steady_clock::now();
-	const auto delta = curr - prev_;
+	delta_ = curr - prev_;
 
 	// guard against spurious wake up
-	if(delta < max_idle_) {
-		return;
-	}
-
-	if(timeout_) {
-		timeout(delta);
+	if(delta_ < max_idle_) {
+		return false;
 	}
 
 	prev_ = curr;
-	timeout_ = true;
+	return true;
 }
 
-void Watchdog::timeout(const std::chrono::nanoseconds& delta) const {
+void Watchdog::terminate() const {
 	LOG_FATAL_SYNC(logger_, "Watchdog triggered after {}, terminating...",
-	               std::chrono::duration_cast<std::chrono::seconds>(delta));
+	               std::chrono::duration_cast<std::chrono::seconds>(delta_));
 	std::abort();
 }
 
