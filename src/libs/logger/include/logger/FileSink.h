@@ -12,7 +12,6 @@
 #include <logger/FileWrapper.h>
 #include <logger/Utility.h>
 #include <boost/container/small_vector.hpp>
-#include <memory>
 #include <string>
 #include <utility>
 #include <vector>
@@ -29,7 +28,7 @@ public:
 	enum class Mode { TRUNCATE, APPEND };
 
 private:
-	std::unique_ptr<File> file_;
+	File file_;
 	std::string file_name_;
 	std::string file_name_format_;
 	std::uintmax_t  max_size_ = 0;

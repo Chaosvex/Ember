@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <string>
+#include <shared/util/cstring_view.hpp>
 #include <cstdio>
 
 #pragma warning(push)
@@ -20,7 +20,7 @@ class File final {
 	std::FILE* file_ = nullptr;
 
 public:
-	File(const std::string& path, const std::string& mode) {
+	File(cstring_view path, cstring_view mode) {
 		file_ = std::fopen(path.c_str(), mode.c_str());
 	}
 
@@ -49,10 +49,20 @@ public:
 	}
 
 	File() = default;
+
 	File(const File&) = delete;
 	File& operator=(const File&) = delete;
-	File(const File&&) = delete;
-	File& operator=(const File&&) = delete;
+
+	File(File&& rhs) noexcept {
+		file_ = rhs.file_;
+		rhs.file_ = nullptr;
+	}
+
+	File& operator=(File&& rhs) noexcept {
+		file_ = rhs.file_;
+		rhs.file_ = nullptr;
+		return *this;
+	}
 };
 
 } // log, ember

@@ -8,6 +8,7 @@
 
 #include <logger/FileSink.h>
 #include <logger/Exception.h>
+#include <shared/util/cstring_view.hpp>
 #include <algorithm>
 #include <array>
 #include <filesystem>
@@ -48,7 +49,7 @@ FileSink::FileSink(Severity severity, Filter filter, std::string file_name, Mode
 
 FileSink::~FileSink() {
 	// logger is being closed, not much we can do about this
-	if(file_->close() != 0) {
+	if(file_.close() != 0) {
 		std::fprintf(stderr, "Log file did not close cleanly - buffered messages may have been lost");
 	}
 }
@@ -81,13 +82,17 @@ void FileSink::format_file_name() {
 }
 
 void FileSink::open(Mode mode) {
+	cstring_view mode_str;
+
 	if(mode == Mode::APPEND && !rotations_) {
-		file_ = std::make_unique<File>(file_name_, "ab");
+		mode_str = "ab";
 	} else {
-		file_ = std::make_unique<File>(file_name_, "wb");
+		mode_str = "wb";
 	}
 
-	if(!file_->handle()) {
+	file_ = std::move(File(file_name_, mode_str));
+
+	if(!file_) {
 		throw exception("Logger could not open " + file_name_);
 	}
 }
@@ -97,7 +102,7 @@ void FileSink::size_limit(std::uintmax_t megabytes) {
 }
 
 void FileSink::rotate() {
-	if(file_->close() != 0) {
+	if(file_.close() != 0) {
 		throw exception("Unable to close log file during rotation - buffered messages may have been lost");
 	}
 
@@ -184,7 +189,7 @@ void FileSink::batch_write(const std::span<std::pair<RecordDetail, std::vector<c
 	const std::size_t buffer_size = out_buf_.size();
 	rotate_check(buffer_size, curr_time);
 
-	if(!std::fwrite(out_buf_.data(), buffer_size, 1, *file_)) {
+	if(!std::fwrite(out_buf_.data(), buffer_size, 1, file_)) {
 		out_buf_.clear();
 		throw exception("Unable to write log record batch to file");
 	}
@@ -213,10 +218,10 @@ void FileSink::write(Severity severity, Filter type, std::span<const char> recor
 	std::size_t count = 0;
 
 	if(prep_size) {
-		count += std::fwrite(prepend.c_str(), prep_size, 1, *file_);
+		count += std::fwrite(prepend.c_str(), prep_size, 1, file_);
 	}
 
-	count += std::fwrite(record.data(), rec_size, 1, *file_);
+	count += std::fwrite(record.data(), rec_size, 1, file_);
 
 	if((prep_size && count != 2) || (!prep_size && !count)) {
 		throw exception("Unable to write log record to file");
@@ -225,7 +230,7 @@ void FileSink::write(Severity severity, Filter type, std::span<const char> recor
 	current_size_ += (static_cast<std::uintmax_t>(prep_size) + rec_size);
 
 	if(flush) {
-		if(std::fflush(*file_) != 0) {
+		if(std::fflush(file_) != 0) {
 			throw exception("Unable to flush log record to file");
 		}
 	}
