@@ -64,51 +64,51 @@ void RemotePeer::receive(std::span<const std::uint8_t> data) {
 	}
 }
 
-void RemotePeer::handle_open_channel_response(const core::OpenChannelResponse* msg) {
+void RemotePeer::handle_open_channel_response(const core::OpenChannelResponse& msg) {
 	LOG_TRACE(log_) << log_func << LOG_ASYNC;
 
-	if(msg->result() != core::Result::OK) {
-		auto& channel = channels_[msg->requested_id()];
+	if(msg.result() != core::Result::OK) {
+		auto& channel = channels_[msg.requested_id()];
 		LOG_ERROR_ASYNC(log_, "[spark] Remote peer could not open channel ({}:{})",
-		                channel->handler()->type(), msg->requested_id());
-		channels_[msg->requested_id()].reset();
+		                channel->handler()->type(), msg.requested_id());
+		channels_[msg.requested_id()].reset();
 		return;
 	}
 
 	// todo, index bounds checks
-	auto id = msg->actual_id();
+	auto id = msg.actual_id();
 	auto& channel = channels_[id];
 
 	if(id == 0) {
 		LOG_ERROR_ASYNC(log_, "[spark] Reserved channel ID returned by {}", remote_banner_);
-		channels_[msg->requested_id()].reset();
+		channels_[msg.requested_id()].reset();
 		return;
 	}
 
-	if(msg->actual_id() != msg->requested_id()) {
+	if(msg.actual_id() != msg.requested_id()) {
 		if(channel) {
 			LOG_ERROR_ASYNC(log_, "[spark] Channel open ({}) failed due to ID collision",
-			                msg->actual_id());
-			send_close_channel(msg->actual_id());
-			channels_[msg->requested_id()].reset();
+			                msg.actual_id());
+			send_close_channel(msg.actual_id());
+			channels_[msg.requested_id()].reset();
 			return;
 		}
 
-		channels_[msg->actual_id()] = channels_[msg->requested_id()];
-		channels_[msg->requested_id()].reset();
+		channels_[msg.actual_id()] = channels_[msg.requested_id()];
+		channels_[msg.requested_id()].reset();
 		channel = channels_[id];
 	}
 
 	if(!channel || channel->is_open()) {
-		send_close_channel(msg->actual_id());
-		channels_[msg->actual_id()].reset();
+		send_close_channel(msg.actual_id());
+		channels_[msg.actual_id()].reset();
 		return;
 	}
 
 	channel->open();
 
 	LOG_DEBUG_ASYNC(log_, "[spark] Remote channel open, {}:{}",
-	                channel->handler()->name(), msg->actual_id());
+	                channel->handler()->name(), msg.actual_id());
 }
 
 void RemotePeer::send_close_channel(const std::uint8_t id) {
@@ -148,30 +148,30 @@ Handler* RemotePeer::find_handler(const core::OpenChannel& msg) {
 	return nullptr;
 }
 
-void RemotePeer::handle_open_channel(const core::OpenChannel* msg) {
+void RemotePeer::handle_open_channel(const core::OpenChannel& msg) {
 	LOG_TRACE(log_) << log_func << LOG_ASYNC;
 
-	auto handler = find_handler(*msg);
+	auto handler = find_handler(msg);
 
 	if(!handler) {
 		LOG_DEBUG_ASYNC(log_, "[spark] Requested service handler ({}) does not exist",
-		                msg->service_type()->str());
-		open_channel_response(core::Result::ERROR_UNK, 0, msg->id());
+		                msg.service_type()->str());
+		open_channel_response(core::Result::ERROR_UNK, 0, msg.id());
 		return;
 	}
 
-	if(msg->id() == 0 || msg->id() >= channels_.size()) {
-		LOG_DEBUG_ASYNC(log_, "[spark] Bad channel ID ({}) specified", msg->id());
-		open_channel_response(core::Result::ERROR_UNK, 0, msg->id());
+	if(msg.id() == 0 || msg.id() >= channels_.size()) {
+		LOG_DEBUG_ASYNC(log_, "[spark] Bad channel ID ({}) specified", msg.id());
+		open_channel_response(core::Result::ERROR_UNK, 0, msg.id());
 		return;
 	}
 
-	auto id = gsl::narrow<std::uint8_t>(msg->id());
+	auto id = gsl::narrow<std::uint8_t>(msg.id());
 
 	if(channels_[id]) {
 		if(id = next_empty_channel(); id == 0) {
 			LOG_ERROR_ASYNC(log_, "[spark] Exhausted channel IDs");
-			open_channel_response(core::Result::ERROR_UNK, 0, msg->id());
+			open_channel_response(core::Result::ERROR_UNK, 0, msg.id());
 			return;
 		}
 	}
@@ -182,7 +182,7 @@ void RemotePeer::handle_open_channel(const core::OpenChannel* msg) {
 
 	channel->open();
 	channels_[id] = std::move(channel);
-	open_channel_response(core::Result::OK, id, msg->id());
+	open_channel_response(core::Result::OK, id, msg.id());
 	LOG_DEBUG_ASYNC(log_, "[spark] Remote channel open, {}:{}", handler->name(), id);
 }
 
@@ -227,28 +227,28 @@ void RemotePeer::handle_control_message(std::span<const std::uint8_t> data) {
 
 	switch(fb->message_type()) {
 		case core::Message::OpenChannel:
-			handle_open_channel(fb->message_as_OpenChannel());
+			handle_open_channel(*fb->message_as_OpenChannel());
 			break;
 		case core::Message::CloseChannel:
-			handle_close_channel(fb->message_as_CloseChannel());
+			handle_close_channel(*fb->message_as_CloseChannel());
 			break;
 		case core::Message::OpenChannelResponse:
-			handle_open_channel_response(fb->message_as_OpenChannelResponse());
+			handle_open_channel_response(*fb->message_as_OpenChannelResponse());
 			break;
 		case core::Message::Ping:
-			handle_ping(fb->message_as_Ping());
+			handle_ping(*fb->message_as_Ping());
 			break;
 		case core::Message::Pong:
-			handle_pong(fb->message_as_Pong());
+			handle_pong(*fb->message_as_Pong());
 			break;
 		default:
 			LOG_WARN(log_) << "[spark] Unknown control message type" << LOG_ASYNC;
 	}
 }
 
-void RemotePeer::handle_ping(const core::Ping* ping) {
+void RemotePeer::handle_ping(const core::Ping& ping) {
 	core::PongT pong {
-		.sequence = ping->sequence()
+		.sequence = ping.sequence()
 	};
 
 	Message msg;
@@ -257,8 +257,8 @@ void RemotePeer::handle_ping(const core::Ping* ping) {
 	conn_->send(std::move(msg));
 }
 
-void RemotePeer::handle_pong(const core::Pong* pong) {
-	if(pong->sequence() != ping_sequence_) {
+void RemotePeer::handle_pong(const core::Pong& pong) {
+	if(pong.sequence() != ping_sequence_) {
 		LOG_DEBUG(log_) << "[spark] Bad pong sequence" << LOG_ASYNC;
 		return;
 	}
@@ -271,10 +271,10 @@ void RemotePeer::handle_pong(const core::Pong* pong) {
 	}
 }
 
-void RemotePeer::handle_close_channel(const core::CloseChannel* msg) {
+void RemotePeer::handle_close_channel(const core::CloseChannel& msg) {
 	LOG_TRACE(log_) << log_func << LOG_ASYNC;
 
-	auto id = gsl::narrow<std::uint8_t>(msg->channel());
+	auto id = gsl::narrow<std::uint8_t>(msg.channel());
 
 	if(!channels_[id]) {
 		LOG_WARN_ASYNC(log_, "[spark] Request to close empty channel ({})", id);

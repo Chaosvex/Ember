@@ -27,7 +27,7 @@ Connection::Connection(ba::ip::tcp::socket socket, log::Logger& logger, CloseHan
 	  socket_(std::move(socket)),
       strand_(socket_.get_executor()),
 	  on_close_(handler) {
-	buffer_.resize(4);
+	buffer_.resize(4); // todo
 }
 
 ba::awaitable<void> Connection::process_queue() try {
@@ -42,7 +42,7 @@ ba::awaitable<void> Connection::process_queue() try {
 
 		co_await ba::async_write(socket_, buffers, ba::deferred);
 	}
-} catch(std::exception& e) {
+} catch(std::exception&) {
 	close();
 }
 
@@ -52,7 +52,7 @@ void Connection::send(Message&& buffer) {
 			return;
 		}
 
-		bool inactive = queue_.empty();
+		const bool inactive = queue_.empty();
 		queue_.emplace(std::move(buffer));
 
 		if(inactive) {

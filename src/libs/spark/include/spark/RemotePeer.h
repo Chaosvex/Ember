@@ -52,11 +52,11 @@ class RemotePeer final {
 
 	void handle_control_message(std::span<const std::uint8_t> data);
 	void handle_channel_message(const MessageHeader& header, std::span<const std::uint8_t> data);
-	void handle_open_channel(const core::OpenChannel* msg);
-	void handle_open_channel_response(const core::OpenChannelResponse* msg);
-	void handle_close_channel(const core::CloseChannel* msg);
-	void handle_ping(const core::Ping* msg);
-	void handle_pong(const core::Pong* msg);
+	void handle_open_channel(const core::OpenChannel& msg);
+	void handle_open_channel_response(const core::OpenChannelResponse& msg);
+	void handle_close_channel(const core::CloseChannel& msg);
+	void handle_ping(const core::Ping& msg);
+	void handle_pong(const core::Pong& msg);
 
 	void open_channel_response(core::Result result, std::uint8_t id, std::uint8_t requested);
 	void send_close_channel(std::uint8_t id);
