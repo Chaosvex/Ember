@@ -17,7 +17,7 @@ namespace ember::spark::inline v1 {
 class exception : public std::runtime_error {
 public:
 	exception() : std::runtime_error("An unknown Spark exception occured!") { }
-	exception(std::string msg) : std::runtime_error(msg) { };
+	exception(const std::string& msg) : std::runtime_error(msg) { };
 };
 
 } // spark, ember

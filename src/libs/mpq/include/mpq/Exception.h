@@ -16,7 +16,7 @@ namespace ember::mpq {
 class exception : public std::runtime_error {
 public:
 	exception() : std::runtime_error("An unknown MPQ exception occured") { }
-	exception(std::string msg) : std::runtime_error(std::move(msg)) { };
+	exception(const std::string& msg) : std::runtime_error(msg) { };
 };
 
 } // mpq, ember
