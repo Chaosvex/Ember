@@ -9,7 +9,6 @@
 #pragma once
 
 #include <spark/buffers/pmr/Buffer.h>
-#include <gsl/gsl_util>
 #include <botan/bigint.h>
 #include <boost/assert.hpp>
 #include <boost/container/small_vector.hpp>
@@ -32,12 +31,12 @@ class PacketCrypto final {
 
 public:
 	explicit PacketCrypto(std::span<const std::uint8_t> key) {
-		key_.assign(key.begin(), key.end());
-
 		BOOST_ASSERT_MSG(
 			key.size() <= std::numeric_limits<std::uint8_t>::max(),
 			"Session key too big"
 		);
+
+		key_.assign(key.begin(), key.end());
 	}
 
 	explicit PacketCrypto(const Botan::BigInt& key) {
@@ -52,7 +51,7 @@ public:
 
 	void encrypt(auto& data) {
 		auto d_bytes = reinterpret_cast<std::uint8_t*>(&data);
-		const auto key_size = gsl::narrow_cast<std::uint8_t>(key_.size());
+		const auto key_size = key_.size();
 	
 		for(std::size_t t = 0; t < sizeof(data); ++t) {
 			send_i_ %= key_size;
@@ -67,7 +66,7 @@ public:
 	}
 
 	void decrypt(auto* data, const std::size_t length) {
-		const auto key_size = gsl::narrow_cast<std::uint8_t>(key_.size());
+		const auto key_size = key_.size();
 
 		for(std::size_t t = 0; t < length; ++t) {
 			recv_i_ %= key_size;
