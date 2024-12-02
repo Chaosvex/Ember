@@ -1,0 +1,18 @@
+{
+  "dependencies": [
+    "boost-asio",
+    "boost-headers",
+    "boost-program-options",
+    "boost-system",
+    "flatbuffers",
+    "pcre",
+    "zlib",
+    "mysql-connector-cpp"
+  ],
+  "overrides": [
+    {
+      "name": "botan",
+      "version": "2.19.3"
+    }
+  ]
+}
