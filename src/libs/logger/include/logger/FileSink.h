@@ -11,6 +11,7 @@
 #include <logger/Sink.h>
 #include <logger/FileWrapper.h>
 #include <logger/Utility.h>
+#include <shared/util/cstring_view.hpp>
 #include <boost/container/small_vector.hpp>
 #include <string>
 #include <utility>
@@ -38,7 +39,7 @@ private:
 	bool log_date_ = false;
 	bool midnight_rotate_ = false;
 	int last_mday_ = detail::current_time().tm_mday;
-	std::string time_format_ = "[%d/%m/%Y %H:%M:%S] ";
+	cstring_view time_format_ = "[%d/%m/%Y %H:%M:%S] ";
 	boost::container::small_vector<char, SV_RESERVE> out_buf_;
 
 	void open(Mode mode = Mode::TRUNCATE);
@@ -57,7 +58,7 @@ public:
 	void log_date(bool enable) { log_date_ = enable;  }
 	void midnight_rotate(bool enable) { midnight_rotate_ = enable; }
 	void size_limit(std::uintmax_t megabytes);
-	void time_format(const std::string& format);
+	void time_format(cstring_view format);
 	void write(Severity severity, Filter type, std::span<const char> record, bool flush) override;
 	void batch_write(const std::span<std::pair<RecordDetail, std::vector<char>>>& records) override;
 };

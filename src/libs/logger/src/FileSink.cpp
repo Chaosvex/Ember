@@ -72,7 +72,7 @@ void FileSink::set_initial_rotation() {
 	}
 }
 
-void FileSink::time_format(const std::string& format) {
+void FileSink::time_format(cstring_view format) {
 	time_format_ = format;
 }
 
@@ -127,12 +127,12 @@ std::string FileSink::generate_record_detail(Severity severity, const std::tm& c
 	}
 
 	if(log_severity_) {
-		std::string sev(detail::severity_string(severity));
+		std::string_view sev_str = detail::severity_string(severity);
 
 		if(!log_date_) {
-			prepend = std::move(sev);
+			prepend = sev_str;
 		} else {
-			prepend.append(sev);
+			prepend.append(sev_str);
 		}
 	}
 
