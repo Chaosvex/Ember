@@ -36,30 +36,13 @@ We have a retro ASCII-art banner straight from 1995 when the server runs. Priori
 ## ⚡ I'm in! What now?
 ### Docker Quick Start
 
-Ember uses Docker to make it easy to get the project up and running within minutes. Once you have Docker (version 19 and up) installed, simply run...
+Ember uses Docker to make it easy to get the project up and running within minutes. Once you have Docker installed, simply run...
 
-**Docker 19:**
-
-Linux & MacOS:
-
-```bash
-DOCKER_BUILDKIT=1 docker build <path to Dockerfile>
-```
-
-Windows:
-
-```cmd
-set "DOCKER_BUILDKIT=1" && docker build <path to Dockerfile>
-```
-
-Ember uses `DOCKER_BUILDKIT=1` to enable experimental features in Docker 19 that allow for build caching. It can be omitted by setting it as an environmental variable.
-
-**Docker 20+:**
 ```
 docker build <path to Dockerfile>
 ```
 
-Want to do it the hard way? No problem, just see docs/GettingStarted.md.
+Want to do it the hard way? No problem, just see `docs/GettingStarted.md`.
 
 ## 💡Need help?
 
