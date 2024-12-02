@@ -49,7 +49,7 @@ public:
 		key.binary_encode(key_.data(), key_.size());
 	}
 
-	void encrypt(auto& data) {
+	inline void encrypt(auto& data) {
 		auto d_bytes = reinterpret_cast<std::uint8_t*>(&data);
 		const auto key_size = key_.size();
 	
@@ -61,11 +61,11 @@ public:
 		}
 	}
 
-	void decrypt(auto& data) {
+	inline void decrypt(auto& data) {
 		decrypt(&data, sizeof(data));
 	}
 
-	void decrypt(auto* data, const std::size_t length) {
+	inline void decrypt(auto* data, const std::size_t length) {
 		const auto key_size = key_.size();
 
 		for(std::size_t t = 0; t < length; ++t) {
