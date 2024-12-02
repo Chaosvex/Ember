@@ -20,17 +20,26 @@ class File final {
 	std::FILE* file_ = nullptr;
 
 public:
-	File(const std::string& path, const std::string& mode = std::string("r")) {
+	File(const std::string& path, const std::string& mode) {
 		file_ = std::fopen(path.c_str(), mode.c_str());
 	}
 
-	~File() { if(file_) { fclose(file_); } };
+	~File() {
+		if(file_) {
+			std::fclose(file_); 
+		} 
+	};
 	
-	operator FILE*() const { return file_; }
+	operator FILE*() const {
+		return file_; 
+	}
 	
 	int close() {
-		if(!file_) return EOF;
-		int ret = fclose(file_);
+		if(!file_) {
+			return EOF;
+		}
+
+		const int ret = std::fclose(file_);
 		file_ = nullptr;
 		return ret;
 	};
@@ -39,6 +48,7 @@ public:
 		return file_;
 	}
 
+	File() = default;
 	File(const File&) = delete;
 	File& operator=(const File&) = delete;
 	File(const File&&) = delete;
