@@ -32,7 +32,7 @@ Connection::Connection(ba::ip::tcp::socket socket, log::Logger& logger, CloseHan
 
 ba::awaitable<void> Connection::process_queue() try {
 	while(!queue_.empty()) {
-		auto msg = std::move(queue_.front());
+		const auto msg = std::move(queue_.front());
 		queue_.pop();
 
 		std::array<ba::const_buffer, 2> buffers {
