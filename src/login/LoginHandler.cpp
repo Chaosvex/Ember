@@ -33,10 +33,10 @@ bool LoginHandler::update_state(const grunt::Packet& packet) try {
 	update_state(LoginState::CLOSED);
 
 	switch(prev_state) {
-		case LoginState::INITIAL_CHALLENGE:
+		case LoginState::CHALLENGE:
 			initiate_login(packet);
 			break;
-		case LoginState::LOGIN_PROOF:
+		case LoginState::PROOF:
 			handle_login_proof(packet);
 			break;
 		case LoginState::RECONNECT_PROOF:

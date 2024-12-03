@@ -49,7 +49,7 @@ class LoginHandler final {
 		ReconnectAuthenticator
 	>;
 
-	LoginState state_ { LoginState::INITIAL_CHALLENGE };
+	LoginState state_ { LoginState::CHALLENGE };
 	Metrics& metrics_;
 	log::Logger& logger_;
 	const Patcher& patcher_;

@@ -11,8 +11,8 @@
 namespace ember {
 
 enum class LoginState {
-	INITIAL_CHALLENGE,
-	LOGIN_PROOF,
+	CHALLENGE,
+	PROOF,
 	RECONNECT_PROOF,
 	REQUEST_REALMS,
 

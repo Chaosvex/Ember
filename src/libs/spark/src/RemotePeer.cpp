@@ -324,7 +324,7 @@ void RemotePeer::open_channel(std::string type, gsl::not_null<Handler*> handler)
 	);
 
 	channels_[id] = std::move(channel);
-	send_open_channel("", std::move(type), id);
+	send_open_channel("", std::move(type), id); // todo, remove name param?
 }
 
 void RemotePeer::start() {
