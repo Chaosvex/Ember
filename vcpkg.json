@@ -1,14 +1,19 @@
 {
   "dependencies": [
-    "botan",
     "boost-asio",
     "boost-headers",
     "boost-program-options",
     "boost-system",
+    "botan",
     "flatbuffers",
     "pcre",
     "zlib",
-    "mysql-connector-cpp[jdbc]"
+    {
+      "name": "mysql-connector-cpp",
+      "features": [
+        "jdbc"
+      ]
+    }
   ],
   "overrides": [
     {
