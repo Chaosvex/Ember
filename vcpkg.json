@@ -8,7 +8,7 @@
     "flatbuffers",
     "pcre",
     "zlib",
-    "mysql-connector-cpp"
+    "mysql-connector-cpp[jdbc]"
   ],
   "overrides": [
     {
