@@ -1,5 +1,6 @@
 {
   "dependencies": [
+    "botan",
     "boost-asio",
     "boost-headers",
     "boost-program-options",
