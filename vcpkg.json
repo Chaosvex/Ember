@@ -7,13 +7,7 @@
     "botan",
     "flatbuffers",
     "pcre",
-    "zlib",
-    {
-      "name": "mysql-connector-cpp",
-      "features": [
-        "jdbc"
-      ]
-    }
+    "zlib"
   ],
   "overrides": [
     {
