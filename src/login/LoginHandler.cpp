@@ -244,7 +244,7 @@ void LoginHandler::send_login_challenge(const FetchUserAction& action) {
 			state_data_.emplace<LoginAuthenticator>(*user_);
 			response = build_login_challenge();
 			response.result = grunt::Result::SUCCESS;
-			update_state(LoginState::LOGIN_PROOF);
+			update_state(LoginState::PROOF);
 		} else {
 			// leaks information on whether the account exists (could send challenge anyway?)
 			response.result = grunt::Result::FAIL_UNKNOWN_ACCOUNT;
