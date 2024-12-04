@@ -192,7 +192,7 @@ void LoginHandler::fetch_session_key(const FetchUserAction& action_res) {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 
 	if(!(user_ = action_res.get_result())) {
-		LOG_DEBUG(logger_) << "Account not found: " << action_res.username() << LOG_ASYNC;
+		LOG_DEBUG_ASYNC(logger_, "Account not found: {}", action_res.username());
 		return;
 	}
 
@@ -202,7 +202,7 @@ void LoginHandler::fetch_session_key(const FetchUserAction& action_res) {
 }
 
 void LoginHandler::reject_client(const GameVersion& version) {
-	LOG_DEBUG(logger_) << "Rejecting client version " << version << LOG_ASYNC;
+	LOG_DEBUG_ASYNC(logger_, "Rejecting client version {}", to_string(version));
 
 	grunt::server::LoginChallenge response;
 	response.result = grunt::Result::FAIL_VERSION_INVALID;
@@ -254,13 +254,11 @@ void LoginHandler::send_login_challenge(const FetchUserAction& action) {
 	} catch(dal::exception& e) {
 		response.result = grunt::Result::FAIL_DB_BUSY;
 		metrics_.increment("login_internal_failure");
-		LOG_ERROR(logger_) << "DAL failure for " << action.username()
-		                   << ": " << e.what() << LOG_ASYNC;
+		LOG_ERROR_ASYNC(logger_, "DAL failure for {}: {}", action.username(), e.what());
 	} catch(Botan::Exception& e) {
 		response.result = grunt::Result::FAIL_DB_BUSY;
 		metrics_.increment("login_internal_failure");
-		LOG_ERROR(logger_) << "Encoding failure for " << action.username()
-		                   << ": " << e.what() << LOG_ASYNC;
+		LOG_ERROR_ASYNC(logger_, "Encoding failure for {}: {}", action.username(), e.what());
 	}
 	
 	send(response);
@@ -269,8 +267,7 @@ void LoginHandler::send_login_challenge(const FetchUserAction& action) {
 void LoginHandler::send_reconnect_proof(grunt::Result result) {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 
-	LOG_DEBUG(logger_) << "Reconnect result for " << user_->username() << ": "
-	                   << grunt::to_string(result) << LOG_ASYNC;
+	LOG_DEBUG_ASYNC(logger_, "Reconnect result for {}: {}", user_->username(), grunt::to_string(result));
 
 	if(result == grunt::Result::SUCCESS) {
 		metrics_.increment("login_success");
@@ -300,13 +297,12 @@ void LoginHandler::send_reconnect_challenge(const FetchSessionKeyAction& action)
 	} else if(status == rpc::Account::Status::SESSION_NOT_FOUND) {
 		metrics_.increment("login_failure");
 		response.result = grunt::Result::FAIL_NOACCESS;
-		LOG_DEBUG(logger_) << "Reconnect failed, session not found for "
-		                   << user_->username() << LOG_ASYNC;
+		LOG_DEBUG_ASYNC(logger_, "Reconnect failed, session not found for {}", user_->username());
 	} else {
 		metrics_.increment("login_internal_failure");
 		response.result = grunt::Result::FAIL_DB_BUSY;
-		LOG_ERROR(logger_) << util::fb_status(status, rpc::Account::EnumNamesStatus())
-		                   << " from peer during reconnect challenge" << LOG_ASYNC;
+		LOG_ERROR_ASYNC(logger_, "{} from peer during reconnect challenge",
+		                util::fb_status(status, rpc::Account::EnumNamesStatus()));
 	}
 	
 	send(response);
@@ -340,13 +336,10 @@ bool LoginHandler::validate_pin(const grunt::client::LoginProof& packet) const {
 	} else if(user_->pin_method() == PINMethod::FIXED) {
 		result = pin_auth.validate_pin(pin_salt_, packet.pin_salt, packet.pin_hash, user_->pin());
 	} else {
-		LOG_ERROR(logger_) << "Unknown TOTP method, "
-		                   << std::to_underlying(user_->pin_method()) << LOG_ASYNC;
+		LOG_ERROR_ASYNC(logger_, "Unknown TOTP method, {}", std::to_underlying(user_->pin_method()));
 	}
 
-	LOG_DEBUG(logger_) << "PIN authentication for " << user_->username()
-	                   << (result? " OK" : " failed") << LOG_ASYNC;
-
+	LOG_DEBUG_ASYNC(logger_, "PIN authentication for {} {}", user_->username(), result? "OK" : "failed");
 	return result;
 }
 
@@ -458,9 +451,7 @@ void LoginHandler::send_login_proof(grunt::Result result, bool survey) {
 		metrics_.increment("login_failure");
 	}
 
-	LOG_DEBUG(logger_) << "Login result for " << user_->username() << ": "
-	                   << grunt::to_string(result) << LOG_ASYNC;
-
+	LOG_DEBUG_ASYNC(logger_, "Login result for {}: {}", user_->username(), grunt::to_string(result));
 	send(response);
 }
 
@@ -472,8 +463,7 @@ void LoginHandler::on_character_data(const FetchCharacterCounts& action) {
 	} catch(dal::exception& e) { // not a fatal exception, we'll keep going without the data
 		state_data_ = CharacterCount();
 		metrics_.increment("login_internal_failure");
-		LOG_ERROR(logger_) << "DAL failure for " << user_->username()
-		                   << ": " << e.what() << LOG_ASYNC;
+		LOG_ERROR_ASYNC(logger_, "DAL failure for {} : {}", user_->username(), e.what());
 	}
 
 	update_state(LoginState::REQUEST_REALMS);
@@ -511,8 +501,8 @@ void LoginHandler::on_session_write(const RegisterSessionAction& action) {
 	} else {
 		metrics_.increment("login_internal_failure");
 		response = grunt::Result::FAIL_DB_BUSY;
-		LOG_ERROR(logger_) << util::fb_status(result, rpc::Account::EnumNamesStatus())
-		                   << " from peer during login" << LOG_ASYNC;
+		LOG_ERROR_ASYNC(logger_, "{} from peer during login",
+		                util::fb_status(result, rpc::Account::EnumNamesStatus()));
 	}
 
 	// defer sending the response until we've fetched the character data
@@ -598,7 +588,7 @@ void LoginHandler::patch_client(const grunt::client::LoginChallenge& challenge) 
 	std::ifstream patch(fmeta.path + fmeta.name, std::ifstream::binary);
 
 	if(!patch) {
-		LOG_ERROR(logger_) << "Could not open patch, " << fmeta.name << LOG_ASYNC;
+		LOG_ERROR_ASYNC(logger_, "Could not open patch, {}", fmeta.name);
 		return;
 	}
 
@@ -634,8 +624,7 @@ void LoginHandler::handle_survey_result(const grunt::Packet& packet) {
 	update_state(LoginState::REQUEST_REALMS);
 
 	if(survey.survey_id != survey_.id()) {
-		LOG_DEBUG(logger_) << "Received an invalid survey ID from "
-		                   << user_->username() << LOG_ASYNC;
+		LOG_DEBUG_ASYNC(logger_, "Received an invalid survey ID from {}", user_->username());
 		return;
 	}
 
@@ -661,8 +650,7 @@ void LoginHandler::on_survey_write(const SaveSurveyAction& action) {
 	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 
 	if(action.error()) {
-		LOG_ERROR(logger_) << "DAL failure for " << user_->username() << ", "
-		                   << action.exception().what() << LOG_ASYNC;
+		LOG_ERROR_ASYNC(logger_, "DAL failure for {}, {}", user_->username(), action.exception().what());
 	}
 }
 
