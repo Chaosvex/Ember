@@ -121,7 +121,7 @@ void Client::handle_message(std::span<const std::uint8_t> buffer) try {
 	Parser parser(buffer, mode_);
 	parser.set_logger(logger_);
 
-	const Header& header = parser.header();
+	const Header& header = parser.read_header();
 
 	// Check to see whether this is a response that we're expecting
 	const auto hash = generate_key(header.tx_id, mode_);
@@ -147,7 +147,7 @@ void Client::process_message(std::span<const std::uint8_t> buffer) try {
 	Parser parser(buffer, mode_);
 	parser.set_logger(logger_);
 
-	const auto header = parser.header();
+	const auto header = parser.read_header();
 	auto attributes = parser.attributes();
 
 	if(const auto fp = retrieve_attribute<attributes::Fingerprint>(attributes)) {
@@ -161,7 +161,7 @@ void Client::process_message(std::span<const std::uint8_t> buffer) try {
 
 	tx_->attributes = std::move(attributes);
 
-	const MessageType type{ static_cast<std::uint16_t>(header.type) };
+	const MessageType type{ header.type.value() };
 
 	switch(type) {
 		case MessageType::BINDING_RESPONSE:

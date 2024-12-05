@@ -82,7 +82,7 @@ attributes::Fingerprint Parser::fingerprint(spark::io::pmr::BinaryStreamReader& 
 
 Header Parser::read_header() try {
 	spark::io::BufferAdaptor sba(buffer_);
-;	spark::io::BinaryStream stream(sba);
+	spark::io::BinaryStream stream(sba);
 
 	Header header{};
 	stream >> header.type;

@@ -183,7 +183,7 @@ bool magic_cookie_present(std::span<const std::uint8_t> buffer) {
 
 Header read_header(std::span<const std::uint8_t> buffer) try {
 	spark::io::BufferAdaptor sba(buffer);
-;	spark::io::BinaryStream stream(sba);
+	spark::io::BinaryStream stream(sba);
 
 	Header header{};
 	stream >> header.type;

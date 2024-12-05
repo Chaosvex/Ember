@@ -22,7 +22,7 @@ using namespace ember;
 TEST(STUNVectors, RFC5769_IPv4Response) {
 	std::span span(respv4);
 	stun::Parser parser(span, stun::RFC5780);
-	const auto header = parser.header();
+	const auto header = parser.read_header();
 
 	ASSERT_EQ(header.length, 60);
 	ASSERT_EQ(static_cast<std::uint16_t>(header.type),
@@ -75,7 +75,7 @@ TEST(STUNVectors, RFC5769_IPv4Response) {
 TEST(STUNVectors, RFC5769_IPv6Response) {
 	std::span span(respv6);
 	stun::Parser parser(span, stun::RFC5780);
-	const auto header = parser.header();
+	const auto header = parser.read_header();
 
 	ASSERT_EQ(header.length, 72);
 	ASSERT_EQ(static_cast<std::uint16_t>(header.type),
@@ -127,7 +127,7 @@ TEST(STUNVectors, RFC5769_IPv6Response) {
 TEST(STUNVectors, RFC5769_LTARequest) {
 	std::span span(reqltc);
 	stun::Parser parser(span, stun::RFC5780);
-	const auto header = parser.header();
+	const auto header = parser.read_header();
 
 	ASSERT_EQ(header.length, 96);
 	ASSERT_EQ(static_cast<std::uint16_t>(header.type),
@@ -175,7 +175,7 @@ TEST(STUNVectors, RFC5769_LTARequest) {
 TEST(STUNVectors, RFC5769_Request) {
 	std::span span(req);
 	stun::Parser parser(span, stun::RFC8445);
-	const auto header = parser.header();
+	const auto header = parser.read_header();
 
 	ASSERT_EQ(header.length, 88);
 	ASSERT_EQ(static_cast<std::uint16_t>(header.type),
