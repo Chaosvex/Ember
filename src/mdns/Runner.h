@@ -20,5 +20,6 @@ namespace ember::dns {
 static constexpr ember::cstring_view APP_NAME { "MDNS-SD" };
 
 int run(std::span<const char*> cmd_args);
+void stop();
 
 } // dns, ember

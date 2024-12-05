@@ -28,6 +28,12 @@ using namespace ember;
 
 po::variables_map parse_arguments(int, const char*[]);
 void launch(std::span<const char*>, const po::variables_map&, log::Logger&);
+void launch_dns(std::span<const char*>, log::Logger&);
+void launch_login(std::span<const char*>, log::Logger&);
+void launch_gateway(std::span<const char*>, log::Logger&);
+void launch_account(std::span<const char*>, log::Logger&);
+void launch_character(std::span<const char*>, log::Logger&);
+void launch_world(std::span<const char*>, log::Logger&);
 
 int main(int argc, const char* argv[]) try {
 	thread::set_name("Main");
@@ -51,16 +57,73 @@ void launch(std::span<const char*> cmd_args, const po::variables_map& args, log:
 	std::vector<std::jthread> services;
 
 	if(args.count("services.dns")) {
-		LOG_INFO_SYNC(logger, "Starting DNS service...");
-
 		services.emplace_back(std::jthread([&]() {
-			dns::run(cmd_args);
+			launch_dns(cmd_args, logger);
 		}));
 	}
 
 	if(services.empty()) {
 		LOG_INFO_SYNC(logger, "No services specified? Nothing to do, farewell.");
 	}
+}
+
+void launch_dns(std::span<const char*> cmd_args, log::Logger& logger) try {
+	LOG_INFO_SYNC(logger, "Starting DNS service...");
+
+	const auto res = dns::run(cmd_args);
+
+	if(res != EXIT_SUCCESS) {
+		LOG_FATAL_SYNC(logger, "DNS service terminated abnormally, aborting");
+		std::exit(res);
+	}
+} catch(std::exception& e) {
+	LOG_FATAL_SYNC(logger, "DNS error: {}", e.what());
+	std::exit(EXIT_FAILURE);
+}
+
+void launch_login(std::span<const char*> cmd_args, log::Logger& logger) try {
+	LOG_INFO_SYNC(logger, "Starting login service...");
+
+	// todo
+} catch(std::exception& e) {
+	LOG_FATAL_SYNC(logger, "Login error: {}", e.what());
+	std::exit(EXIT_FAILURE);
+}
+
+void launch_gateway(std::span<const char*> cmd_args, log::Logger& logger) try {
+	LOG_INFO_SYNC(logger, "Starting gateway service...");
+
+	// todo
+} catch(std::exception& e) {
+	LOG_FATAL_SYNC(logger, "Gateway error: {}", e.what());
+	std::exit(EXIT_FAILURE);
+}
+
+void launch_account(std::span<const char*> cmd_args, log::Logger& logger) try {
+	LOG_INFO_SYNC(logger, "Starting account service...");
+
+	// todo
+} catch(std::exception& e) {
+	LOG_FATAL_SYNC(logger, "Account error: {}", e.what());
+	std::exit(EXIT_FAILURE);
+}
+
+void launch_character(std::span<const char*> cmd_args, log::Logger& logger) try {
+	LOG_INFO_SYNC(logger, "Starting character service...");
+
+	// todo
+} catch(std::exception& e) {
+	LOG_FATAL_SYNC(logger, "Character error: {}", e.what());
+	std::exit(EXIT_FAILURE);
+}
+
+void launch_world(std::span<const char*> cmd_args, log::Logger& logger) try {
+	LOG_INFO_SYNC(logger, "Starting world service...");
+
+	// todo
+} catch(std::exception& e) {
+	LOG_FATAL_SYNC(logger, "World error: {}", e.what());
+	std::exit(EXIT_FAILURE);
 }
 
 po::variables_map parse_arguments(int argc, const char* argv[]) {

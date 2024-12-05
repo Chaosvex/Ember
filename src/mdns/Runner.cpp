@@ -29,6 +29,7 @@ namespace ember::dns {
 
 po::variables_map parse_arguments(std::span<const char*> cmd_args);
 std::exception_ptr eptr = nullptr;
+std::binary_semaphore stop_flag { 0 };
 
 void launch(const boost::program_options::variables_map& args,
             boost::asio::io_context& service,
@@ -37,7 +38,6 @@ void launch(const boost::program_options::variables_map& args,
 
 int asio_launch(const boost::program_options::variables_map& args,
                 ember::log::Logger& logger);
-
 
 int run(std::span<const char*> cmd_args) {
 	const po::variables_map args = parse_arguments(cmd_args);
@@ -52,6 +52,10 @@ int run(std::span<const char*> cmd_args) {
 	return ret;
 }
 
+void stop() {
+	stop_flag.release();
+}
+
 /*
  * Starts ASIO worker threads, blocking until the launch thread exits
  * upon error or signal handling.
@@ -62,11 +66,10 @@ int run(std::span<const char*> cmd_args) {
  */
 int asio_launch(const po::variables_map& args, log::Logger& logger) try {
 	boost::asio::io_context service(BOOST_ASIO_CONCURRENCY_HINT_UNSAFE_IO);
-	std::binary_semaphore flag(0);
 
 	std::thread thread([&]() {
 		thread::set_name("Launcher");
-		launch(args, service, flag, logger);
+		launch(args, service, stop_flag, logger);
 	});
 
 	// Install signal handler
@@ -74,7 +77,7 @@ int asio_launch(const po::variables_map& args, log::Logger& logger) try {
 
 	signals.async_wait([&](auto error, auto signal) {
 		LOG_DEBUG_SYNC(logger, "Received signal {}({})", util::sig_str(signal), signal);
-		flag.release();
+		stop_flag.release();
 	});
 
 	std::jthread worker(static_cast<std::size_t(boost::asio::io_context::*)()>

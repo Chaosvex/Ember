@@ -25,8 +25,8 @@ using namespace ember;
  */
 int main(int argc, const char* argv[]) try {
 	thread::set_name("Main");
-	print_banner(ember::dns::APP_NAME);
-	util::set_window_title(ember::dns::APP_NAME);
+	print_banner(dns::APP_NAME);
+	util::set_window_title(dns::APP_NAME);
 
 	std::span<const char*> args(argv, argc);
 	return dns::run(args);
