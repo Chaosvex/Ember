@@ -58,14 +58,7 @@ ba::awaitable<void> Server::accept_connection() {
 	ba::ip::tcp::socket socket(ctx_);
 	auto [ec] = co_await acceptor_.async_accept(socket, as_tuple(ba::deferred));
 
-	if(ec == boost::asio::error::operation_aborted) {
-		co_return;
-	}
-
 	if(ec) {
-		LOG_DEBUG(logger_)
-			<< "[spark] Unable to accept connection"
-			<< LOG_ASYNC;
 		co_return;
 	}
 
