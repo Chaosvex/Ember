@@ -32,9 +32,6 @@ void launch(const boost::program_options::variables_map& args,
             std::binary_semaphore& sem,
             ember::log::Logger& logger);
 
-int asio_launch(const boost::program_options::variables_map& args,
-                ember::log::Logger& logger);
-
 void stop() {
 	stop_flag.release();
 }
