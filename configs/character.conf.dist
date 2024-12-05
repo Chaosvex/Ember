@@ -24,7 +24,7 @@ port = 514
 
 [file_log]
 verbosity = none # trace, debug, info, warning, error, fatal or none to disable
-path = logs/gateway_%d_%m_%Y.log
+path = logs/character_%d_%m_%Y.log
 midnight_rotate = 0
 mode = append # if an existing log is found, you can either 'append' to it or 'truncate' it
 size_rotate = 0 # max log size in megabytes - 0 disables

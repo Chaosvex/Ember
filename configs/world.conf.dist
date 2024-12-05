@@ -25,14 +25,14 @@ min_connections = 1
 max_connections = 8
 
 [remote_log]
-service_name = login
+service_name = world
 verbosity = none # trace, debug, info, warning, error, fatal or none to disable
 host = localhost
 port = 514
 
 [file_log]
 verbosity = none   # trace, debug, info, warning, error, fatal or none to disable
-path = logs/login_%d_%m_%Y.log
+path = logs/world_%d_%m_%Y.log
 midnight_rotate = 0
 mode = append      # if an existing log is found, you can either 'append' to it or 'truncate' it
 size_rotate = 0    # max log size in megabytes - 0 disables

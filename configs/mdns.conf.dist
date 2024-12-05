@@ -10,14 +10,14 @@ address = 127.0.0.1
 port = 6010          # use 0 to choose a random free port
 
 [remote_log]
-service_name = account
+service_name = mdns
 verbosity = none # trace, debug, info, warning, error, fatal or none to disable
 host = localhost
 port = 514
 
 [file_log]
 verbosity = none # trace, debug, info, warning, error, fatal or none to disable
-path = logs/account_%d_%m_%Y.log
+path = logs/mdns_%d_%m_%Y.log
 midnight_rotate = 0
 mode = append # if an existing log is found, you can either 'append' to it or 'truncate' it
 size_rotate = 0 # max log size in megabytes - 0 disables
