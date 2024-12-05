@@ -15,7 +15,7 @@ services:
   login:
     build: .
     image: ember-build:latest
-    command: ["run.sh", "login"]
+    command: ["docker-first-run.sh", "login"]
     restart: always
     deploy:
       replicas: 4
@@ -45,7 +45,7 @@ services:
   gateway:
     build: .
     image: ember-build:latest
-    command: ["run.sh", "gateway"]
+    command: ["docker-first-run.sh", "gateway"]
     deploy:
       replicas: 1
       resources:
@@ -74,7 +74,7 @@ services:
   account:
     build: .
     image: ember-build:latest
-    command: ["run.sh", "account"]
+    command: ["docker-first-run.sh", "account"]
     deploy:
       replicas: 1
       resources:
@@ -101,7 +101,7 @@ services:
   character:
     build: .
     image: ember-build:latest
-    command: ["run.sh", "character"]
+    command: ["docker-first-run.sh", "character"]
     deploy:
       replicas: 1
       resources:
