@@ -44,3 +44,4 @@ log_severity = 1  # enable/disable writing severity to log records
 [console_log]
 verbosity = trace # trace, debug, info, warning, error, fatal or none to disable
 colours = true    # colourise the output
+prefix = [fusion]
