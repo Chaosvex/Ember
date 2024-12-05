@@ -10,6 +10,8 @@
 
 #include <logger/Sink.h>
 #include <boost/container/small_vector.hpp>
+#include <string>
+#include <utility>
 
 namespace ember::log {
 
@@ -18,6 +20,7 @@ class ConsoleSink final : public Sink {
 	static constexpr auto MAX_BUF_SIZE = 4096u;
 
 	bool colour_;
+	std::string prefix_;
 	boost::container::small_vector<char, SV_RESERVE> out_buf_;
 
 	void set_colour(Severity severity);
@@ -28,6 +31,7 @@ public:
 	void write(Severity severity, Filter type, std::span<const char> record, bool flush) override;
 	void batch_write(const std::span<std::pair<RecordDetail, std::vector<char>>>& records) override;
 	void colourise(bool colourise) { colour_ = colourise; }
+	void prefix(std::string prefix) { prefix_ = std::move(prefix); }
 };
 
 } // log, ember

@@ -57,6 +57,11 @@ std::unique_ptr<log::Sink> init_console_sink(const po::variables_map& args, log:
 	auto colourise = args["console_log.colours"].as<bool>();
 	auto sink = std::make_unique<log::ConsoleSink>(severity, log::Filter(filter));
 	sink->colourise(colourise);
+
+	if(args.count("console_log.prefix")) {
+		sink->prefix(args["console_log.prefix"].as<std::string>());
+	}
+
 	return sink;
 }
 

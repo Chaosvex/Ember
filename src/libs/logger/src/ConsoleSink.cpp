@@ -47,15 +47,25 @@ void ConsoleSink::do_batch_write(const std::span<std::pair<RecordDetail, std::ve
 
 	out_buf_.reserve(size + (10 * records.size()));
 
+	const bool prefix = !prefix_.empty();
+
 	for(auto&& [detail, data] : records) {
 		if(sink_sev <= detail.severity && !(sink_filter & detail.type)) {
 			std::string_view severity = detail::severity_string(detail.severity);
 			const auto cur_sz = out_buf_.size();
-			const auto new_sz = cur_sz + severity.size() + data.size();
+			const auto new_sz = cur_sz + severity.size() + data.size() + prefix_.size();
 			out_buf_.resize(new_sz, boost::container::default_init);
 			auto write_ptr = out_buf_.data() + cur_sz;
-			std::memcpy(write_ptr, severity.data(), severity.size());
-			std::memcpy(write_ptr + severity.size(), data.data(), data.size());
+			std::size_t offset = 0;
+			
+			if(prefix) {
+				std::memcpy(write_ptr + offset, prefix_.data(), prefix_.size());
+				offset += prefix_.size();
+			}
+			
+			std::memcpy(write_ptr + offset, severity.data(), severity.size());
+			offset += severity.size();
+			std::memcpy(write_ptr + offset, data.data(), data.size());
 		}
 	}
 
@@ -82,10 +92,14 @@ void ConsoleSink::write(Severity severity, Filter type, std::span<const char> re
 	std::string_view sevsv = detail::severity_string(severity);
 
 	out_buf_.clear();
-	out_buf_.resize(record.size() + sevsv.size(), boost::container::default_init);
+	out_buf_.resize(prefix_.size() + record.size() + sevsv.size(), boost::container::default_init);
 
-	std::memcpy(out_buf_.data(), sevsv.data(), sevsv.size());
-	std::memcpy(out_buf_.data() + sevsv.size(), record.data(), record.size());
+	std::size_t offset = 0;
+	std::memcpy(out_buf_.data(), prefix_.data(), prefix_.size());
+	offset += prefix_.size();
+	std::memcpy(out_buf_.data() + offset, sevsv.data(), sevsv.size());
+	offset += sevsv.size();
+	std::memcpy(out_buf_.data() + offset, record.data(), record.size());
 	std::fwrite(out_buf_.data(), out_buf_.size(), 1, stdout);
 
 	if(colour_) [[likely]] {
