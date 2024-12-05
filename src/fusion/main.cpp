@@ -10,8 +10,8 @@
 #include <logger/Logger.h>
 #include <shared/Banner.h>
 #include <shared/util/cstring_view.hpp>
-#include <shared/util/LogConfig.h>
 #include <shared/threading/Utility.h>
+#include <shared/util/LogConfig.h>
 #include <shared/util/Utility.h>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/signal_set.hpp>

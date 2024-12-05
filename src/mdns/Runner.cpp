@@ -13,9 +13,11 @@
 #include <spark/Server.h>
 #include <shared/threading/Utility.h>
 #include <shared/util/Utility.h>
+#include <boost/asio/io_context.hpp>
 #include <exception>
 #include <iostream>
 #include <memory>
+#include <semaphore>
 #include <utility>
 #include <cstddef>
 #include <cstdlib>

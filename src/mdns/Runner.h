@@ -9,17 +9,17 @@
 #pragma once
 
 #include <logger/Logger.h>
-#include <boost/asio/io_context.hpp>
-#include <boost/program_options.hpp>
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/variables_map.hpp>
 #include <shared/util/cstring_view.hpp>
-#include <semaphore>
 
 namespace ember::dns {
 
 static constexpr ember::cstring_view APP_NAME { "MDNS-SD" };
 
-boost::program_options::options_description options();
 int run(const boost::program_options::variables_map& args, log::Logger& logger);
 void stop();
+
+boost::program_options::options_description options();
 
 } // dns, ember
