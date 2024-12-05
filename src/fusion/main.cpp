@@ -13,6 +13,8 @@
 #include <shared/util/LogConfig.h>
 #include <shared/threading/Utility.h>
 #include <shared/util/Utility.h>
+#include <boost/asio/io_context.hpp>
+#include <boost/asio/signal_set.hpp>
 #include <boost/program_options.hpp>
 #include <fstream>
 #include <iostream>
@@ -27,13 +29,15 @@ namespace po = boost::program_options;
 using namespace ember;
 
 po::variables_map parse_arguments(int, const char*[]);
-void launch(std::span<const char*>, const po::variables_map&, log::Logger&);
-void launch_dns(std::span<const char*>, log::Logger&);
-void launch_login(std::span<const char*>, log::Logger&);
-void launch_gateway(std::span<const char*>, log::Logger&);
-void launch_account(std::span<const char*>, log::Logger&);
-void launch_character(std::span<const char*>, log::Logger&);
-void launch_world(std::span<const char*>, log::Logger&);
+po::variables_map load_options(const std::string&, const po::options_description&);
+void launch(const po::variables_map&, log::Logger&);
+void launch_dns(const po::variables_map&, log::Logger&);
+void launch_login(const po::variables_map&, log::Logger&);
+void launch_gateway(const po::variables_map&, log::Logger&);
+void launch_account(const po::variables_map&, log::Logger&);
+void launch_character(const po::variables_map&, log::Logger&);
+void launch_world(const po::variables_map&, log::Logger&);
+void stop_services();
 
 int main(int argc, const char* argv[]) try {
 	thread::set_name("Main");
@@ -44,21 +48,37 @@ int main(int argc, const char* argv[]) try {
 
 	log::Logger logger;
 	util::configure_logger(logger, args);
+	log::global_logger(logger);
 
 	std::span<const char*> cmd_args(argv, argc);
-	launch(cmd_args, args, logger);
+	launch(args, logger);
 	LOG_INFO_SYNC(logger, "{} terminated", APP_NAME);
 } catch(std::exception& e) {
 	std::cerr << e.what();
 	return EXIT_FAILURE;
 }
 
-void launch(std::span<const char*> cmd_args, const po::variables_map& args, log::Logger& logger) {
+void launch(const po::variables_map& args, log::Logger& logger) {
+	// Install signal handler
+	boost::asio::io_context service;
+	boost::asio::signal_set signals(service, SIGINT, SIGTERM);
+
+	signals.async_wait([&](auto error, auto signal) {
+		LOG_DEBUG_SYNC(logger, "Received signal {}({})", util::sig_str(signal), signal);
+		stop_services();
+		service.stop();
+	});
+
+	std::jthread worker([&]() {
+		service.run();
+	});
+
+	// Start services
 	std::vector<std::jthread> services;
 
-	if(args.count("services.dns")) {
+	if(args.count("dns.active")) {
 		services.emplace_back(std::jthread([&]() {
-			launch_dns(cmd_args, logger);
+			launch_dns(args, logger);
 		}));
 	}
 
@@ -67,10 +87,24 @@ void launch(std::span<const char*> cmd_args, const po::variables_map& args, log:
 	}
 }
 
-void launch_dns(std::span<const char*> cmd_args, log::Logger& logger) try {
+void stop_services() {
+	dns::stop();
+}
+
+void launch_dns(const po::variables_map& args, log::Logger& logger) try {
 	LOG_INFO_SYNC(logger, "Starting DNS service...");
 
-	const auto res = dns::run(cmd_args);
+	const auto& conf_path = args["dns.config"].as<std::string>();
+	auto opts = load_options(conf_path, dns::options());
+
+	if(!opts.contains("console_log.prefix")) {
+		boost::any prefix = std::string("[mdns]");
+		opts.insert({ "console_log.prefix", po::variable_value(prefix, false) });
+	}
+
+	log::Logger service_logger;
+	util::configure_logger(service_logger, opts);
+	const auto res = dns::run(opts, service_logger);
 
 	if(res != EXIT_SUCCESS) {
 		LOG_FATAL_SYNC(logger, "DNS service terminated abnormally, aborting");
@@ -126,6 +160,20 @@ void launch_world(std::span<const char*> cmd_args, log::Logger& logger) try {
 	std::exit(EXIT_FAILURE);
 }
 
+po::variables_map load_options(const std::string& config_path, const po::options_description& opt_desc) {
+	std::ifstream ifs(config_path);
+
+	if(!ifs) {
+		throw std::invalid_argument("Unable to open configuration file: " + config_path);
+	}
+
+	po::variables_map options;
+	po::store(po::parse_config_file(ifs, opt_desc, true), options);
+	po::notify(options);
+
+	return options;
+}
+
 po::variables_map parse_arguments(int argc, const char* argv[]) {
 	// Command-line options
 	po::options_description cmdline_opts("Generic options");
@@ -140,15 +188,22 @@ po::variables_map parse_arguments(int argc, const char* argv[]) {
 	// Config file options
 	po::options_description config_opts("Fusion configuration options");
 	config_opts.add_options()
-		("services.dns", po::value<bool>()->required())
-		("services.account", po::value<bool>()->required())
-		("services.character", po::value<bool>()->required())
-		("services.gateway", po::value<bool>()->required())
-		("services.login", po::value<bool>()->required())
-		("services.world", po::value<bool>()->required())
+		("dns.active", po::value<bool>()->required())
+		("dns.config", po::value<std::string>()->required())
+		("account.active", po::value<bool>()->required())
+		("account.config", po::value<std::string>()->required())
+		("character.active", po::value<bool>()->required())
+		("character.config", po::value<std::string>()->required())
+		("gateway.active", po::value<bool>()->required())
+		("gateway.config", po::value<std::string>()->required())
+		("world.active", po::value<bool>()->required())
+		("world.config", po::value<std::string>()->required())
+		("login.active", po::value<bool>()->required())
+		("login.config", po::value<std::string>()->required())
 		("console_log.verbosity", po::value<std::string>()->required())
 		("console_log.filter-mask", po::value<std::uint32_t>()->default_value(0))
 		("console_log.colours", po::value<bool>()->required())
+		("console_log.prefix", po::value<std::string>()->default_value(""))
 		("remote_log.verbosity", po::value<std::string>()->required())
 		("remote_log.filter-mask", po::value<std::uint32_t>()->default_value(0))
 		("remote_log.service_name", po::value<std::string>()->required())

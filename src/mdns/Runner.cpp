@@ -13,10 +13,7 @@
 #include <spark/Server.h>
 #include <shared/threading/Utility.h>
 #include <shared/util/Utility.h>
-#include <shared/util/LogConfig.h>
-#include <boost/asio/signal_set.hpp>
 #include <exception>
-#include <fstream>
 #include <iostream>
 #include <memory>
 #include <utility>
@@ -27,7 +24,6 @@ namespace po = boost::program_options;
 
 namespace ember::dns {
 
-po::variables_map parse_arguments(std::span<const char*> cmd_args);
 std::exception_ptr eptr = nullptr;
 std::binary_semaphore stop_flag { 0 };
 
@@ -38,19 +34,6 @@ void launch(const boost::program_options::variables_map& args,
 
 int asio_launch(const boost::program_options::variables_map& args,
                 ember::log::Logger& logger);
-
-int run(std::span<const char*> cmd_args) {
-	const po::variables_map args = parse_arguments(cmd_args);
-
-	log::Logger logger;
-	util::configure_logger(logger, args);
-	log::global_logger(logger);
-	LOG_INFO(logger) << "Logger configured successfully" << LOG_SYNC;
-
-	const auto ret = asio_launch(args, logger);
-	LOG_INFO(logger) << APP_NAME << " terminated" << LOG_SYNC;
-	return ret;
-}
 
 void stop() {
 	stop_flag.release();
@@ -64,20 +47,13 @@ void stop() {
  * services can cleanly shut down upon destruction without requiring
  * explicit shutdown() calls in a signal handler.
  */
-int asio_launch(const po::variables_map& args, log::Logger& logger) try {
+int run(const po::variables_map& args, log::Logger& logger) try {
 	boost::asio::io_context service(BOOST_ASIO_CONCURRENCY_HINT_UNSAFE_IO);
+	boost::asio::io_context::work work(service);
 
 	std::thread thread([&]() {
 		thread::set_name("Launcher");
 		launch(args, service, stop_flag, logger);
-	});
-
-	// Install signal handler
-	boost::asio::signal_set signals(service, SIGINT, SIGTERM);
-
-	signals.async_wait([&](auto error, auto signal) {
-		LOG_DEBUG_SYNC(logger, "Received signal {}({})", util::sig_str(signal), signal);
-		stop_flag.release();
 	});
 
 	std::jthread worker(static_cast<std::size_t(boost::asio::io_context::*)()>
@@ -129,25 +105,17 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 	eptr = std::current_exception();
 }
 
-po::variables_map parse_arguments(std::span<const char*> args) {
-	// Command-line options
-	po::options_description cmdline_opts("Generic options");
-	cmdline_opts.add_options()
-		("help", "Displays a list of available options")
-		("config,c", po::value<std::string>()->default_value("mdns.conf"),
-			 "Path to the configuration file");
-
-	po::positional_options_description pos;
-	pos.add("config", 1);
-
-	// Config file options
-	po::options_description config_opts("Multicast DNS configuration options");
-	config_opts.add_options()
+po::options_description options() {
+	po::options_description opts;
+	opts.add_options()
 		("mdns.interface", po::value<std::string>()->required())
 		("mdns.group", po::value<std::string>()->required())
 		("mdns.port", po::value<std::uint16_t>()->default_value(5353))
 		("spark.address", po::value<std::string>()->required())
 		("spark.port", po::value<std::uint16_t>()->required())
+		("metrics.enabled", po::value<bool>()->required())
+		("metrics.statsd_host", po::value<std::string>()->required())
+		("metrics.statsd_port", po::value<std::uint16_t>()->required())
 		("console_log.verbosity", po::value<std::string>()->required())
 		("console_log.filter-mask", po::value<std::uint32_t>()->default_value(0))
 		("console_log.colours", po::value<bool>()->required())
@@ -164,31 +132,8 @@ po::variables_map parse_arguments(std::span<const char*> args) {
 		("file_log.size_rotate", po::value<std::uint32_t>()->required())
 		("file_log.midnight_rotate", po::value<bool>()->required())
 		("file_log.log_timestamp", po::value<bool>()->required())
-		("file_log.log_severity", po::value<bool>()->required())
-		("metrics.enabled", po::value<bool>()->required())
-		("metrics.statsd_host", po::value<std::string>()->required())
-		("metrics.statsd_port", po::value<std::uint16_t>()->required());
-
-	po::variables_map options;
-	po::store(po::command_line_parser(args.size(), args.data()).positional(pos).options(cmdline_opts).run(), options);
-	po::notify(options);
-
-	if(options.count("help")) {
-		std::cout << cmdline_opts;
-		std::exit(EXIT_SUCCESS);
-	}
-
-	const auto& config_path = options["config"].as<std::string>();
-	std::ifstream ifs(config_path);
-
-	if(!ifs) {
-		throw std::invalid_argument("Unable to open configuration file: " + config_path);
-	}
-
-	po::store(po::parse_config_file(ifs, config_opts), options);
-	po::notify(options);
-
-	return options;
+		("file_log.log_severity", po::value<bool>()->required());
+	return opts;
 }
 
 } // dns, ember

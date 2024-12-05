@@ -13,13 +13,13 @@
 #include <boost/program_options.hpp>
 #include <shared/util/cstring_view.hpp>
 #include <semaphore>
-#include <span>
 
 namespace ember::dns {
 
 static constexpr ember::cstring_view APP_NAME { "MDNS-SD" };
 
-int run(std::span<const char*> cmd_args);
+boost::program_options::options_description options();
+int run(const boost::program_options::variables_map& args, log::Logger& logger);
 void stop();
 
 } // dns, ember

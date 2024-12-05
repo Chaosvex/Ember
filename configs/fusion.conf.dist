@@ -1,13 +1,29 @@
 # Fusion configuration
 
 # Specify which services should be run within the Fusion instance
-[services]
-dns = true
-account = true
-character = true
-login = true
-gateway = true
-world = true
+[dns]
+active = true
+config = mdns.conf
+
+[account]
+active = true
+config = account.conf
+
+[character]
+active = true
+config = character.conf
+
+[login]
+active = true
+config = login.conf
+
+[gateway]
+active = true
+config = gateway.conf
+
+[world]
+active = true
+config = world.conf
 
 [remote_log]
 service_name = gateway
