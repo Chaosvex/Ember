@@ -175,7 +175,7 @@ po::variables_map parse_arguments(int argc, const char* argv[]) {
 		("remote_log.port", po::value<std::uint16_t>()->required())
 		("file_log.verbosity", po::value<std::string>()->required())
 		("file_log.filter-mask", po::value<std::uint32_t>()->default_value(0))
-		("file_log.path", po::value<std::string>()->default_value("world.log"))
+		("file_log.path", po::value<std::string>()->default_value("mdns.log"))
 		("file_log.timestamp_format", po::value<std::string>())
 		("file_log.mode", po::value<std::string>()->required())
 		("file_log.size_rotate", po::value<std::uint32_t>()->required())
