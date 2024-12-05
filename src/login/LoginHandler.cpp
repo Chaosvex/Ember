@@ -463,7 +463,7 @@ void LoginHandler::on_character_data(const FetchCharacterCounts& action) {
 	} catch(dal::exception& e) { // not a fatal exception, we'll keep going without the data
 		state_data_ = CharacterCount();
 		metrics_.increment("login_internal_failure");
-		LOG_ERROR_ASYNC(logger_, "DAL failure for {} : {}", user_->username(), e.what());
+		LOG_ERROR_ASYNC(logger_, "DAL failure for {}: {}", user_->username(), e.what());
 	}
 
 	update_state(LoginState::REQUEST_REALMS);

@@ -80,7 +80,7 @@ attributes::Fingerprint Parser::fingerprint(spark::io::pmr::BinaryStreamReader& 
 	return attr;
 }
 
-Header Parser::header() try {
+Header Parser::read_header() try {
 	spark::io::BufferAdaptor sba(buffer_);
 ;	spark::io::BinaryStream stream(sba);
 
@@ -205,8 +205,8 @@ std::vector<attributes::Attribute> Parser::attributes() try {
 	spark::io::pmr::BinaryStreamReader stream(sba);
 	stream.skip(HEADER_LENGTH);
 
-	const Header hdr = header();
-	const MessageType type{ static_cast<std::uint16_t>(hdr.type) };
+	const Header hdr = read_header();
+	const MessageType type { hdr.type.value() };
 
 	std::vector<attributes::Attribute> attributes;
 	bool has_msg_integrity = false;
@@ -344,8 +344,7 @@ bool Parser::check_attr_validity(const Attributes attr_type, const MessageType m
 				logger_(Verbosity::STUN_LOG_DEBUG, Error::RESP_BAD_REQ_ATTR_SERVER);
 				return false;
 			}
-		}
-		else {
+		} else {
 			// might be our fault but probably not
 			logger_(Verbosity::STUN_LOG_DEBUG, Error::RESP_UNKNOWN_REQ_ATTRIBUTE);
 			return false;
