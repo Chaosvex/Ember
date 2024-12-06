@@ -13,13 +13,13 @@
 #include <boost/program_options/variables_map.hpp>
 #include <boost/program_options/options_description.hpp>
 
-namespace ember::world {
+namespace ember::account {
 
-constexpr cstring_view APP_NAME { "World Server" };
+constexpr cstring_view APP_NAME { "Account Daemon" };
 
 int run(const boost::program_options::variables_map& args, log::Logger& logger);
 void stop();
 
 boost::program_options::options_description options();
 
-} // world, ember
+} // account, ember

@@ -7,11 +7,13 @@
  */
 
 #include "Runner.h"
+#include <logger/Logger.h>
 #include <shared/Banner.h>
 #include <shared/Version.h>
 #include <shared/threading/Utility.h>
 #include <shared/util/LogConfig.h>
 #include <shared/util/Utility.h>
+#include <shared/util/cstring_view.hpp>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/signal_set.hpp>
 #include <fstream>
@@ -64,11 +66,12 @@ int run(std::span<const char*> cmd_args) {
 	});
 
 	std::jthread worker([&]() {
+		thread::set_name("Signal handler");
 		service.run();
 	});
 
 	const auto ret = dns::run(args, logger);
-	LOG_INFO(logger) << dns::APP_NAME << " terminated" << LOG_SYNC;
+	LOG_INFO_SYNC(logger, "{} terminated", dns::APP_NAME);
 	return ret;
 }
 

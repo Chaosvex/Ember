@@ -9,6 +9,7 @@
 #include "Runner.h"
 #include "MapRunner.h"
 #include "utilities/Utility.h"
+#include <logger/Logger.h>
 #include <dbcreader/Reader.h>
 #include <boost/program_options.hpp>
 #include <vector>

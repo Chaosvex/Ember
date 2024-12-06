@@ -8,14 +8,14 @@
 
 #pragma once
 
-#include <logger/Logger.h>
+#include <logger/LoggerFwd.h>
+#include <shared/util/cstring_view.hpp>
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
-#include <shared/util/cstring_view.hpp>
 
 namespace ember::dns {
 
-static constexpr ember::cstring_view APP_NAME { "MDNS-SD" };
+static constexpr cstring_view APP_NAME { "MDNS-SD" };
 
 int run(const boost::program_options::variables_map& args, log::Logger& logger);
 void stop();

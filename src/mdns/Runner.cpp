@@ -10,6 +10,7 @@
 #include "Server.h"
 #include "MulticastSocket.h"
 #include "NSDService.h"
+#include <logger/Logger.h>
 #include <spark/Server.h>
 #include <shared/threading/Utility.h>
 #include <shared/util/Utility.h>

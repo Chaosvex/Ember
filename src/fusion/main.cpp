@@ -6,6 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+#include <account/Runner.h>
 #include <mdns/Runner.h>
 #include <world/Runner.h>
 #include <logger/Logger.h>
@@ -71,6 +72,7 @@ void launch(const po::variables_map& args, log::Logger& logger) {
 	});
 
 	std::jthread worker([&]() {
+		thread::set_name("Signal handler");
 		service.run();
 	});
 
@@ -121,6 +123,7 @@ void launch(const po::variables_map& args, log::Logger& logger) {
 void stop_services() {
 	// stopping a service which is not running should be a nop
 	dns::stop();
+	account::stop();
 	world::stop();
 }
 
@@ -169,9 +172,24 @@ void launch_gateway(const po::variables_map& args, log::Logger& logger) try {
 void launch_account(const po::variables_map& args, log::Logger& logger) try {
 	LOG_INFO_SYNC(logger, "Starting account service...");
 
-	// todo
+	const auto& conf_path = args["account.config"].as<std::string>();
+	auto opts = load_options(conf_path, account::options());
+
+	if(!opts.contains("console_log.prefix")) {
+		boost::any prefix = std::string("[account]");
+		opts.insert({ "console_log.prefix", po::variable_value(prefix, false) });
+	}
+
+	log::Logger service_logger;
+	util::configure_logger(service_logger, opts);
+	const auto res = account::run(opts, service_logger);
+
+	if(res != EXIT_SUCCESS) {
+		LOG_FATAL_SYNC(logger, "Account service terminated abnormally, aborting");
+		std::exit(res);
+	}
 } catch(std::exception& e) {
-	LOG_FATAL_SYNC(logger, "Account error: {}", e.what());
+	LOG_FATAL_SYNC(logger, "Account service error: {}", e.what());
 	std::exit(EXIT_FAILURE);
 }
 

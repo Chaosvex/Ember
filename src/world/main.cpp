@@ -19,8 +19,6 @@
 #include <stdexcept>
 #include <cstdlib>
 
-constexpr ember::cstring_view APP_NAME { "World Server" };
-
 using namespace ember;
 namespace po = boost::program_options;
 
@@ -37,8 +35,8 @@ po::variables_map parse_arguments(int argc, const char* argv[]);
  */
 int main(int argc, const char* argv[]) try {
 	thread::set_name("Main");
-	print_banner(APP_NAME);
-	util::set_window_title(APP_NAME);
+	print_banner(world::APP_NAME);
+	util::set_window_title(world::APP_NAME);
 
 	const po::variables_map args = parse_arguments(argc, argv);
 
@@ -48,7 +46,7 @@ int main(int argc, const char* argv[]) try {
 
 	LOG_INFO(logger) << "Logger configured successfully" << LOG_SYNC;
 	const auto ret = launch(args, logger);
-	LOG_INFO_SYNC(logger, "{} terminated", APP_NAME);
+	LOG_INFO_SYNC(logger, "{} terminated", world::APP_NAME);
 	return ret;
 } catch(const std::exception& e) {
 	std::cerr << e.what();
