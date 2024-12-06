@@ -82,6 +82,36 @@ void launch(const po::variables_map& args, log::Logger& logger) {
 		}));
 	}
 
+	if(args.count("account.active")) {
+		services.emplace_back(std::jthread([&]() {
+			launch_dns(args, logger);
+		}));
+	}
+
+	if(args.count("character.active")) {
+		services.emplace_back(std::jthread([&]() {
+			// todo
+		}));
+	}
+
+	if(args.count("login.active")) {
+		services.emplace_back(std::jthread([&]() {
+			// todo
+		}));
+	}
+
+	if(args.count("gateway.active")) {
+		services.emplace_back(std::jthread([&]() {
+			// todo
+		}));
+	}
+
+	if(args.count("world.active")) {
+		services.emplace_back(std::jthread([&]() {
+			// todo
+		}));
+	}
+
 	if(services.empty()) {
 		LOG_INFO_SYNC(logger, "No services specified? Nothing to do, farewell.");
 	}
