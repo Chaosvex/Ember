@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "Launch.h"
+#include "Runner.h"
 #include <logger/Logger.h>
 #include <shared/Banner.h>
 #include <shared/threading/Utility.h>
@@ -56,7 +56,7 @@ int main(int argc, const char* argv[]) try {
 }
 
 int launch(const po::variables_map& args, log::Logger& logger) try {
-	return world::launch(args, logger);
+	return world::run(args, logger);
 } catch(const std::exception& e) {
 	LOG_FATAL_SYNC(logger, "{}", e.what());
 	return EXIT_FAILURE;
@@ -77,25 +77,6 @@ po::variables_map parse_arguments(int argc, const char* argv[]) {
 
 	// Config file options
 	po::options_description config_opts("World configuration options");
-	config_opts.add_options()
-		("console_log.verbosity", po::value<std::string>()->required())
-		("console_log.filter-mask", po::value<std::uint32_t>()->default_value(0))
-		("console_log.colours", po::value<bool>()->required())
-		("remote_log.verbosity", po::value<std::string>()->required())
-		("remote_log.filter-mask", po::value<std::uint32_t>()->default_value(0))
-		("remote_log.service_name", po::value<std::string>()->required())
-		("remote_log.host", po::value<std::string>()->required())
-		("remote_log.port", po::value<std::uint16_t>()->required())
-		("file_log.verbosity", po::value<std::string>()->required())
-		("file_log.filter-mask", po::value<std::uint32_t>()->default_value(0))
-		("file_log.path", po::value<std::string>()->default_value("world.log"))
-		("file_log.timestamp_format", po::value<std::string>())
-		("file_log.mode", po::value<std::string>()->required())
-		("file_log.size_rotate", po::value<std::uint32_t>()->required())
-		("file_log.midnight_rotate", po::bool_switch()->required())
-		("file_log.log_timestamp", po::value<bool>()->required())
-		("file_log.log_severity", po::value<bool>()->required());
-
 	config_opts.add(world::options());
 
 	po::variables_map options;

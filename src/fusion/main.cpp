@@ -7,6 +7,7 @@
  */
 
 #include <mdns/Runner.h>
+#include <world/Runner.h>
 #include <logger/Logger.h>
 #include <shared/Banner.h>
 #include <shared/util/cstring_view.hpp>
@@ -76,39 +77,39 @@ void launch(const po::variables_map& args, log::Logger& logger) {
 	// Start services
 	std::vector<std::jthread> services;
 
-	if(args.count("dns.active")) {
+	if(args["dns.active"].as<bool>()) {
 		services.emplace_back(std::jthread([&]() {
 			launch_dns(args, logger);
 		}));
 	}
 
-	if(args.count("account.active")) {
+	if(args["account.active"].as<bool>()) {
 		services.emplace_back(std::jthread([&]() {
-			launch_dns(args, logger);
+			launch_account(args, logger);
 		}));
 	}
 
-	if(args.count("character.active")) {
+	if(args["character.active"].as<bool>()) {
 		services.emplace_back(std::jthread([&]() {
-			// todo
+			launch_character(args, logger);
 		}));
 	}
 
-	if(args.count("login.active")) {
+	if(args["login.active"].as<bool>()) {
 		services.emplace_back(std::jthread([&]() {
-			// todo
+			launch_login(args, logger);
 		}));
 	}
 
-	if(args.count("gateway.active")) {
+	if(args["gateway.active"].as<bool>()) {
 		services.emplace_back(std::jthread([&]() {
-			// todo
+			launch_gateway(args, logger);
 		}));
 	}
 
-	if(args.count("world.active")) {
+	if(args["world.active"].as<bool>()) {
 		services.emplace_back(std::jthread([&]() {
-			// todo
+			launch_world(args, logger);
 		}));
 	}
 
@@ -118,7 +119,9 @@ void launch(const po::variables_map& args, log::Logger& logger) {
 }
 
 void stop_services() {
+	// stopping a service which is not running should be a nop
 	dns::stop();
+	world::stop();
 }
 
 void launch_dns(const po::variables_map& args, log::Logger& logger) try {
@@ -145,7 +148,7 @@ void launch_dns(const po::variables_map& args, log::Logger& logger) try {
 	std::exit(EXIT_FAILURE);
 }
 
-void launch_login(std::span<const char*> cmd_args, log::Logger& logger) try {
+void launch_login(const po::variables_map& args, log::Logger& logger) try {
 	LOG_INFO_SYNC(logger, "Starting login service...");
 
 	// todo
@@ -154,7 +157,7 @@ void launch_login(std::span<const char*> cmd_args, log::Logger& logger) try {
 	std::exit(EXIT_FAILURE);
 }
 
-void launch_gateway(std::span<const char*> cmd_args, log::Logger& logger) try {
+void launch_gateway(const po::variables_map& args, log::Logger& logger) try {
 	LOG_INFO_SYNC(logger, "Starting gateway service...");
 
 	// todo
@@ -163,7 +166,7 @@ void launch_gateway(std::span<const char*> cmd_args, log::Logger& logger) try {
 	std::exit(EXIT_FAILURE);
 }
 
-void launch_account(std::span<const char*> cmd_args, log::Logger& logger) try {
+void launch_account(const po::variables_map& args, log::Logger& logger) try {
 	LOG_INFO_SYNC(logger, "Starting account service...");
 
 	// todo
@@ -172,7 +175,7 @@ void launch_account(std::span<const char*> cmd_args, log::Logger& logger) try {
 	std::exit(EXIT_FAILURE);
 }
 
-void launch_character(std::span<const char*> cmd_args, log::Logger& logger) try {
+void launch_character(const po::variables_map& args, log::Logger& logger) try {
 	LOG_INFO_SYNC(logger, "Starting character service...");
 
 	// todo
@@ -181,10 +184,25 @@ void launch_character(std::span<const char*> cmd_args, log::Logger& logger) try 
 	std::exit(EXIT_FAILURE);
 }
 
-void launch_world(std::span<const char*> cmd_args, log::Logger& logger) try {
+void launch_world(const po::variables_map& args, log::Logger& logger) try {
 	LOG_INFO_SYNC(logger, "Starting world service...");
 
-	// todo
+	const auto& conf_path = args["world.config"].as<std::string>();
+	auto opts = load_options(conf_path, world::options());
+
+	if(!opts.contains("console_log.prefix")) {
+		boost::any prefix = std::string("[world]");
+		opts.insert({ "console_log.prefix", po::variable_value(prefix, false) });
+	}
+
+	log::Logger service_logger;
+	util::configure_logger(service_logger, opts);
+	const auto res = world::run(opts, service_logger);
+
+	if(res != EXIT_SUCCESS) {
+		LOG_FATAL_SYNC(logger, "World service terminated abnormally, aborting");
+		std::exit(res);
+	}
 } catch(std::exception& e) {
 	LOG_FATAL_SYNC(logger, "World error: {}", e.what());
 	std::exit(EXIT_FAILURE);

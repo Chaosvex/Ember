@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include "Launch.h"
+#include "Runner.h"
 #include "MapRunner.h"
 #include "utilities/Utility.h"
 #include <dbcreader/Reader.h>
@@ -19,7 +19,7 @@ namespace po = boost::program_options;
 
 namespace ember::world {
 
-int launch(const boost::program_options::variables_map& args, log::Logger& logger) {
+int run(const boost::program_options::variables_map& args, log::Logger& logger) {
 	LOG_INFO(logger) << "Loading DBC data..." << LOG_SYNC;
 
 	dbc::DiskLoader loader(args["dbc.path"].as<std::string>(), [&](auto message) {
@@ -46,14 +46,35 @@ int launch(const boost::program_options::variables_map& args, log::Logger& logge
 	LOG_INFO_SYNC(logger, "Serving as world server for maps:");
 	print_maps(maps, dbc_store.map, logger);
 
-	run(logger);
+	map::run(logger);
 
 	return EXIT_SUCCESS;
+}
+
+void stop() {
+	// todo
 }
 
 po::options_description options() {
 	po::options_description opts;
 	opts.add_options()
+		("console_log.verbosity", po::value<std::string>()->required())
+		("console_log.filter-mask", po::value<std::uint32_t>()->default_value(0))
+		("console_log.colours", po::value<bool>()->required())
+		("remote_log.verbosity", po::value<std::string>()->required())
+		("remote_log.filter-mask", po::value<std::uint32_t>()->default_value(0))
+		("remote_log.service_name", po::value<std::string>()->required())
+		("remote_log.host", po::value<std::string>()->required())
+		("remote_log.port", po::value<std::uint16_t>()->required())
+		("file_log.verbosity", po::value<std::string>()->required())
+		("file_log.filter-mask", po::value<std::uint32_t>()->default_value(0))
+		("file_log.path", po::value<std::string>()->default_value("world.log"))
+		("file_log.timestamp_format", po::value<std::string>())
+		("file_log.mode", po::value<std::string>()->required())
+		("file_log.size_rotate", po::value<std::uint32_t>()->required())
+		("file_log.midnight_rotate", po::bool_switch()->required())
+		("file_log.log_timestamp", po::value<bool>()->required())
+		("file_log.log_severity", po::value<bool>()->required())
 		("database.min_connections", po::value<unsigned short>()->required())
 		("database.max_connections", po::value<unsigned short>()->required())
 		("database.config_path", po::value<std::string>()->required())

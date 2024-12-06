@@ -14,7 +14,9 @@
 
 namespace ember::world {
 
-int launch(const boost::program_options::variables_map& args, log::Logger& logger);
+int run(const boost::program_options::variables_map& args, log::Logger& logger);
+void stop();
+
 boost::program_options::options_description options();
 
 } // world, ember

@@ -8,7 +8,7 @@ set(EXECUTABLE_NAME world)
 set(LIBRARY_NAME    libworld)
 
 set(LIBRARY_HDR
-    Launch.h
+    Runner.h
     MapRunner.h
     Watchdog.h
     utilities/DeltaTimer.h
@@ -16,7 +16,7 @@ set(LIBRARY_HDR
     )
 
 set(LIBRARY_SRC
-    Launch.cpp
+    Runner.cpp
     MapRunner.cpp
     Watchdog.cpp
     utilities/DeltaTimer.cpp

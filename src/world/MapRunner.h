@@ -10,8 +10,8 @@
 
 #include <logger/Logger.h>
 
-namespace ember::world {
+namespace ember::map {
 
 void run(log::Logger& logger);
 
-} // world, ember
+} // map, ember

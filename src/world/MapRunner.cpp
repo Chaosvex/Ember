@@ -16,7 +16,7 @@
 
 using namespace std::chrono_literals;
 
-namespace ember::world {
+namespace ember::map {
 
 const auto UPDATE_FREQUENCY = 60.0;
 const auto TARGET_UPDATE_TIME { 1000ms / UPDATE_FREQUENCY };
@@ -88,4 +88,4 @@ void run(log::Logger& log) {
 	}
 }
 
-} // world, ember
+} // map, ember
