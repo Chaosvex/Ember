@@ -1,0 +1,47 @@
+# Fusion configuration
+
+# Specify which services should be run within the Fusion instance
+[dns]
+active = true
+config = mdns.conf
+
+[account]
+active = true
+config = account.conf
+
+[character]
+active = true
+config = character.conf
+
+[login]
+active = true
+config = login.conf
+
+[gateway]
+active = true
+config = gateway.conf
+
+[world]
+active = true
+config = world.conf
+
+[remote_log]
+service_name = gateway
+verbosity = none # trace, debug, info, warning, error, fatal or none to disable
+host = localhost
+port = 514
+
+[file_log]
+verbosity = none  # trace, debug, info, warning, error, fatal or none to disable
+path = logs/gateway_%d_%m_%Y.log
+midnight_rotate = 0
+mode = append     # if an existing log is found, you can either 'append' to it or 'truncate' it
+size_rotate = 0   # max log size in megabytes - 0 disables
+log_timestamp = 0 # enable/disable timestamping log records
+timestamp_format = [%d/%m/%Y %H:%M:%S] 
+log_severity = 1  # enable/disable writing severity to log records
+
+[console_log]
+verbosity = trace # trace, debug, info, warning, error, fatal or none to disable
+colours = true    # colourise the output
+prefix = [fusion]

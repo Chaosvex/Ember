@@ -72,7 +72,7 @@ enum class QR {
 };
 
 enum class ResCode {
-    NOERROR, FORMERR, SERVFAIL, NXDOMAIN
+    RNOERROR, FORMERR, SERVFAIL, NXDOMAIN
 };
 
 smart_enum_class(RecordType, std::uint16_t,
