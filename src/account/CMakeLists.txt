@@ -12,21 +12,20 @@ set(LIBRARY_HDR
     AccountService.h
     Sessions.h
     AccountHandler.h
-	Runner.h
+    Runner.h
     )
 
 set(LIBRARY_SRC
     AccountService.cpp
     Sessions.cpp
     AccountHandler.cpp
-	Runner.cpp
+    Runner.cpp
     )
-
 
 include_directories(${SPARK_INCLUDES_DIR})
 add_library(${LIBRARY_NAME} ${LIBRARY_HDR} ${LIBRARY_SRC})
 add_dependencies(${LIBRARY_NAME} FB_SCHEMA_COMPILE)
-target_link_libraries(${LIBRARY_NAME} spark conpool logger shared ${MYSQLCCPP_LIBRARY} ${BOTAN_LIBRARY} ${Boost_LIBRARIES} Threads::Threads)
+target_link_libraries(${LIBRARY_NAME} PRIVATE spark conpool logger shared ${MYSQLCCPP_LIBRARY} ${BOTAN_LIBRARY} ${Boost_LIBRARIES} Threads::Threads)
 
 add_executable(${EXECUTABLE_NAME} main.cpp)
 target_link_libraries(${EXECUTABLE_NAME} ${LIBRARY_NAME} logger shared ${Boost_LIBRARIES} Threads::Threads)

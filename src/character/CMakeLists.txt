@@ -12,11 +12,13 @@ set(LIBRARY_HDR
     InventoryTypes.h
     FilterTypes.h
     CharacterService.h
+    Runner.h
     )
 
 set(LIBRARY_SRC
     CharacterHandler.cpp
     CharacterService.cpp
+    Runner.cpp
     )
 
 include_directories(${CMAKE_SOURCE_DIR}/deps/utf8cpp)
