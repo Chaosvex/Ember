@@ -20,6 +20,7 @@
 #include <string>
 #include <span>
 #include <stdexcept>
+#include <thread>
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
