@@ -17,9 +17,9 @@
 #include <boost/program_options.hpp>
 #include <fstream>
 #include <iostream>
-#include <string>
 #include <span>
 #include <stdexcept>
+#include <string>
 #include <thread>
 #include <cstddef>
 #include <cstdint>

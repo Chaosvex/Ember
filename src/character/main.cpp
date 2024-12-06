@@ -6,24 +6,25 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+#include "Runner.h"
 #include "FilterTypes.h"
 #include "CharacterHandler.h"
 #include "CharacterService.h"
 #include <dbcreader/Reader.h>
-#include <spark/Server.h>
 #include <conpool/ConnectionPool.h>
 #include <conpool/Policies.h>
 #include <conpool/drivers/AutoSelect.h>
 #include <logger/Logger.h>
 #include <shared/Banner.h>
+#include <shared/Version.h>
 #include <shared/database/daos/CharacterDAO.h>
 #include <shared/threading/ThreadPool.h>
-#include <shared/Version.h>
 #include <shared/threading/Utility.h>
 #include <shared/util/cstring_view.hpp>
 #include <shared/util/LogConfig.h>
 #include <shared/util/PCREHelper.h>
 #include <shared/util/Utility.h>
+#include <spark/Server.h>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/signal_set.hpp>
 #include <boost/program_options.hpp>
@@ -32,13 +33,11 @@
 #include <iostream>
 #include <fstream>
 #include <semaphore>
+#include <stdexcept>
 #include <string>
 #include <string_view>
 #include <vector>
-#include <stdexcept>
 #include <cstdlib>
-
-constexpr ember::cstring_view APP_NAME { "Character Daemon" };
 
 namespace ep = ember::connection_pool;
 namespace po = boost::program_options;
@@ -65,8 +64,8 @@ std::exception_ptr eptr = nullptr;
  */
 int main(int argc, const char* argv[]) try {
 	thread::set_name("Main");
-	print_banner(APP_NAME);
-	util::set_window_title(APP_NAME);
+	print_banner(character::APP_NAME);
+	util::set_window_title(character::APP_NAME);
 
 	const po::variables_map args = parse_arguments(argc, argv);
 
@@ -76,7 +75,7 @@ int main(int argc, const char* argv[]) try {
 	LOG_INFO(logger) << "Logger configured successfully" << LOG_SYNC;
 
 	const auto ret = asio_launch(args, logger);
-	LOG_INFO(logger) << APP_NAME << " terminated" << LOG_SYNC;
+	LOG_INFO(logger) << character::APP_NAME << " terminated" << LOG_SYNC;
 	return ret;
 } catch(const std::exception& e) {
 	std::cerr << e.what();
@@ -201,11 +200,11 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 	CharacterService char_service(spark, handler, logger);
 	
 	service.dispatch([&]() {
-		LOG_INFO_SYNC(logger, "{} started successfully", APP_NAME);
+		LOG_INFO_SYNC(logger, "{} started successfully", character::APP_NAME);
 	});
 
 	sem.acquire();
-	LOG_INFO_SYNC(logger, "{} shutting down...", APP_NAME);
+	LOG_INFO_SYNC(logger, "{} shutting down...", character::APP_NAME);
 } catch(...) {
 	eptr = std::current_exception();
 }
