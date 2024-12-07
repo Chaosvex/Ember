@@ -9,20 +9,19 @@
 #include "Runner.h"
 #include <logger/Logger.h>
 #include <shared/Banner.h>
-#include <logger/Logger.h>
+#include <shared/Version.h>
+#include <shared/threading/Utility.h>
 #include <shared/util/LogConfig.h>
 #include <shared/util/Utility.h>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/signal_set.hpp>
 #include <boost/program_options.hpp>
+#include <exception>
 #include <fstream>
 #include <iostream>
 #include <span>
-#include <stdexcept>
 #include <string>
 #include <thread>
-#include <cstddef>
-#include <cstdint>
 #include <cstdlib>
 
 using namespace ember;
@@ -71,6 +70,7 @@ int run(std::span<const char*> cmd_args) {
 	});
 
 	std::jthread worker([&]() {
+		thread::set_name("Signal handler");
 		service.run();
 	});
 

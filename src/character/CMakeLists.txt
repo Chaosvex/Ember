@@ -28,7 +28,7 @@ add_dependencies(${LIBRARY_NAME} FB_SCHEMA_COMPILE)
 target_link_libraries(${LIBRARY_NAME} dbcreader spark logger protocol shared ${BOTAN_LIBRARY} ${Boost_LIBRARIES} Threads::Threads)
 
 add_executable(${EXECUTABLE_NAME} main.cpp)
-target_link_libraries(${EXECUTABLE_NAME} ${LIBRARY_NAME} protocol dbcreader spark conpool logger shared ${PCRE_LIBRARY} ${MYSQLCCPP_LIBRARY} ${Boost_LIBRARIES} Threads::Threads)
+target_link_libraries(${EXECUTABLE_NAME} ${LIBRARY_NAME} protocol dbcreader spark conpool logger shared ${MYSQLCCPP_LIBRARY} ${Boost_LIBRARIES} Threads::Threads)
 
 INSTALL(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX})
 set_target_properties(character libcharacter PROPERTIES FOLDER "Services")

@@ -22,10 +22,13 @@
 #include <shared/threading/Utility.h>
 #include <spark/Server.h>
 #include <boost/asio/io_context.hpp>
+#include <exception>
 #include <semaphore>
-#include <stdexcept>
 #include <string_view>
 #include <thread>
+#include <cstddef>
+#include <cstdlib>
+#include <cstdint>
 
 namespace po = boost::program_options;
 namespace ep = ember::connection_pool;

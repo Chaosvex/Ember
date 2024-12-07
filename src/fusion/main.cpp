@@ -7,6 +7,7 @@
  */
 
 #include <account/Runner.h>
+#include <character/Runner.h>
 #include <mdns/Runner.h>
 #include <world/Runner.h>
 #include <logger/Logger.h>
@@ -122,6 +123,7 @@ void launch(const po::variables_map& args, log::Logger& logger) {
 
 void stop_services() {
 	// stopping a service which is not running should be a nop
+	character::stop();
 	dns::stop();
 	account::stop();
 	world::stop();
@@ -196,7 +198,22 @@ void launch_account(const po::variables_map& args, log::Logger& logger) try {
 void launch_character(const po::variables_map& args, log::Logger& logger) try {
 	LOG_INFO_SYNC(logger, "Starting character service...");
 
-	// todo
+	const auto& conf_path = args["character.config"].as<std::string>();
+	auto opts = load_options(conf_path, character::options());
+
+	if(!opts.contains("console_log.prefix")) {
+		boost::any prefix = std::string("[character]");
+		opts.insert({ "console_log.prefix", po::variable_value(prefix, false) });
+	}
+
+	log::Logger service_logger;
+	util::configure_logger(service_logger, opts);
+	const auto res = character::run(opts, service_logger);
+
+	if(res != EXIT_SUCCESS) {
+		LOG_FATAL_SYNC(logger, "Character service terminated abnormally, aborting");
+		std::exit(res);
+	}
 } catch(std::exception& e) {
 	LOG_FATAL_SYNC(logger, "Character error: {}", e.what());
 	std::exit(EXIT_FAILURE);
