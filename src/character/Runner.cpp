@@ -101,7 +101,7 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 	LOG_INFO(logger) << "Resolving DBC references..." << LOG_SYNC;
 	dbc::link(dbc_store);
 
-	LOG_INFO_GLOB << "Compiling DBC regular expressions..." << LOG_ASYNC;
+	LOG_INFO(logger) << "Compiling DBC regular expressions..." << LOG_ASYNC;
 	std::vector<util::pcre::Result> profanity, reserved, spam;
 
 	for(auto& [_, record] : dbc_store.names_profanity) {

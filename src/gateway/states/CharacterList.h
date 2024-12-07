@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 - 2018 Ember
+ * Copyright (c) 2016 - 2024 Ember
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -16,7 +16,7 @@
 namespace ember::gateway::character_list {
 
 using namespace std::chrono_literals;
-constexpr std::chrono::minutes CHAR_LIST_TIMEOUT = 15min;
+constexpr auto CHAR_LIST_TIMEOUT = 15min;
 
 void enter(ClientContext& ctx);
 void handle_packet(ClientContext& ctx, protocol::ClientOpcode opcode);

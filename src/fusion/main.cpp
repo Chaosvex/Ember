@@ -35,7 +35,7 @@ using namespace ember;
 
 po::variables_map parse_arguments(int, const char*[]);
 po::variables_map load_options(const std::string&, const po::options_description&);
-void launch(const po::variables_map&, log::Logger&);
+int launch(const po::variables_map&, log::Logger&);
 void launch_dns(const po::variables_map&, log::Logger&);
 void launch_login(const po::variables_map&, log::Logger&);
 void launch_gateway(const po::variables_map&, log::Logger&);
@@ -55,15 +55,15 @@ int main(int argc, const char* argv[]) try {
 	util::configure_logger(logger, args);
 	log::global_logger(logger);
 
-	std::span<const char*> cmd_args(argv, argc);
-	launch(args, logger);
+	const auto ret = launch(args, logger);
 	LOG_INFO_SYNC(logger, "{} terminated", APP_NAME);
+	return ret;
 } catch(std::exception& e) {
 	std::cerr << e.what();
 	return EXIT_FAILURE;
 }
 
-void launch(const po::variables_map& args, log::Logger& logger) {
+int launch(const po::variables_map& args, log::Logger& logger) try {
 	// Install signal handler
 	boost::asio::io_context service;
 	boost::asio::signal_set signals(service, SIGINT, SIGTERM);
@@ -121,6 +121,11 @@ void launch(const po::variables_map& args, log::Logger& logger) {
 	if(services.empty()) {
 		LOG_INFO_SYNC(logger, "No services specified? Nothing to do, farewell.");
 	}
+
+	return EXIT_SUCCESS;
+} catch(std::exception& e) {
+	LOG_FATAL(logger) << e.what() << LOG_SYNC;
+	return EXIT_FAILURE;
 }
 
 void stop_services() {
