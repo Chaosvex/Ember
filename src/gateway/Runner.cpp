@@ -358,22 +358,6 @@ void print_lib_versions(log::Logger& logger) {
 		<< " - Zlib " << ZLIB_VERSION << LOG_SYNC;
 }
 
-/*
- * The concurrency level returned is usually the number of logical cores
- * in the machine but the standard doesn't guarantee that it won't be zero.
- * In that case, we just set the minimum concurrency level to one.
- */
-unsigned int check_concurrency(log::Logger& logger) {
-	unsigned int concurrency = std::thread::hardware_concurrency();
-
-	if(!concurrency) {
-		concurrency = 1;
-		LOG_WARN(logger) << "Unable to determine concurrency level" << LOG_SYNC;
-	}
-
-	return concurrency;
-}
-
 po::options_description options() {
 	po::options_description opts;
 	opts.add_options()
