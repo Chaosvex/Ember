@@ -46,7 +46,7 @@ int main(int argc, const char* argv[]) try {
 
 	LOG_INFO(logger) << "Logger configured successfully" << LOG_SYNC;
 	const auto ret = launch(args, logger);
-	LOG_INFO_SYNC(logger, "{} terminated", world::APP_NAME);
+	LOG_INFO_SYNC(logger, "{} terminated ({})", world::APP_NAME, ret);
 	return ret;
 } catch(const std::exception& e) {
 	std::cerr << e.what();

@@ -24,8 +24,8 @@
 using namespace ember;
 namespace po = boost::program_options;
 
-int run(std::span<const char*> cmd_args);
 po::variables_map parse_arguments(std::span<const char*> cmd_args);
+int run(const po::variables_map& args, log::Logger& logger);
 
 /*
  * We want to do the minimum amount of work required to get 
@@ -36,18 +36,10 @@ po::variables_map parse_arguments(std::span<const char*> cmd_args);
  * from them.
  */
 int main(int argc, const char* argv[]) try {
-	thread::set_name("Main");
 	print_banner(dns::APP_NAME);
 	util::set_window_title(dns::APP_NAME);
 
-	std::span<const char*> args(argv, argc);
-	return run(args);
-} catch(std::exception& e) {
-	std::cerr << e.what();
-	return EXIT_FAILURE;
-}
-
-int run(std::span<const char*> cmd_args) {
+	std::span<const char*> cmd_args(argv, argc);
 	const po::variables_map args = parse_arguments(cmd_args);
 
 	log::Logger logger;
@@ -55,6 +47,15 @@ int run(std::span<const char*> cmd_args) {
 	log::global_logger(logger);
 	LOG_INFO(logger) << "Logger configured successfully" << LOG_SYNC;
 
+	const auto ret = run(args, logger);
+	LOG_INFO_SYNC(logger, "{} terminated ({})", dns::APP_NAME, ret);
+	return ret;
+} catch(const std::exception& e) {
+	std::cerr << e.what();
+	return EXIT_FAILURE;
+}
+
+int run(const po::variables_map& args, log::Logger& logger) try {
 	// Install signal handler
 	boost::asio::io_context service;
 	boost::asio::signal_set signals(service, SIGINT, SIGTERM);
@@ -70,10 +71,12 @@ int run(std::span<const char*> cmd_args) {
 		service.run();
 	});
 
-	const auto ret = dns::run(args, logger);
-	LOG_INFO_SYNC(logger, "{} terminated", dns::APP_NAME);
-	return ret;
+	return dns::run(args, logger);
+} catch(const std::exception& e) {
+	LOG_FATAL(logger) << e.what() << LOG_SYNC;
+	return EXIT_FAILURE;
 }
+
 
 po::variables_map parse_arguments(std::span<const char*> args) {
 	// Command-line options
