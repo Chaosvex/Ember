@@ -11,7 +11,7 @@
 #include <memory>
 #include <unordered_map>
 
-namespace ember {
+namespace ember::gateway {
 
 class WorldConnection;
 
@@ -31,4 +31,4 @@ public:
 	std::shared_ptr<WorldConnection> locate_world(WorldID id) const;
 };
 
-} // ember
+} // gateway, ember

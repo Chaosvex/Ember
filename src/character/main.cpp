@@ -19,7 +19,6 @@
 #include <exception>
 #include <fstream>
 #include <iostream>
-#include <span>
 #include <string>
 #include <thread>
 #include <cstdlib>
@@ -28,8 +27,8 @@ using namespace ember;
 namespace el = ember::log;
 namespace po = boost::program_options;
 
-po::variables_map parse_arguments(std::span<const char*> cmd_args);
-int run(std::span<const char*> cmd_args);
+po::variables_map parse_arguments(int argc, const char* argv[]);
+int run(const po::variables_map& args, log::Logger& logger);
 
 /*
  * We want to do the minimum amount of work required to get 
@@ -42,23 +41,23 @@ int run(std::span<const char*> cmd_args);
 int main(int argc, const char* argv[]) try {
 	print_banner(character::APP_NAME);
 	util::set_window_title(character::APP_NAME);
-	
-	std::span<const char*> args(argv, argc);
-	const auto ret = run(args);
-	return ret;
-} catch(const std::exception& e) {
-	std::cerr << e.what();
-	return EXIT_FAILURE;
-}
 
-int run(std::span<const char*> cmd_args) {
-	const po::variables_map args = parse_arguments(cmd_args);
+	const po::variables_map args = parse_arguments(argc, argv);
 
 	log::Logger logger;
 	util::configure_logger(logger, args);
 	log::global_logger(logger);
 	LOG_INFO(logger) << "Logger configured successfully" << LOG_SYNC;
 
+	const auto ret = run(args, logger);
+	LOG_INFO_SYNC(logger, "{} terminated ({})", character::APP_NAME, ret);
+	return ret;
+} catch(const std::exception& e) {
+	std::cerr << e.what();
+	return EXIT_FAILURE;
+}
+
+int run(const po::variables_map& args, log::Logger& logger) try {
 	// Install signal handler
 	boost::asio::io_context service;
 	boost::asio::signal_set signals(service, SIGINT, SIGTERM);
@@ -74,12 +73,13 @@ int run(std::span<const char*> cmd_args) {
 		service.run();
 	});
 
-	const auto ret = character::run(args, logger);
-	LOG_INFO_SYNC(logger, "{} terminated", character::APP_NAME);
-	return ret;
+	return character::run(args, logger);
+} catch(const std::exception& e) {
+	LOG_FATAL(logger) << e.what() << LOG_SYNC;
+	return EXIT_FAILURE;
 }
 
-po::variables_map parse_arguments(std::span<const char*> args) {
+po::variables_map parse_arguments(const int argc, const char* argv[]) {
 	//Command-line options
 	po::options_description cmdline_opts("Generic options");
 	cmdline_opts.add_options()
@@ -95,7 +95,7 @@ po::variables_map parse_arguments(std::span<const char*> args) {
 	config_opts.add(character::options());
 
 	po::variables_map options;
-	po::store(po::command_line_parser(args.size(), args.data()).positional(pos).options(cmdline_opts).run(), options);
+	po::store(po::command_line_parser(argc, argv).positional(pos).options(cmdline_opts).run(), options);
 	po::notify(options);
 
 	if(options.count("help")) {

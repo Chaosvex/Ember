@@ -11,10 +11,10 @@
 #include <protocol/Packets.h>
 #include <spark/buffers/pmr/Buffer.h>
 
-namespace ember {
+namespace ember::gateway {
 
 template<typename Packet_t>
 int compress_message(const Packet_t& packet, spark::io::pmr::Buffer& out, int compression_level);
 int compress_message(const spark::io::pmr::Buffer& in, spark::io::pmr::Buffer& out, int compression_level);
 
-} // ember
+} // gateway, ember

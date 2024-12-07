@@ -14,7 +14,7 @@
 #include <string_view>
 #include <fstream>
 
-namespace ember {
+namespace ember::gateway {
 
 class FBSink final : public PacketSink {
 	constexpr static std::uint32_t VERSION = 1;
@@ -31,4 +31,4 @@ public:
 	         PacketDirection dir) override;
 };
 
-} // ember
+} // gateway, ember

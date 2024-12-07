@@ -31,7 +31,7 @@
 #include <cstddef>
 #include <cstdint>
 
-namespace ember::authentication {
+namespace ember::gateway::authentication {
 
 using AddonData = protocol::client::AuthSession::AddonData;
 
@@ -339,4 +339,4 @@ void exit(ClientContext& ctx) {
 	}
 }
 
-} // authentication, ember
+} // authentication, gateway, ember

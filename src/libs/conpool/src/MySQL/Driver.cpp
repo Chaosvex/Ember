@@ -15,20 +15,24 @@
 #include <cppconn/statement.h>
 #include <cppconn/prepared_statement.h>
 #include <format>
+#include <cassert>
 
 namespace ember::drivers {
 
-MySQL::MySQL(std::string user, std::string pass, std::string_view host, std::uint16_t port,
-             std::string db)
-	: dsn(std::format("tcp://{}:{}", host, port)),
-	  database(std::move(db)),
-	  username(std::move(user)),
-      password(std::move(pass)) {
+MySQL::MySQL(std::string user, std::string pass, std::string_view host, std::uint16_t port, std::string db) :
+	dsn(std::format("tcp://{}:{}", host, port)),
+	database(std::move(db)),
+	username(std::move(user)),
+    password(std::move(pass)) {
+	std::lock_guard guard(driver_lock);
 	driver = get_driver_instance();
+	assert(driver);
 }
 
 sql::Connection* MySQL::open() const {
+	thread_enter();
 	sql::Connection* conn = driver->connect(dsn, username, password);
+	thread_exit();
 
 	if(!database.empty()) {
 		conn->setSchema(database);
@@ -37,10 +41,13 @@ sql::Connection* MySQL::open() const {
 	conn->setAutoCommit(true);
 	constexpr bool opt = true;
 	conn->setClientOption("MYSQL_OPT_RECONNECT", &opt);
+
 	return conn;
 }
 
 void MySQL::close(sql::Connection* conn) const {
+	thread_enter();
+
 	std::unique_ptr<sql::Connection> conn_ptr(conn);
 
 	if(!conn->isClosed()) {
@@ -52,6 +59,8 @@ void MySQL::close(sql::Connection* conn) const {
 	if(conn_cache) {
 		close_cache(conn);
 	}
+
+	thread_exit();
 }
 
 bool MySQL::keep_alive(sql::Connection* conn) const try {
@@ -77,11 +86,13 @@ void MySQL::thread_exit() const {
 }
 
 std::string MySQL::name() {
+	std::unique_lock guard(driver_lock);
 	auto driver = get_driver_instance();
 	return driver->getName();
 }
 
 std::string MySQL::version() {
+	std::unique_lock guard(driver_lock);
 	auto driver = get_driver_instance();
 	return std::format("{}.{}.{}", driver->getMajorVersion(),
 		 driver->getMinorVersion(), driver->getPatchVersion());

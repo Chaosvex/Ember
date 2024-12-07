@@ -9,7 +9,7 @@
 #include "CharacterClient.h"
 #include <memory>
 
-namespace ember {
+namespace ember::gateway {
 
 using namespace rpc::Character;
 
@@ -199,4 +199,4 @@ void CharacterClient::handle_delete_reply(const spark::Link& link,
 	cb(protocol::Result(msg->result()));
 }
 
-} // ember
+} // gateway, ember

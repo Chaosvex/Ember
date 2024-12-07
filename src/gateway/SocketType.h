@@ -17,9 +17,9 @@
  * having to pay a performance penalty for a feature we
  * don't need
  */
-namespace ember {
+namespace ember::gateway {
 
 using executor = boost::asio::io_context::executor_type;
 using tcp_socket = boost::asio::basic_stream_socket<boost::asio::ip::tcp, executor>;
 
-} // ember
+} // gateway, ember

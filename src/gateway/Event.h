@@ -10,11 +10,11 @@
 
 #include "EventTypes.h"
 
-namespace ember {
+namespace ember::gateway {
 
 struct Event {
 	EventType type;
 	~Event() = default;
 };
 
-} // ember
+} // gateway, ember

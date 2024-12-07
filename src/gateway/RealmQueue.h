@@ -18,7 +18,7 @@
 #include <mutex>
 #include <cstddef>
 
-namespace ember {
+namespace ember::gateway {
 
 class ClientConnection;
 using namespace std::chrono_literals;
@@ -66,4 +66,4 @@ public:
 	std::size_t size() const;
 };
 
-} // ember
+} // gateway, ember

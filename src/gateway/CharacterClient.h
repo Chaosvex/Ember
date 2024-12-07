@@ -14,7 +14,7 @@
 #include <protocol/ResultCodes.h>
 #include <shared/database/objects/Character.h>
 
-namespace ember {
+namespace ember::gateway {
 
 class CharacterClient final : public services::CharacterClient {
 public:
@@ -71,4 +71,4 @@ public:
 	                      RenameCB cb) const;
 };
 
-} // ember
+} // gateway, ember

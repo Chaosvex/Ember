@@ -11,11 +11,11 @@
 #include "ClientContext.h"
 #include "../Event.h"
 
-namespace ember::world {
+namespace ember::gateway::world {
 
 void enter(ClientContext& ctx);
 void handle_packet(ClientContext& ctx, protocol::ClientOpcode opcode);
 void handle_event(ClientContext& ctx, const Event* event);
 void exit(ClientContext& ctx);
 
-} // world, ember
+} // world, gateway, ember

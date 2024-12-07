@@ -12,7 +12,7 @@
 #include <memory>
 #include <map>
 
-namespace ember {
+namespace ember::gateway {
 
 class ClientConnection;
 
@@ -32,4 +32,4 @@ public:
 
 };
 
-} // ember
+} // gateway, ember

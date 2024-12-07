@@ -18,7 +18,7 @@
 #include <format>
 #include <utility>
 
-namespace ember {
+namespace ember::gateway {
 
 void ClientHandler::start() {
 	Locator::dispatcher()->register_handler(this);
@@ -149,4 +149,4 @@ ClientHandler::ClientHandler(ClientConnection& connection, ClientRef uuid,
 	context_.handler = this;
 }
 
-} // ember
+} // gateway, ember

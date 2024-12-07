@@ -8,7 +8,7 @@
 
 #include "WorldConnection.h"
 
-namespace ember {
+namespace ember::gateway {
 
 
-} // ember
+} // gateway, ember

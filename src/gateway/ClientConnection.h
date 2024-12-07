@@ -33,7 +33,7 @@
 #include <cstdint>
 #include <cstddef>
 
-namespace ember {
+namespace ember::gateway {
 
 class SessionManager;
 
@@ -113,4 +113,4 @@ public:
 
 #include "ClientConnection.inl"
 
-} // ember
+} // gateway, ember

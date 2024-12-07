@@ -17,7 +17,7 @@
 #include <memory>
 #include <vector>
 
-namespace ember {
+namespace ember::gateway {
 
 class EventDispatcher final {
 	using HandlerMap = boost::unordered_flat_map<
@@ -74,4 +74,4 @@ public:
 	void remove_handler(const ClientHandler* handler);
 };
 
-} // ember
+} // gateway, ember

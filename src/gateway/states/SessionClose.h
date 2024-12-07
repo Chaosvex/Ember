@@ -12,11 +12,11 @@
 #include "../Event.h"
 #include <memory>
 
-namespace ember::session_close {
+namespace ember::gateway::session_close {
 
 void enter(ClientContext& ctx);
 void handle_packet(ClientContext& ctx, protocol::ClientOpcode opcode);
 void handle_event(ClientContext& ctx, const Event* event);
 void exit(ClientContext& ctx);
 
-} // session_close, ember
+} // session_close, gateway, ember

@@ -8,7 +8,7 @@
 
 #include "RealmService.h"
 
-namespace ember {
+namespace ember::gateway {
 
 using namespace rpc::Realm;
 using namespace spark;
@@ -75,4 +75,4 @@ void RealmService::broadcast_status() {
 	}
 }
 
-} // ember
+} // gateway, ember

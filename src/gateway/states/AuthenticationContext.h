@@ -11,7 +11,7 @@
 #include <protocol/Packets.h>
 #include <cstdint>
 
-namespace ember::authentication {
+namespace ember::gateway::authentication {
 
 enum class State {
 	NOT_AUTHED, IN_PROGRESS, IN_QUEUE, SUCCESS, FAILED
@@ -24,4 +24,4 @@ struct Context {
 	protocol::CMSG_AUTH_SESSION packet;
 };
 
-} // authentication, ember
+} // authentication, gateway, ember

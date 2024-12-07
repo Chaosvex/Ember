@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace ember {
+namespace ember::gateway {
 
 enum class EventType {
 	QUEUE_SUCCESS,
@@ -23,4 +23,4 @@ enum class EventType {
 	TIMER_EXPIRED
 };
 
-} // ember
+} // gateway, ember

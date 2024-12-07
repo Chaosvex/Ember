@@ -23,7 +23,7 @@
 	static_assert(std::ranges::none_of(x, [](auto p) \
 		{ return p == nullptr;}), "Missing jump table entry");
 
-namespace ember { 
+namespace ember::gateway { 
 
 struct ClientContext;
 struct Event;
@@ -77,4 +77,4 @@ VALIDATE_JUMP_ENTRIES(exit_states);
 VALIDATE_JUMP_ENTRIES(update_event);
 VALIDATE_JUMP_ENTRIES(update_packet);
 
-} // ember
+} // gateway, ember

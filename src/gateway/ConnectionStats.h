@@ -10,7 +10,7 @@
 
 #include <cstddef>
 
-namespace ember {
+namespace ember::gateway {
 
 struct ConnectionStats {
 	std::size_t bytes_in;
@@ -22,4 +22,4 @@ struct ConnectionStats {
 	std::size_t latency;
 };
 
-} // ember
+} // gateway, ember

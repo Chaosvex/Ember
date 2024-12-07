@@ -13,7 +13,7 @@
 #include <chrono>
 #include <memory>
 
-namespace ember::character_list {
+namespace ember::gateway::character_list {
 
 using namespace std::chrono_literals;
 constexpr std::chrono::minutes CHAR_LIST_TIMEOUT = 15min;
@@ -23,4 +23,4 @@ void handle_packet(ClientContext& ctx, protocol::ClientOpcode opcode);
 void handle_event(ClientContext& ctx, const Event* event);
 void exit(ClientContext& ctx);
 
-} // character_list, ember
+} // character_list, gateway, ember

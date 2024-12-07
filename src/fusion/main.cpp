@@ -8,6 +8,7 @@
 
 #include <account/Runner.h>
 #include <character/Runner.h>
+#include <gateway/Runner.h>
 #include <login/Runner.h>
 #include <mdns/Runner.h>
 #include <world/Runner.h>
@@ -125,6 +126,7 @@ void launch(const po::variables_map& args, log::Logger& logger) {
 void stop_services() {
 	// stopping a service which is not running should be a nop
 	login::stop();
+	gateway::stop();
 	character::stop();
 	dns::stop();
 	account::stop();
@@ -182,7 +184,22 @@ void launch_login(const po::variables_map& args, log::Logger& logger) try {
 void launch_gateway(const po::variables_map& args, log::Logger& logger) try {
 	LOG_INFO_SYNC(logger, "Starting gateway service...");
 
-	// todo
+	const auto& conf_path = args["gateway.config"].as<std::string>();
+	auto opts = load_options(conf_path, gateway::options());
+
+	if(!opts.contains("console_log.prefix")) {
+		boost::any prefix = std::string("[gateway]");
+		opts.insert({ "console_log.prefix", po::variable_value(prefix, false) });
+	}
+
+	log::Logger service_logger;
+	util::configure_logger(service_logger, opts);
+	const auto res = gateway::run(opts, service_logger);
+
+	if(res != EXIT_SUCCESS) {
+		LOG_FATAL_SYNC(logger, "Gateway terminated abnormally, aborting");
+		std::exit(res);
+	}
 } catch(std::exception& e) {
 	LOG_FATAL_SYNC(logger, "Gateway error: {}", e.what());
 	std::exit(EXIT_FAILURE);

@@ -10,7 +10,7 @@
 
 namespace sc = std::chrono;
 
-namespace ember {
+namespace ember::gateway {
 
 void PacketLogger::add_sink(std::unique_ptr<PacketSink> sink) {
 	sinks_.emplace_back(std::move(sink));
@@ -42,4 +42,4 @@ void PacketLogger::log(std::span<const std::uint8_t> buffer, PacketDirection dir
 	}
 }
 
-} // ember
+} // gateway, ember

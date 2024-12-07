@@ -14,7 +14,7 @@
 #include <logger/Logger.h>
 #include <utility>
 
-namespace ember::world {
+namespace ember::gateway::world {
 
 void route_packet(ClientContext& ctx, protocol::ClientOpcode opcode, Route route);
 
@@ -45,4 +45,4 @@ void exit(ClientContext& ctx) {
 	//queue_service_temp->free_slot();
 }
 
-} // world, ember
+} // world, gateway, ember

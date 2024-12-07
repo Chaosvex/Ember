@@ -20,7 +20,7 @@ namespace po = boost::program_options;
 
 namespace ember {
 
-static stun::Client create_stun_client(const po::variables_map& args) {
+inline static stun::Client create_stun_client(const po::variables_map& args) {
 	const auto& proto_arg = args["stun.protocol"].as<std::string>();
 
 	if(proto_arg != "tcp" && proto_arg != "udp") {
@@ -35,7 +35,7 @@ static stun::Client create_stun_client(const po::variables_map& args) {
 	);
 }
 
-static void stun_log_callback(stun::Verbosity verbosity, stun::Error reason, log::Logger& logger) {
+inline static void stun_log_callback(stun::Verbosity verbosity, stun::Error reason, log::Logger& logger) {
 	switch(verbosity) {
 		case stun::Verbosity::STUN_LOG_TRIVIAL:
 			LOG_TRACE(logger) << "[stun] " << reason << LOG_SYNC;
@@ -58,7 +58,7 @@ static void stun_log_callback(stun::Verbosity verbosity, stun::Error reason, log
 	}
 }
 
-void log_stun_result(stun::Client& client, const stun::MappedResult& result,
+inline void log_stun_result(stun::Client& client, const stun::MappedResult& result,
                      const std::uint16_t port, log::Logger& logger) {
 	if(!result) {
 		LOG_ERROR_SYNC(logger, "STUN: Query failed ({})", stun::to_string(result.error().reason));

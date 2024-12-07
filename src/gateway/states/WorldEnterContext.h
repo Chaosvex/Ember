@@ -10,7 +10,7 @@
 
 #include <cstdint>
 
-namespace ember::world_enter {
+namespace ember::gateway::world_enter {
 
 enum class State {
 	INITIATED
@@ -21,4 +21,4 @@ struct Context {
 	std::uint64_t character_id {};
 };
 
-} // world_enter, ember
+} // world_enter, gateway, ember

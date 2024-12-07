@@ -11,7 +11,7 @@
 #include "SessionManager.h"
 #include "ConnectionStats.h"
 
-namespace ember {
+namespace ember::gateway {
 
 void QoS::set_timer() {
 	timer_.expires_from_now(TIMER_FREQUENCY);
@@ -41,4 +41,4 @@ void QoS::shutdown() {
 	
 }
 
-} // ember
+} // gateway, ember

@@ -19,7 +19,6 @@
 #include <exception>
 #include <fstream>
 #include <iostream>
-#include <span>
 #include <string>
 #include <thread>
 #include <cstdlib>
@@ -28,7 +27,7 @@ using namespace ember;
 namespace el = ember::log;
 namespace po = boost::program_options;
 
-po::variables_map parse_arguments(std::span<const char*> cmd_args);
+po::variables_map parse_arguments(int argc, const char* argv[]);
 int run(const po::variables_map& args, log::Logger& logger);
 
 /*
@@ -43,8 +42,7 @@ int main(int argc, const char* argv[]) try {
 	print_banner(login::APP_NAME);
 	util::set_window_title(login::APP_NAME);
 
-	std::span<const char*> cmd_args(argv, argc);
-	const po::variables_map args = parse_arguments(cmd_args);
+	const po::variables_map args = parse_arguments(argc, argv);
 
 	log::Logger logger;
 	util::configure_logger(logger, args);
@@ -81,7 +79,7 @@ int run(const po::variables_map& args, log::Logger& logger) try {
 	return EXIT_FAILURE;
 }
 
-po::variables_map parse_arguments(std::span<const char*> args) {
+po::variables_map parse_arguments(const int argc, const char* argv[]) {
 	//Command-line options
 	po::options_description cmdline_opts("Generic options");
 	cmdline_opts.add_options()
@@ -99,7 +97,7 @@ po::variables_map parse_arguments(std::span<const char*> args) {
 	config_opts.add(login::options());
 
 	po::variables_map options;
-	po::store(po::command_line_parser(args.size(), args.data()).positional(pos).options(cmdline_opts).run(), options);
+	po::store(po::command_line_parser(argc, argv).positional(pos).options(cmdline_opts).run(), options);
 	po::notify(options);
 
 	if(options.count("help")) {

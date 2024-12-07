@@ -25,7 +25,7 @@
 #include <string>
 #include <string_view>
 
-namespace ember {
+namespace ember::gateway {
 
 class ClientConnection;
 
@@ -72,4 +72,4 @@ public:
 
 #include "ClientHandler.inl"
 
-} // ember
+} // gateway, ember

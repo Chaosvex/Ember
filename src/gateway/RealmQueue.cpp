@@ -8,7 +8,7 @@
 
 #include "RealmQueue.h"
 
-namespace ember {
+namespace ember::gateway {
 
 void RealmQueue::set_timer() {
 	timer_.expires_from_now(frequency_);
@@ -108,4 +108,4 @@ std::size_t RealmQueue::size() const {
 	return queue_.size();
 }
 
-} // ember
+} // gateway, ember

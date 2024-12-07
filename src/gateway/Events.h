@@ -20,7 +20,7 @@
 #include <cstdint>
 #include <cstddef>
 
-namespace ember {
+namespace ember::gateway {
 
 struct PlayerLogin : Event {
 	explicit PlayerLogin(std::uint64_t character_id)
@@ -96,4 +96,4 @@ struct CharRenameResponse : Event {
 	std::string name;
 };
 
-} // ember
+} // gateway, ember

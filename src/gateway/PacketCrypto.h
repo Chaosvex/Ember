@@ -18,7 +18,7 @@
 #include <cstddef>
 #include <cstring>
 
-namespace ember {
+namespace ember::gateway {
 
 class PacketCrypto final {
 	static constexpr auto KEY_SIZE_HINT = 40u;
@@ -79,4 +79,4 @@ public:
 	}
 };
 
-} // ember
+} // gateway, ember

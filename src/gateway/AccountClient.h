@@ -15,7 +15,7 @@
 #include <functional>
 #include <cstdint>
 
-namespace ember {
+namespace ember::gateway {
 
 class AccountClient final : public services::AccountClient {
 public:
@@ -47,4 +47,4 @@ public:
 	void locate_account_id(const std::string& username, AccountCB cb) const;
 };
 
-} // ember
+} // gateway, ember

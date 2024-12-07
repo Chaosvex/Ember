@@ -8,7 +8,7 @@
 
 #pragma once
 
-namespace ember {
+namespace ember::gateway {
 
 struct ServerConfig {
 	unsigned int compression_level;
@@ -16,4 +16,4 @@ struct ServerConfig {
 	unsigned int max_bandwidth_out;
 };
 
-} // ember
+} // gateway, ember

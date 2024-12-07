@@ -9,7 +9,7 @@
 #include "WorldSessions.h"
 #include "WorldConnection.h"
 
-namespace ember {
+namespace ember::gateway {
 
 void WorldSessions::add_world(WorldID id, const std::shared_ptr<WorldConnection>& connection) {
 
@@ -28,4 +28,4 @@ std::shared_ptr<WorldConnection> WorldSessions::locate_world(WorldID id) const {
 }
 
 
-} // ember
+} // gateway, ember

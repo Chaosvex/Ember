@@ -12,11 +12,11 @@
 #include "../Events.h"
 #include <protocol/Opcodes.h>
 
-namespace ember::world_enter {
+namespace ember::gateway::world_enter {
 
 void enter(ClientContext& ctx);
 void handle_packet(ClientContext& ctx, protocol::ClientOpcode opcode);
 void handle_event(ClientContext& ctx, const Event* event);
 void exit(ClientContext& ctx);
 
-} // world_enter, ember
+} // world_enter, gateway, ember

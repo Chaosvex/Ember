@@ -60,7 +60,7 @@ int launch(const po::variables_map& args, log::Logger& logger) try {
 	return EXIT_FAILURE;
 }
 
-po::variables_map parse_arguments(int argc, const char* argv[]) {
+po::variables_map parse_arguments(const int argc, const char* argv[]) {
 	// Command-line options
 	po::options_description cmdline_opts("Generic options");
 	cmdline_opts.add_options()

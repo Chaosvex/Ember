@@ -9,14 +9,14 @@
 #include "AccountClient.h"
 #include <vector>
 
-namespace ember {
+namespace ember::gateway {
 
 using namespace rpc::Account;
 
 AccountClient::AccountClient(spark::Server& spark, log::Logger& logger)
 	: services::AccountClient(spark),
 	  logger_(logger) {
-	connect("127.0.0.1", 8000); // temp
+	connect("127.0.0.1", 6003); // temp
 }
 
 void AccountClient::on_link_up(const spark::Link& link) {
@@ -90,4 +90,4 @@ void AccountClient::handle_locate_response(std::expected<const SessionResponse*,
 	cb(msg->status(), std::move(key));
 }
 
-} // ember
+} // gateway, ember

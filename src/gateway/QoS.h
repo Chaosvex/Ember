@@ -12,7 +12,7 @@
 #include <boost/asio/steady_timer.hpp>
 #include <chrono>
 
-namespace ember {
+namespace ember::gateway {
 
 struct ServerConfig;
 class SessionManager;
@@ -32,10 +32,14 @@ class QoS {
 	void measure_bandwidth();
 
 public:
-	QoS(const ServerConfig& config, const SessionManager& sessions, boost::asio::io_context& service)
-		: sessions_(sessions), config_(config), service_(service), timer_(service), last_bandwidth_out_(0) { }
+	QoS(const ServerConfig& config, const SessionManager& sessions, boost::asio::io_context& service) : 
+		sessions_(sessions),
+		config_(config),
+		service_(service),
+		timer_(service),
+		last_bandwidth_out_(0) { }
 
 	void shutdown();
 };
 
-} // ember
+} // gateway, ember

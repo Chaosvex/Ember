@@ -11,7 +11,7 @@
 #include <shared/Realm.h>
 #include <cstddef>
 
-namespace ember {
+namespace ember::gateway {
 
 struct Config {
 	Realm* realm;
@@ -19,4 +19,4 @@ struct Config {
 	unsigned int max_slots;
 };
 
-} // ember
+} // gateway, ember
