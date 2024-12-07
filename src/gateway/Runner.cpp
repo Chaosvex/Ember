@@ -117,6 +117,8 @@ void launch(const po::variables_map& args, ServicePool& service_pool,
 	LOG_WARN(logger) << "Compiled with DEBUG_NO_THREADS!" << LOG_SYNC;
 #endif
 
+	print_lib_versions(logger);
+
 	auto stun = create_stun_client(args);
 	const auto stun_enabled = args["stun.enabled"].as<bool>();
 
