@@ -28,7 +28,7 @@ using namespace ember;
 namespace el = ember::log;
 namespace po = boost::program_options;
 
-po::variables_map parse_arguments(std::span<const char*> cmd_args);
+po::variables_map parse_arguments(int argc, const char* argv[]);
 int run(const po::variables_map& args, log::Logger& logger);
 
 /*
@@ -43,8 +43,7 @@ int main(int argc, const char* argv[]) try {
 	print_banner(gateway::APP_NAME);
 	util::set_window_title(gateway::APP_NAME);
 
-	std::span<const char*> cmd_args(argv, argc);
-	const po::variables_map args = parse_arguments(cmd_args);
+	const po::variables_map args = parse_arguments(argc, argv);
 
 	log::Logger logger;
 	util::configure_logger(logger, args);
@@ -81,8 +80,7 @@ int run(const po::variables_map& args, log::Logger& logger) try {
 	return EXIT_FAILURE;
 }
 
-
-po::variables_map parse_arguments(int argc, const char* argv[]) {
+po::variables_map parse_arguments(const int argc, const char* argv[]) {
 	//Command-line options
 	po::options_description cmdline_opts("Generic options");
 	cmdline_opts.add_options()
