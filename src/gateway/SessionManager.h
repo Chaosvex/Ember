@@ -13,7 +13,7 @@
 #include <mutex>
 #include <unordered_set>
 
-namespace ember {
+namespace ember::gateway {
 
 struct ConnectionStats;
 
@@ -61,4 +61,4 @@ public:
 	ConnectionStats aggregate_stats() const;
 };
 
-} // ember
+} // gateway, ember

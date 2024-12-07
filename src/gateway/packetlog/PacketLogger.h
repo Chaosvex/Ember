@@ -19,7 +19,7 @@
 #include <span>
 #include <vector>
 
-namespace ember {
+namespace ember::gateway {
 
 class PacketLogger final {
 	constexpr static auto RESERVE_LEN = 128u;
@@ -46,4 +46,4 @@ public:
 	}
 };
 
-} // ember
+} // gateway, ember

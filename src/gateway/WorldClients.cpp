@@ -8,7 +8,7 @@
 
 #include "WorldClients.h"
 
-namespace ember {
+namespace ember::gateway {
 
 void WorldClients::add(boost::uuids::uuid uuid, const std::shared_ptr<ClientConnection>& client) {
 
@@ -26,4 +26,4 @@ std::shared_ptr<ClientConnection> WorldClients::locate(boost::uuids::uuid uuid) 
 	return nullptr;
 }
 
-} // ember
+} // gateway, ember

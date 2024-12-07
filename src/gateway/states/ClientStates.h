@@ -10,7 +10,7 @@
 
 #include <shared/smartenum.hpp>
 
-namespace ember {
+namespace ember::gateway {
 
 smart_enum(ClientState, int,
 	AUTHENTICATING,
@@ -24,4 +24,4 @@ smart_enum(ClientState, int,
 constexpr auto STATES_MAX = SESSION_CLOSED;
 constexpr auto STATES_NUM = STATES_MAX + 1;
 
-} // ember
+} // gateway, ember

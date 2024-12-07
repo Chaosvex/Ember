@@ -13,7 +13,7 @@
 #include <cstdint>
 #include <ctime>
 
-namespace ember {
+namespace ember::gateway {
 
 enum class PacketDirection {
 	INBOUND, OUTBOUND
@@ -28,4 +28,4 @@ public:
 	virtual ~PacketSink() = default;
 };
 
-} // ember
+} // gateway, ember

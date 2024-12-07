@@ -11,7 +11,7 @@
 #include <boost/asio/ip/tcp.hpp>
 #include <memory>
 
-namespace ember {
+namespace ember::gateway {
 
 class WorldConnection final : std::enable_shared_from_this<WorldConnection> {
 	boost::asio::ip::tcp::socket socket_;
@@ -20,4 +20,4 @@ public:
 	explicit WorldConnection(boost::asio::io_context& service) : socket_(service) { }
 };
 
-} // ember
+} // gateway, ember

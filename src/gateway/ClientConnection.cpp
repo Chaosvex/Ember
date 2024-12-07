@@ -18,7 +18,7 @@
 #include <boost/asio/post.hpp>
 #include <algorithm>
 
-namespace ember {
+namespace ember::gateway {
 
 void ClientConnection::parse_header(StaticBuffer& buffer) {
 	LOG_TRACE_FILTER(logger_, LF_NETWORK) << log_func << LOG_ASYNC;
@@ -274,4 +274,4 @@ void ClientConnection::log_packets(bool enable) {
 	}
 }
 
-} // ember
+} // gateway, ember

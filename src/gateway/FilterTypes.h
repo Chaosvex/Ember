@@ -10,11 +10,11 @@
 
 #include <shared/FilterTypes.h>
 
-namespace ember {
+namespace ember::gateway {
 
 // Service specific filters
 enum ExtendedFilterType {
 	LF_PACKET_LOG = 128
 };
 
-} // ember
+} // gateway, ember

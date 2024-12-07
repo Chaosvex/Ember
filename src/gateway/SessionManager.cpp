@@ -9,7 +9,7 @@
 #include "SessionManager.h"
 #include "ConnectionStats.h"
 
-namespace ember {
+namespace ember::gateway {
 
 void SessionManager::start(std::unique_ptr<ClientConnection> session) {
 	auto sess_ptr = session.get();
@@ -72,4 +72,4 @@ SessionManager::~SessionManager() {
 	stop_all();
 }
 
-} // ember
+} // gateway, ember

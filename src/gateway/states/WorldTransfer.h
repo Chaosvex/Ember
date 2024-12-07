@@ -12,7 +12,7 @@
 #include "../Event.h"
 #include <cassert>
 
-namespace ember::world_transfer {
+namespace ember::gateway::world_transfer {
 
 void enter(ClientContext& ctx) {
 	assert(false && "Unused state");
@@ -30,4 +30,4 @@ void exit(ClientContext& ctx) {
 	assert(false && "Unused state");
 }
 
-} // world_transfer, ember
+} // world_transfer, gateway, ember

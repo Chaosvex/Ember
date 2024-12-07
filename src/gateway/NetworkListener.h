@@ -19,7 +19,7 @@
 #include <string>
 #include <cstddef>
 
-namespace ember {
+namespace ember::gateway {
 
 namespace bai = boost::asio::ip;
 
@@ -56,4 +56,4 @@ public:
 	void shutdown();
 };
 
-} // ember
+} // gateway, ember

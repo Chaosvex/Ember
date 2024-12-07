@@ -34,6 +34,8 @@ struct StatementDeleter {
 };
 
 class MySQL final {
+	inline static std::mutex driver_lock; // MySQL driver needs to be locked globally
+
 	using UniqueStmt = std::unique_ptr<sql::PreparedStatement, StatementDeleter>;
 
 	using QueryCache = boost::unordered_flat_map<std::string, UniqueStmt,

@@ -31,7 +31,7 @@ class NetworkListener final {
 	using tcp_acceptor = boost::asio::basic_socket_acceptor<
 		boost::asio::ip::tcp, boost::asio::io_context::executor_type>;
 
-	boost::asio::io_context& io_context;
+	boost::asio::io_context& io_context_;
 	tcp_acceptor acceptor_;
 	tcp_socket socket_;
 
@@ -78,7 +78,7 @@ class NetworkListener final {
 				}
 			}
 
-			socket_ = tcp_socket(boost::asio::make_strand(io_context));
+			socket_ = tcp_socket(boost::asio::make_strand(io_context_));
 			accept_connection();
 		});
 	}
@@ -95,7 +95,7 @@ public:
 	                log::Logger& logger, Metrics& metrics)
 	                : acceptor_(io_context, boost::asio::ip::tcp::endpoint(
 	                            boost::asio::ip::address::from_string(interface), port)),
-	                  io_context(io_context),
+	                  io_context_(io_context),
 	                  socket_(boost::asio::make_strand(io_context)),
 	                  session_builder_(session_create),
 	                  logger_(logger),

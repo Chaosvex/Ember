@@ -13,7 +13,7 @@
 #include <memory>
 #include <utility>
 
-namespace ember {
+namespace ember::gateway {
 
 void NetworkListener::accept_connection() {
 	LOG_TRACE_FILTER(logger_, LF_NETWORK) << log_func << LOG_ASYNC;
@@ -62,4 +62,4 @@ std::uint16_t NetworkListener::port() const {
 	return acceptor_.local_endpoint().port();
 }
 
-} // ember
+} // gateway, ember

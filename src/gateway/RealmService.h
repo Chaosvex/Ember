@@ -14,7 +14,7 @@
 #include <mutex>
 #include <vector>
 
-namespace ember {
+namespace ember::gateway {
 
 class RealmService final : public services::RealmService {
 	std::vector<spark::Link> links_;
@@ -41,4 +41,4 @@ public:
 	void set_offline();
 };
 
-} // ember
+} // gateway, ember

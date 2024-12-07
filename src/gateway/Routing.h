@@ -11,7 +11,7 @@
 #include <protocol/Opcodes.h>
 #include <unordered_map>
 
-namespace ember {
+namespace ember::gateway {
 
 enum class Route {
     INVALID,
@@ -26,4 +26,4 @@ const std::unordered_map<protocol::ClientOpcode, Route> cmsg_routes {
     { protocol::ClientOpcode::CMSG_PING, Route::SELF }
 };
 
-} // ember
+} // gateway, ember

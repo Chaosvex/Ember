@@ -8,7 +8,7 @@
 
 #include "WorldEnter.h"
 
-namespace ember::world_enter {
+namespace ember::gateway::world_enter {
 
 void initiate_player_login(ClientContext& ctx, const PlayerLogin* event) {
     auto& state_ctx = std::get<Context>(ctx.state_ctx);
@@ -37,4 +37,4 @@ void exit(ClientContext& ctx) {
 
 }
 
-} // world_enter, ember
+} // world_enter, gateway, ember

@@ -8,7 +8,7 @@
 
 #pragma once 
 
-namespace ember {
+namespace ember::gateway {
 
 class EventDispatcher;
 class CharacterClient;
@@ -41,4 +41,4 @@ public:
 	static EventDispatcher* dispatcher() { return dispatcher_; }
 };
 
-} // ember
+} // gateway, ember

@@ -15,7 +15,7 @@
 #include <string_view>
 #include <cstddef>
 
-namespace ember {
+namespace ember::gateway {
 
 LogSink::LogSink(log::Logger& logger, log::Severity severity, std::string remote_host)
                  : logger_(logger), severity_(severity), remote_host_(std::move(remote_host)) {
@@ -51,4 +51,4 @@ LogSink::~LogSink() {
 		<< "Ending packet logging for " << remote_host_ << log::flush;
 }
 
-} // ember
+} // gateway, ember

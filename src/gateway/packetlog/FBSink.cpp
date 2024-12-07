@@ -16,7 +16,7 @@
 
 namespace be = boost::endian;
 
-namespace ember {
+namespace ember::gateway {
 
 FBSink::FBSink(const std::string& filename, std::string_view host, std::string_view remote_host) {
 	start_log(filename, host, remote_host);
@@ -89,4 +89,4 @@ void FBSink::log(std::span<const std::uint8_t> buffer, const std::time_t& time,
 	file_.flush();
 }
 
-} // ember
+} // gateway, ember

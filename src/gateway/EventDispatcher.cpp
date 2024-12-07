@@ -11,7 +11,7 @@
 #include <boost/asio/post.hpp>
 #include <type_traits>
 
-namespace ember {
+namespace ember::gateway {
 
 void EventDispatcher::post_event(const ClientRef& client, std::unique_ptr<Event> event) const {
 	auto service = pool_.get_if(client.service());
@@ -95,4 +95,4 @@ void EventDispatcher::remove_handler(const ClientHandler* handler) {
 	});
 }
 
-} // ember
+} // gateway, ember

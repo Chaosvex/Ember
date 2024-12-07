@@ -8,7 +8,7 @@
 
 #include "Locator.h"
 
-namespace ember {
+namespace ember::gateway {
 
 EventDispatcher* Locator::dispatcher_;
 CharacterClient* Locator::character_;
@@ -17,4 +17,4 @@ RealmService* Locator::realm_;
 RealmQueue* Locator::queue_;
 Config* Locator::config_;
 
-} // ember
+} // gateway, ember

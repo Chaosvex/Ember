@@ -11,7 +11,7 @@
 #include "PacketSink.h"
 #include <logger/Logger.h>
 
-namespace ember {
+namespace ember::gateway {
 
 class LogSink final : public PacketSink {
 	log::Logger& logger_;
@@ -29,4 +29,4 @@ public:
 	~LogSink() override;
 };
 
-} // ember
+} // gateway, ember

@@ -13,7 +13,7 @@
 #include <cstdint>
 #include <cstddef>
 
-namespace ember {
+namespace ember::gateway {
 
 /*
  * To think about: state of the buffers if compression fails.
@@ -69,4 +69,4 @@ int compress_message(const auto& packet, spark::io::pmr::Buffer& out, int compre
 	return deflateEnd(&z_stream);
 }
 
-} // ember
+} // gateway, ember

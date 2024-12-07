@@ -19,7 +19,7 @@
 #include <variant>
 #include <cstdint>
 
-namespace ember {
+namespace ember::gateway {
 
 class ClientHandler;
 class ClientConnection;
@@ -49,4 +49,4 @@ struct ClientContext {
 	std::optional<ClientID> client_id;
 };
 
-} // ember
+} // gateway, ember

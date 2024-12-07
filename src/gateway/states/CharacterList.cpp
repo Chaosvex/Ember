@@ -23,7 +23,7 @@
 #include <memory>
 #include <vector>
 
-namespace ember::character_list {
+namespace ember::gateway::character_list {
 
 namespace {
 
@@ -235,4 +235,4 @@ void exit(ClientContext& ctx) {
 	}
 }
 
-} // character_list, ember
+} // character_list, gateway, ember

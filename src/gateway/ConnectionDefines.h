@@ -13,7 +13,7 @@
 #include <spark/buffers/DynamicTLSBuffer.h>
 #include <spark/buffers/StaticBuffer.h>
 
-namespace ember {
+namespace ember::gateway {
 
 static constexpr auto INBOUND_SIZE  { 1024 };
 static constexpr auto OUTBOUND_SIZE { 2048 };
@@ -29,4 +29,4 @@ using DynamicBuffer = spark::io::DynamicTLSBuffer<OUTBOUND_SIZE, PREALLOC_NODES>
 
 using BinaryStream = spark::io::BinaryStream<StaticBuffer>;
 
-} // ember
+} // gateway, ember
