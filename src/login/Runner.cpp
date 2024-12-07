@@ -50,7 +50,6 @@
 #include <zlib.h>
 #include <exception>
 #include <functional>
-#include <iostream>
 #include <memory>
 #include <ranges>
 #include <semaphore>

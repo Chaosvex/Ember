@@ -52,6 +52,7 @@ set(LIBRARY_HDR
     packetlog/PacketSink.h
     packetlog/FBSink.h
     packetlog/LogSink.h
+    Runner.h
     )
 
 set(LIBRARY_SRC
@@ -78,14 +79,15 @@ set(LIBRARY_SRC
     packetlog/PacketLogger.cpp
     packetlog/FBSink.cpp
     packetlog/LogSink.cpp
+    Runner.cpp
     )
 
 add_library(${LIBRARY_NAME} ${LIBRARY_HDR} ${LIBRARY_SRC})
 add_dependencies(${LIBRARY_NAME} FB_SCHEMA_COMPILE)
-target_link_libraries(${LIBRARY_NAME} dbcreader protocol spark logger shared ${BOTAN_LIBRARY} ${Boost_LIBRARIES} Threads::Threads)
+target_link_libraries(${LIBRARY_NAME} nsd conpool stun ports dbcreader protocol spark logger shared  ${ZLIB_LIBRARY} ${BOTAN_LIBRARY} ${Boost_LIBRARIES} Threads::Threads)
 
 add_executable(${EXECUTABLE_NAME} main.cpp)
-target_link_libraries(${EXECUTABLE_NAME} ${LIBRARY_NAME} nsd conpool stun ports logger shared ${ZLIB_LIBRARY} ${MYSQLCCPP_LIBRARY} ${Boost_LIBRARIES} Threads::Threads)
+target_link_libraries(${EXECUTABLE_NAME} ${LIBRARY_NAME} logger shared ${Boost_LIBRARIES} Threads::Threads)
 
 INSTALL(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX})
 set_target_properties(gateway libgateway PROPERTIES FOLDER "Services")

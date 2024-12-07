@@ -16,7 +16,6 @@
 #include <shared/util/Utility.h>
 #include <boost/asio/io_context.hpp>
 #include <exception>
-#include <iostream>
 #include <memory>
 #include <semaphore>
 #include <utility>

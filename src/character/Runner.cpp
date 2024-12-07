@@ -157,11 +157,11 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 	CharacterService char_service(spark, handler, logger);
 	
 	service.dispatch([&]() {
-		LOG_INFO_SYNC(logger, "{} started successfully", character::APP_NAME);
+		LOG_INFO_SYNC(logger, "{} started successfully", APP_NAME);
 	});
 
 	sem.acquire();
-	LOG_INFO_SYNC(logger, "{} shutting down...", character::APP_NAME);
+	LOG_INFO_SYNC(logger, "{} shutting down...", APP_NAME);
 } catch(...) {
 	eptr = std::current_exception();
 }
