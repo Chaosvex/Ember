@@ -82,13 +82,6 @@ void ConsoleSink::write(Severity severity, Filter type, std::span<const char> re
 		return;
 	}
 
-	util::Colour old_colour;
-
-	if(colour_) [[likely]] {
-		old_colour = util::save_output_colour();
-		set_colour(severity);
-	}
-
 	std::string_view sevsv = detail::severity_string(severity);
 
 	out_buf_.clear();
@@ -100,10 +93,17 @@ void ConsoleSink::write(Severity severity, Filter type, std::span<const char> re
 	std::memcpy(out_buf_.data() + offset, sevsv.data(), sevsv.size());
 	offset += sevsv.size();
 	std::memcpy(out_buf_.data() + offset, record.data(), record.size());
-	std::fwrite(out_buf_.data(), out_buf_.size(), 1, stdout);
+
 
 	if(colour_) [[likely]] {
+		util::Colour old_colour;
+		std::lock_guard guard(colour_lock);
+		old_colour = util::save_output_colour();
+		set_colour(severity);
+		std::fwrite(out_buf_.data(), out_buf_.size(), 1, stdout);
 		util::set_output_colour(old_colour);
+	} else {
+		std::fwrite(out_buf_.data(), out_buf_.size(), 1, stdout);
 	}
 
 	if(flush) {

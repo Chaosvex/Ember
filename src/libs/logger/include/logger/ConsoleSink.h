@@ -10,6 +10,7 @@
 
 #include <logger/Sink.h>
 #include <boost/container/small_vector.hpp>
+#include <mutex>
 #include <string>
 #include <utility>
 
@@ -18,6 +19,7 @@ namespace ember::log {
 class ConsoleSink final : public Sink {
 	static constexpr auto SV_RESERVE = 256u;
 	static constexpr auto MAX_BUF_SIZE = 4096u;
+	static inline std::mutex colour_lock;
 
 	bool colour_;
 	std::string prefix_;
