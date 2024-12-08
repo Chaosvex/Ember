@@ -8,6 +8,7 @@
 
 #include <spark/Peers.h>
 #include <spark/RemotePeer.h>
+#include <ranges>
 
 namespace ember::spark {
 
@@ -34,7 +35,7 @@ std::shared_ptr<RemotePeer> Peers::find(const std::string& key) {
 void Peers::notify_remove_handler(Handler* handler) {
 	std::lock_guard guard(lock_);
 
-	for(auto& [_, peer] : peers_) {
+	for(auto& peer : peers_ | std::views::values) {
 		peer->remove_handler(handler);
 	}
 }

@@ -21,6 +21,7 @@
 #include <boost/asio/io_context.hpp>
 #include <chrono>
 #include <exception>
+#include <ranges>
 #include <semaphore>
 #include <cstddef>
 #include <cstdlib>
@@ -104,15 +105,15 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 	LOG_INFO(logger) << "Compiling DBC regular expressions..." << LOG_ASYNC;
 	std::vector<util::pcre::Result> profanity, reserved, spam;
 
-	for(auto& [_, record] : dbc_store.names_profanity) {
+	for(auto& record : dbc_store.names_profanity | std::views::values) {
 		profanity.emplace_back(util::pcre::utf8_jit_compile(record.name));
 	}
 
-	for(auto& [_, record] : dbc_store.names_reserved) {
+	for(auto& record : dbc_store.names_reserved | std::views::values) {
 		reserved.emplace_back(util::pcre::utf8_jit_compile(record.name));
 	}
 
-	for(auto& [_, record] : dbc_store.spam_messages) {
+	for(auto& record : dbc_store.spam_messages | std::views::values) {
 		spam.emplace_back(util::pcre::utf8_jit_compile(record.text));
 	}
 

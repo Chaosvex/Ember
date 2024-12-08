@@ -47,6 +47,7 @@
 #include <exception>
 #include <format>
 #include <memory>
+#include <ranges>
 #include <semaphore>
 #include <string>
 #include <string_view>
@@ -275,7 +276,7 @@ void launch(const po::variables_map& args, ServicePool& service_pool,
 }
 
 std::string_view category_name(const Realm& realm, const dbc::Store<dbc::Cfg_Categories>& dbc) {
-	for(auto&& [_, record] : dbc) {
+	for(auto& record : dbc | std::views::values) {
 		if(record.category == realm.category && record.region == realm.region) {
 			return record.name.en_gb;
 		}

@@ -14,6 +14,7 @@
 #include <condition_variable>
 #include <functional>
 #include <memory>
+#include <ranges>
 
 namespace sc = std::chrono;
 using namespace std::chrono_literals;
@@ -96,7 +97,7 @@ Tracking::~Tracking() {
 void Tracking::shutdown() {
 	timer_.cancel();
 
-	for(auto& [_, request] : requests_) {
+	for(auto& request : requests_ | std::views::values) {
 		cancel(request);
 	}
 }
