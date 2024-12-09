@@ -152,7 +152,6 @@ void generate_linker(const types::Definitions& defs, const std::string& output, 
 			auto components = extract_components(f.underlying_type);
 			bool array = components.second.has_value();
 			bool write_field = false;
-			std::string type;
 
 			if(auto it = type_map.find(components.first); it == type_map.end()) {
 				auto t = locate_type(*dbc, components.first);
@@ -161,9 +160,6 @@ void generate_linker(const types::Definitions& defs, const std::string& output, 
 					throw std::runtime_error("Could not locate type: " + components.first + " in DBC: " + dbc->name);
 				}
 				
-				type = *t + ":: " + components.first;
-			} else {
-				type = it->first;
 			}
 
 			if(array) {
