@@ -42,7 +42,7 @@ std::string random_tip(const dbc::Store<dbc::GameTips>& tips) {
 
 bool validate_maps(std::span<const std::int32_t> maps, const dbc::Store<dbc::Map>& dbc, log::Logger& logger) {
 	const auto validate = [&](const auto id) {
-		auto it = std::ranges::find_if(dbc, [&](auto& record) {
+		auto it = std::ranges::find_if(dbc, [&](const auto& record) {
 			return record.second.id == id;
 		});
 

@@ -262,12 +262,10 @@ void generate_disk_loader(const types::Definitions& defs, const std::string& out
 			auto components = extract_components(f.underlying_type);
 			bool array = components.second.has_value();
 			bool str_offset = (components.first == "string_ref");
-			bool type_found = false;
 			std::string type;
 
 			if(auto it = type_map.find(components.first); it != type_map.end()) {
 				type = it->second.first;
-				type_found = true;
 			} else {
 				type = components.first;
 			}

@@ -16,7 +16,7 @@ namespace ember::dbc {
 template<typename T>
 struct TreeNode {
 	T t;
-	TreeNode<T>* parent;
+	TreeNode<T>* parent = nullptr;
 	std::vector<std::unique_ptr<TreeNode<T>>> children;
 };
 
