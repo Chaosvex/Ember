@@ -39,7 +39,7 @@ private:
 	void remap_pin();
 
 public:
-	PINAuthenticator(std::uint32_t seed);
+	explicit PINAuthenticator(std::uint32_t seed);
 
 	HashBytes calculate_hash(const SaltBytes& server_salt,
 	                         const SaltBytes& client_salt,

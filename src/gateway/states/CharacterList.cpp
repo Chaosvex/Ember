@@ -83,7 +83,7 @@ void character_rename(ClientContext& ctx) {
 	});
 }
 
-void character_enumerate(ClientContext& ctx) {
+void character_enumerate(const ClientContext& ctx) {
 	LOG_TRACE_FILTER_GLOB(LF_NETWORK) << log_func << LOG_ASYNC;
 
 	const auto& uuid = ctx.handler->uuid();

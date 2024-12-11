@@ -101,7 +101,7 @@ std::deque<PatchGraph::Node> PatchGraph::path(std::uint16_t from, std::uint16_t 
 	auto it = prev.find(to);
 
 	while(it != prev.end()) {
-		auto& node = *prev[to];
+		const auto& node = *prev[to];
 		path.push_front(node);
 		to = node.from;
 		it = prev.find(to);

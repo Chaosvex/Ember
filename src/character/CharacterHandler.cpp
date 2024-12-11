@@ -130,7 +130,7 @@ void CharacterHandler::do_create(std::uint32_t account_id, std::uint32_t realm_i
 	// PvP faction check
 	auto faction_group = dbc_.chr_races[character.race]->faction->faction_group_id;
 
-	auto it = std::ranges::find_if_not(characters, [&](auto& c) {
+	auto it = std::ranges::find_if_not(characters, [&](const auto& c) {
 		return faction_group == dbc_.chr_races[c.race]->faction->faction_group_id;
 	});
 
@@ -149,7 +149,7 @@ void CharacterHandler::do_create(std::uint32_t account_id, std::uint32_t realm_i
 	const dbc::ChrRaces* race = dbc_.chr_races[character.race];
 	const dbc::ChrClasses* class_ = dbc_.chr_classes[character.class_];
 
-	auto base_info = std::ranges::find_if(dbc_.char_start_base, [&](auto& record) {
+	auto base_info = std::ranges::find_if(dbc_.char_start_base, [&](const auto& record) {
 		return record.second.race_id == character.race
 			&& record.second.class__id == character.class_;
 	});
@@ -179,7 +179,7 @@ void CharacterHandler::do_create(std::uint32_t account_id, std::uint32_t realm_i
 	character.orientation = zone->orientation;
 
 	// populate starting equipment
-	const auto& items = std::ranges::find_if(dbc_.char_start_outfit, [&](auto& record) {
+	const auto& items = std::ranges::find_if(dbc_.char_start_outfit, [&](const auto& record) {
 		return record.second.race_id == character.race
 			&& record.second.class__id == character.class_;
 	});
@@ -192,7 +192,7 @@ void CharacterHandler::do_create(std::uint32_t account_id, std::uint32_t realm_i
 	}
 
 	// populate starting spells
-	const auto& spells = std::ranges::find_if(dbc_.char_start_spells, [&](auto& record) {
+	const auto& spells = std::ranges::find_if(dbc_.char_start_spells, [&](const auto& record) {
 		return record.second.race_id == character.race && record.second.class__id == character.class_;
 	});
 
@@ -204,7 +204,7 @@ void CharacterHandler::do_create(std::uint32_t account_id, std::uint32_t realm_i
 	}
 
 	// populate starting skills
-	const auto& skills = std::ranges::find_if(dbc_.char_start_skills, [&](auto& record) {
+	const auto& skills = std::ranges::find_if(dbc_.char_start_skills, [&](const auto& record) {
 		return record.second.race_id == character.race
 			&& record.second.class__id == character.class_;
 	});

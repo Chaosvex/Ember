@@ -35,7 +35,7 @@ std::optional<std::reference_wrapper<const types::Field>> Validator::locate_fk_p
 			continue;
 		}
 			
-		auto def_s = static_cast<types::Struct*>(def.get());
+		const auto def_s = static_cast<types::Struct*>(def.get());
 
 		for(const auto& field : def_s->fields) {
 			for(const auto& key : field.keys) {
