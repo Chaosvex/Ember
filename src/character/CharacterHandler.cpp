@@ -347,7 +347,7 @@ void CharacterHandler::do_restore(std::uint64_t id, const ResultCB& callback) co
 		return c.realm_id == character->realm_id;
 	});
 
-	if(static_cast<std::size_t>(realm_chars) >= MAX_CHARACTER_SLOTS_SERVER) {
+	if(realm_chars >= MAX_CHARACTER_SLOTS_SERVER) {
 		LOG_WARN(logger_) << "Cannot restore character - would exceed max server slots" << LOG_ASYNC;
 		callback(protocol::Result::CHAR_CREATE_SERVER_LIMIT);
 		return;
