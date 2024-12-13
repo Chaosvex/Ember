@@ -19,7 +19,7 @@ namespace ember {
 
 class ThreadPool;
 
-class AccountHandler {
+class AccountHandler final {
 public:
 	// temp. unexpected type
 	using LookupCB = std::function<void(std::expected<std::optional<std::uint32_t>, bool>)>;
