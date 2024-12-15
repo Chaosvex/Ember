@@ -151,7 +151,7 @@ void launch_dns(const po::variables_map& args, log::Logger& logger) try {
 
 	if(!opts.contains("console_log.prefix")) {
 		boost::any prefix = std::string("[mdns]");
-		opts.insert({ "console_log.prefix", po::variable_value(prefix, false) });
+		opts.try_emplace("console_log.prefix", po::variable_value(prefix, false));
 	}
 
 	log::Logger service_logger;
@@ -175,7 +175,7 @@ void launch_login(const po::variables_map& args, log::Logger& logger) try {
 
 	if(!opts.contains("console_log.prefix")) {
 		boost::any prefix = std::string("[login]");
-		opts.insert({ "console_log.prefix", po::variable_value(prefix, false) });
+		opts.try_emplace("console_log.prefix", po::variable_value(prefix, false));
 	}
 
 	log::Logger service_logger;
@@ -199,7 +199,7 @@ void launch_gateway(const po::variables_map& args, log::Logger& logger) try {
 
 	if(!opts.contains("console_log.prefix")) {
 		boost::any prefix = std::string("[gateway]");
-		opts.insert({ "console_log.prefix", po::variable_value(prefix, false) });
+		opts.try_emplace("console_log.prefix", po::variable_value(prefix, false));
 	}
 
 	log::Logger service_logger;
@@ -223,7 +223,7 @@ void launch_account(const po::variables_map& args, log::Logger& logger) try {
 
 	if(!opts.contains("console_log.prefix")) {
 		boost::any prefix = std::string("[account]");
-		opts.insert({ "console_log.prefix", po::variable_value(prefix, false) });
+		opts.try_emplace("console_log.prefix", po::variable_value(prefix, false));
 	}
 
 	log::Logger service_logger;
@@ -247,7 +247,7 @@ void launch_character(const po::variables_map& args, log::Logger& logger) try {
 
 	if(!opts.contains("console_log.prefix")) {
 		boost::any prefix = std::string("[character]");
-		opts.insert({ "console_log.prefix", po::variable_value(prefix, false) });
+		opts.try_emplace("console_log.prefix", po::variable_value(prefix, false));
 	}
 
 	log::Logger service_logger;
@@ -271,7 +271,7 @@ void launch_world(const po::variables_map& args, log::Logger& logger) try {
 
 	if(!opts.contains("console_log.prefix")) {
 		boost::any prefix = std::string("[world]");
-		opts.insert({ "console_log.prefix", po::variable_value(prefix, false) });
+		opts.try_emplace("console_log.prefix", po::variable_value(prefix, false));
 	}
 
 	log::Logger service_logger;
