@@ -21,6 +21,7 @@
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/signal_set.hpp>
 #include <boost/program_options.hpp>
+#include <atomic>
 #include <fstream>
 #include <iostream>
 #include <span>
@@ -44,7 +45,7 @@ void launch_character(const po::variables_map&, log::Logger&);
 void launch_world(const po::variables_map&, log::Logger&);
 void stop_services();
 
-bool shutting_down = false;
+std::atomic_bool shutting_down = false;
 
 int main(int argc, const char* argv[]) try {
 	thread::set_name("Main");
