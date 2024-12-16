@@ -22,7 +22,7 @@
 
 namespace ember::gateway {
 
-struct PlayerLogin : Event {
+struct PlayerLogin final : Event {
 	explicit PlayerLogin(std::uint64_t character_id)
 		: Event{ EventType::PLAYER_LOGIN },
 		  character_id_(character_id) { }
@@ -30,7 +30,7 @@ struct PlayerLogin : Event {
 	const std::uint64_t character_id_;
 };
 
-struct QueuePosition : Event {
+struct QueuePosition final : Event {
 	explicit QueuePosition(std::size_t position)	
 		: Event { EventType::QUEUE_UPDATE_POSITION },
 	      position(position) { }
@@ -38,7 +38,7 @@ struct QueuePosition : Event {
 	std::size_t position;
 };
 
-struct AccountIDResponse : Event {
+struct AccountIDResponse final : Event {
 	AccountIDResponse(rpc::Account::Status status, std::uint32_t id)
 		: Event { EventType::ACCOUNT_ID_RESPONSE },
 	      status(status),
@@ -48,7 +48,7 @@ struct AccountIDResponse : Event {
 	std::uint32_t account_id;
 };
 
-struct SessionKeyResponse : Event {
+struct SessionKeyResponse final : Event {
 	SessionKeyResponse(rpc::Account::Status status, Botan::BigInt key)
 		: Event { EventType::SESSION_KEY_RESPONSE },
 	      status(status),
@@ -58,7 +58,7 @@ struct SessionKeyResponse : Event {
 	Botan::BigInt key;
 };
 
-struct CharEnumResponse : Event {
+struct CharEnumResponse final : Event {
 	CharEnumResponse(rpc::Character::Status status, std::vector<Character> characters)
 		: Event{ EventType::CHAR_ENUM_RESPONSE },
 		  status(status),
@@ -68,7 +68,7 @@ struct CharEnumResponse : Event {
 	std::vector<Character> characters;
 };
 
-struct CharCreateResponse : Event {
+struct CharCreateResponse final : Event {
 	explicit CharCreateResponse(protocol::Result result)
 		: Event { EventType::CHAR_CREATE_RESPONSE },
 		  result(result) { }
@@ -76,7 +76,7 @@ struct CharCreateResponse : Event {
 	protocol::Result result;
 };
 
-struct CharDeleteResponse : Event {
+struct CharDeleteResponse final : Event {
 	explicit CharDeleteResponse(protocol::Result result)
 		: Event{ EventType::CHAR_DELETE_RESPONSE },
 		  result(result) { }
@@ -84,7 +84,7 @@ struct CharDeleteResponse : Event {
 	protocol::Result result;
 };
 
-struct CharRenameResponse : Event {
+struct CharRenameResponse final : Event {
 	CharRenameResponse(protocol::Result result, std::uint64_t id, std::string name)
 		: Event { EventType::CHAR_RENAME_RESPONSE },
 		  result(result),
