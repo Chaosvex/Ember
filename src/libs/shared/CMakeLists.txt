@@ -89,6 +89,7 @@ set(UTIL_SRC
     shared/util/polyfill/inplace_vector
     shared/util/Timing.h
     shared/util/Timing.cpp
+    shared/util/Exception.h
 )
 
 set(METRICS_SRC
