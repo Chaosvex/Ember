@@ -10,7 +10,7 @@
 
 namespace ember::dns {
 
-class ServiceRegistry {
+class ServiceRegistry final {
 
 };
 

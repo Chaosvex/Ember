@@ -25,7 +25,7 @@ struct IntrusiveNode {
 };
 
 template<std::size_t BlockSize, byte_type StorageType = std::byte>
-struct IntrusiveStorage {
+struct IntrusiveStorage final {
 	using value_type = StorageType;
 	using OffsetType = std::remove_const_t<decltype(BlockSize)>;
 

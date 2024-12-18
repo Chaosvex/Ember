@@ -13,7 +13,7 @@
 
 namespace ember {
 
-class Weather {
+class Weather final {
 	const dbc::Storage& data_;
 
 public:

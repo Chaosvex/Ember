@@ -22,7 +22,7 @@
 
 namespace ember {
 
-class Survey {
+class Survey final {
 	struct Key {
 		grunt::Platform platform;
 		grunt::System os;

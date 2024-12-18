@@ -17,7 +17,7 @@ namespace ember::gateway {
 struct ServerConfig;
 class SessionManager;
 
-class QoS {
+class QoS final {
 	const std::chrono::seconds TIMER_FREQUENCY { 120 };
 	const unsigned int MAX_BANDWIDTH_PERCENTAGE { 80 };
 
