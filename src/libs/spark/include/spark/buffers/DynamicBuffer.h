@@ -9,9 +9,9 @@
 #pragma once
 
 #include <spark/buffers/pmr/Buffer.h>
-#include <spark/buffers/SharedDefs.h>
+#include <spark/buffers/detail/SharedDefs.h>
 #include <spark/buffers/allocators/DefaultAllocator.h>
-#include <spark/buffers/IntrusiveStorage.h>
+#include <spark/buffers/detail/IntrusiveStorage.h>
 #include <boost/assert.hpp>
 #include <algorithm>
 #include <concepts>

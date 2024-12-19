@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <spark/buffers/SharedDefs.h>
+#include <spark/buffers/detail/SharedDefs.h>
 #include <spark/buffers/Exception.h>
 #include <shared/util/cstring_view.hpp>
 #include <shared/util/polyfill/start_lifetime_as>

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <spark/buffers/SharedDefs.h>
+#include <spark/buffers/detail/SharedDefs.h>
 #include <algorithm>
 #include <concepts>
 #include <ranges>

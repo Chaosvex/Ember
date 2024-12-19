@@ -9,7 +9,7 @@
 #pragma once
 
 #include <spark/buffers/pmr/BufferRead.h>
-#include <spark/buffers/SharedDefs.h>
+#include <spark/buffers/detail/SharedDefs.h>
 #include <boost/assert.hpp>
 #include <span>
 #include <stdexcept>

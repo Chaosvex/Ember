@@ -9,7 +9,7 @@
 #pragma once
 
 #include <spark/buffers/Exception.h>
-#include <spark/buffers/SharedDefs.h>
+#include <spark/buffers/detail/SharedDefs.h>
 #include <array>
 #include <utility>
 #include <cassert>

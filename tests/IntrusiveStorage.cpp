@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <spark/buffers/IntrusiveStorage.h>
+#include <spark/buffers/detail/IntrusiveStorage.h>
 #include <gtest/gtest.h>
 #include <array>
 #include <string_view>

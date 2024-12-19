@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <spark/buffers/SharedDefs.h>
+#include <spark/buffers/detail/SharedDefs.h>
 #include <gtest/gtest.h>
 #include <array>
 #include <cstdint>
@@ -43,5 +43,3 @@ TEST(BufferUtility, SrcDestOverlap_NoOverlap) {
 	std::array<std::uint8_t, 10> buffer{}, buffer2{};
 	ASSERT_FALSE(spark::io::region_overlap(buffer.data(), buffer.size(), buffer2.data(), buffer2.size()));
 }
-
-

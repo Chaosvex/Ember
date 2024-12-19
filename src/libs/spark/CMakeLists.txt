@@ -33,8 +33,8 @@ set(IO_SRC
     include/spark/buffers/Exception.h
     include/spark/buffers/DynamicBuffer.h
     include/spark/buffers/DynamicTLSBuffer.h
-    include/spark/buffers/IntrusiveStorage.h
-    include/spark/buffers/SharedDefs.h
+    include/spark/buffers/detail/IntrusiveStorage.h
+    include/spark/buffers/detail/SharedDefs.h
     include/spark/buffers/BufferAdaptor.h
     include/spark/buffers/BufferSequence.h
     include/spark/buffers/BinaryStream.h

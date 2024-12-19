@@ -9,7 +9,7 @@
 #pragma once
 
 #include <spark/buffers/pmr/BufferWrite.h>
-#include <spark/buffers/SharedDefs.h>
+#include <spark/buffers/detail/SharedDefs.h>
 #include <vector>
 #include <utility>
 #include <cassert>

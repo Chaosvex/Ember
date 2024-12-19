@@ -9,7 +9,7 @@
 #pragma once
 
 #include <spark/buffers/pmr/BufferBase.h>
-#include <spark/buffers/SharedDefs.h>
+#include <spark/buffers/detail/SharedDefs.h>
 
 namespace ember::spark::io::pmr {
 
