@@ -50,6 +50,7 @@ struct Transaction {
 
 	// :grimacing:
 	using Promise = std::variant<
+		std::monostate,
 		std::promise<MappedResult>,
 		std::promise<AttributesResult>,
 		std::promise<NATResult>,
