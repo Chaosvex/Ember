@@ -28,7 +28,7 @@ static void finish(auto& payload, Message& msg) {
 	core::HeaderT header_t;
 	core::MessageUnion mu;
 	mu.Set(payload);
-	header_t.message = mu;
+	header_t.message = std::move(mu);
 	msg.fbb.Finish(core::Header::Pack(msg.fbb, &header_t));
 }
 
