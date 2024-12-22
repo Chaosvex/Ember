@@ -8,6 +8,7 @@
 
 #include <login/ExecutablesChecksum.h>
 #include <gtest/gtest.h>
+#include <array>
 #include <vector>
 #include <cstdint>
 
