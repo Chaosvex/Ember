@@ -11,7 +11,6 @@ set(EXECUTABLE_SRC
     DynamicBuffer.cpp
     IntrusiveStorage.cpp
     BinaryStreamPMR.cpp
-    GruntHandler.cpp
     GruntProtocol.cpp
     LoginHandler.cpp
     Patcher.cpp
