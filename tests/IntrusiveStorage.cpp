@@ -11,7 +11,7 @@
 #include <array>
 #include <string_view>
 
-namespace spark = ember::spark;
+using namespace ember;
 
 TEST(IntrusiveStorage, Size) {
 	const int iterations = 5;

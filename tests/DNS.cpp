@@ -11,7 +11,7 @@
 #include <array>
 #include <cstdint>
 
-namespace dns = ember::dns;
+using namespace ember;
 
 constexpr auto DNS_HEADER_SIZE = 12u;
 constexpr auto DNS_MAX_PAYLOAD_SIZE = 9000u; // should include UDP & IPvx headers

@@ -11,10 +11,12 @@
 #include <memory>
 #include <vector>
 
+using namespace ember;
+
 class IPBanTest : public ::testing::Test {
 public:
 	virtual void SetUp() {
-		std::vector<ember::IPEntry> entries {
+		std::vector<IPEntry> entries {
 			{ "2001:db8::",     64 },
 			{ "198.51.106.51",   8 },
 			{ "172.16.125.134", 16 },
@@ -23,12 +25,12 @@ public:
 			{ "192.88.99.62",   32 }
 		};
 
-		bans = std::make_unique<ember::IPBanCache>(entries);
+		bans = std::make_unique<IPBanCache>(entries);
 	}
 
 	virtual void TearDown() {}
 
-	std::unique_ptr<ember::IPBanCache> bans;
+	std::unique_ptr<IPBanCache> bans;
 };
 
 

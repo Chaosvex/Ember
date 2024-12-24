@@ -15,7 +15,7 @@
 #include <thread>
 #include <cstdlib>
 
-namespace spark = ember::spark;
+using namespace ember;
 
 TEST(TLSBlockAllocator, SingleAlloc) {
 	spark::io::TLSBlockAllocator<std::uint64_t, 1> tlsalloc;

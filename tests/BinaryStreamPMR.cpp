@@ -19,7 +19,7 @@
 #include <cstdint>
 #include <cstdlib>
 
-namespace spark = ember::spark;
+using namespace ember;
 
 TEST(BinaryStreamPMR, MessageReadLimit) {
 	std::array<std::uint8_t, 14> ping {

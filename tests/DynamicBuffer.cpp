@@ -18,7 +18,7 @@
 #include <vector>
 #include <cstring>
 
-namespace spark = ember::spark;
+using namespace ember;
 using namespace std::literals;
 
 TEST(DynamicBuffer, Size) {

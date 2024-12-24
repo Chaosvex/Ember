@@ -15,8 +15,8 @@
 #include <vector>
 #include <cstdint>
 
-using namespace std::literals;
 using namespace ember;
+using namespace std::literals;
 
 TEST(BufferAdaptor, SizeEmptyInitial) {
 	std::array<std::uint8_t, 0> buffer;
