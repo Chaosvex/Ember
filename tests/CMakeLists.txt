@@ -12,7 +12,6 @@ set(EXECUTABLE_SRC
     IntrusiveStorage.cpp
     BinaryStreamPMR.cpp
     GruntProtocol.cpp
-    LoginHandler.cpp
     Patcher.cpp
     IPBan.cpp
     DNS.cpp
