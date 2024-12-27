@@ -40,9 +40,7 @@
 #include <cstdlib>
 
 using namespace ember;
-
 namespace po = boost::program_options;
-namespace el = ember::log;
 
 const std::unordered_map<std::string_view, std::array<std::string_view, 2>> db_args {
 	{ "login", { "login.root-user", "login.root-password" }},
@@ -64,16 +62,16 @@ bool apply_updates(const po::variables_map& args, QueryExecutor& exec,
 int main(int argc, const char* argv[]) try {
 	std::cout << "Build " << ember::version::VERSION << " (" << ember::version::GIT_HASH << ")\n";
 	const po::variables_map args = parse_arguments(argc, argv);
-	const auto& con_verbosity = el::severity_string(args["verbosity"].as<std::string>());
-	const auto& file_verbosity = el::severity_string(args["fverbosity"].as<std::string>());
+	const auto& con_verbosity = log::severity_string(args["verbosity"].as<std::string>());
+	const auto& file_verbosity = log::severity_string(args["fverbosity"].as<std::string>());
 
-	auto logger = std::make_unique<el::Logger>();
+	auto logger = std::make_unique<log::Logger>();
 
-	auto fsink = std::make_unique<el::FileSink>(
-		file_verbosity, el::Filter(0), "dbmanage.log", el::FileSink::Mode::APPEND
+	auto fsink = std::make_unique<log::FileSink>(
+		file_verbosity, log::Filter(0), "dbmanage.log", log::FileSink::Mode::APPEND
 	);
 
-	auto consink = std::make_unique<el::ConsoleSink>(con_verbosity, el::Filter(0));
+	auto consink = std::make_unique<log::ConsoleSink>(con_verbosity, log::Filter(0));
 	consink->colourise(true);
 	logger->add_sink(std::move(consink));
 	logger->add_sink(std::move(fsink));

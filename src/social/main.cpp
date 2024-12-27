@@ -32,13 +32,11 @@
 #include <cstdint>
 #include <cstdlib>
 
-namespace el = ember::log;
+using namespace ember;
 namespace po = boost::program_options;
-namespace ba = boost::asio;
-using namespace std::chrono_literals;
 
-void print_lib_versions(el::Logger& logger);
-int launch(const po::variables_map& args, el::Logger& logger);
+void print_lib_versions(log::Logger& logger);
+int launch(const po::variables_map& args, log::Logger& logger);
 po::variables_map parse_arguments(int argc, const char* argv[]);
 
 /*
@@ -50,12 +48,12 @@ po::variables_map parse_arguments(int argc, const char* argv[]);
  * from them.
  */
 int main(int argc, const char* argv[]) try {
-	ember::print_banner("Social Daemon");
+	print_banner("Social Daemon");
 	const po::variables_map args = parse_arguments(argc, argv);
 
-	el::Logger logger;
-	ember::util::configure_logger(logger, args);
-	el::global_logger(logger);
+	log::Logger logger;
+	util::configure_logger(logger, args);
+	log::global_logger(logger);
 	LOG_INFO(logger) << "Logger configured successfully" << LOG_SYNC;
 
 	print_lib_versions(logger);
@@ -67,7 +65,7 @@ int main(int argc, const char* argv[]) try {
 	return EXIT_FAILURE;
 }
 
-int launch(const po::variables_map& args, el::Logger& logger) try {
+int launch(const po::variables_map& args, log::Logger& logger) try {
 #ifdef DEBUG_NO_THREADS
 	LOG_WARN(logger) << "Compiled with DEBUG_NO_THREADS!" << LOG_SYNC;
 #endif
@@ -180,7 +178,7 @@ po::variables_map parse_arguments(int argc, const char* argv[]) {
 }
 
 
-void print_lib_versions(el::Logger& logger) {
+void print_lib_versions(log::Logger& logger) {
 	LOG_DEBUG(logger)
 		<< "Compiled with library versions: " << "\n"
 		<< " - Boost " << BOOST_VERSION / 100000 << "."

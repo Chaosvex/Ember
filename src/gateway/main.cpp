@@ -25,7 +25,6 @@
 #include <cstdlib>
 
 using namespace ember;
-namespace el = ember::log;
 namespace po = boost::program_options;
 
 po::variables_map parse_arguments(int argc, const char* argv[]);

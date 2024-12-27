@@ -29,31 +29,30 @@
 #include <unordered_map>
 #include <cstdlib>
 
+using namespace ember;
 namespace po = boost::program_options;
 namespace fs = std::filesystem;
-namespace edbc = ember::dbc;
-namespace el = ember::log;
 
 int launch(const po::variables_map& args);
 po::variables_map parse_arguments(int argc, const char* argv[]);
 std::vector<std::string> fetch_definitions(std::span<const std::string> paths);
-void print_dbc_table(const edbc::types::Definitions& defs);
-void print_dbc_fields(const edbc::types::Definitions& defs);
-void handle_options(const po::variables_map& args, const edbc::types::Definitions& defs);
+void print_dbc_table(const dbc::types::Definitions& defs);
+void print_dbc_fields(const dbc::types::Definitions& defs);
+void handle_options(const po::variables_map& args, const dbc::types::Definitions& defs);
 
 int main(int argc, const char* argv[]) try {
 	const po::variables_map args = parse_arguments(argc, argv);
-	const auto& con_verbosity = el::severity_string(args["verbosity"].as<std::string>());
-	const auto& file_verbosity = el::severity_string(args["fverbosity"].as<std::string>());
+	const auto& con_verbosity = log::severity_string(args["verbosity"].as<std::string>());
+	const auto& file_verbosity = log::severity_string(args["fverbosity"].as<std::string>());
 
-	auto logger = std::make_unique<el::Logger>();
-	auto fsink = std::make_unique<el::FileSink>(file_verbosity, el::Filter(0),
-	                                            "dbcparser.log", el::FileSink::Mode::APPEND);
-	auto consink = std::make_unique<el::ConsoleSink>(con_verbosity, el::Filter(0));
+	auto logger = std::make_unique<log::Logger>();
+	auto fsink = std::make_unique<log::FileSink>(file_verbosity, log::Filter(0),
+	                                             "dbcparser.log", log::FileSink::Mode::APPEND);
+	auto consink = std::make_unique<log::ConsoleSink>(con_verbosity, log::Filter(0));
 	consink->colourise(true);
 	logger->add_sink(std::move(consink));
 	logger->add_sink(std::move(fsink));
-	el::global_logger(logger.get());
+	log::global_logger(logger.get());
 
 	return launch(args);
 } catch(const std::exception& e) {
@@ -66,7 +65,7 @@ int launch(const po::variables_map& args) try {
 
 	std::vector<std::string> paths = fetch_definitions(def_paths);
 
-	edbc::Parser parser;
+	dbc::Parser parser;
 	auto definitions = parser.parse(paths);
 	handle_options(args, definitions);
 	return EXIT_SUCCESS;
@@ -75,15 +74,15 @@ int launch(const po::variables_map& args) try {
 	return EXIT_FAILURE;
 }
 
-void handle_options(const po::variables_map& args, const edbc::types::Definitions& defs) {
-	edbc::Validator validator;
-	edbc::Validator::Options val_opts { edbc::Validator::VAL_SKIP_FOREIGN_KEYS };
+void handle_options(const po::variables_map& args, const dbc::types::Definitions& defs) {
+	dbc::Validator validator;
+	dbc::Validator::Options val_opts { dbc::Validator::VAL_SKIP_FOREIGN_KEYS };
 
 	// if we're doing code generation for a DBC that references other DBCs, we
 	// need to make sure that those references are also valid, otherwise we
 	// might generate code that doesn't compile
 	if(args["disk"].as<bool>()) {
-		val_opts = static_cast<edbc::Validator::Options>(val_opts & ~edbc::Validator::VAL_SKIP_FOREIGN_KEYS);
+		val_opts = static_cast<dbc::Validator::Options>(val_opts & ~dbc::Validator::VAL_SKIP_FOREIGN_KEYS);
 	}
 
 	validator.validate(defs, val_opts);
@@ -102,29 +101,29 @@ void handle_options(const po::variables_map& args, const edbc::types::Definition
 
 	if(args["dbc-gen"].as<bool>()) {
 		for(const auto& dbc : defs) {
-			if(dbc->type == edbc::types::Type::STRUCT) {
-				edbc::generate_dbc_template(static_cast<const edbc::types::Struct*>(dbc.get()), out);
+			if(dbc->type == dbc::types::Type::STRUCT) {
+				dbc::generate_dbc_template(static_cast<const dbc::types::Struct*>(dbc.get()), out);
 			}
 		}
 	}
 
 	if(args["disk"].as<bool>()) {
-		edbc::generate_common(defs, out, args["templates"].as<std::string>());
-		edbc::generate_disk_source(defs, out, args["templates"].as<std::string>());
+		dbc::generate_common(defs, out, args["templates"].as<std::string>());
+		dbc::generate_disk_source(defs, out, args["templates"].as<std::string>());
 	}
 
 	if(args["sql-schema"].as<bool>()) {
-		edbc::generate_sql_ddl(defs, out);
+		dbc::generate_sql_ddl(defs, out);
 	}
 
 	if(args["sql-data"].as<bool>()) {
-		edbc::generate_sql_dml(defs, out);
+		dbc::generate_sql_dml(defs, out);
 	}
 
 	LOG_DEBUG_GLOB << "Done!" << LOG_ASYNC;
 }
 
-void print_dbc_table(const edbc::types::Definitions& defs) {
+void print_dbc_table(const dbc::types::Definitions& defs) {
 	const auto comment_len = 45;
 	const auto name_len = 26;
 
@@ -135,8 +134,8 @@ void print_dbc_table(const edbc::types::Definitions& defs) {
 	printer.PrintHeader();
 
 	for(const auto& def : defs) {
-		if(def->type == edbc::types::Type::STRUCT) {
-			const auto dbc = static_cast<const edbc::types::Struct*>(def.get());
+		if(def->type == dbc::types::Type::STRUCT) {
+			const auto dbc = static_cast<const dbc::types::Struct*>(def.get());
 			printer << std::string_view(dbc->name).substr(0, name_len) << dbc->fields.size()
 				<< dbc->comment;
 		}
@@ -145,7 +144,7 @@ void print_dbc_table(const edbc::types::Definitions& defs) {
 	printer.PrintFooter();
 }
 
-void print_dbc_fields(const edbc::types::Definitions& groups) {
+void print_dbc_fields(const dbc::types::Definitions& groups) {
 	for(const auto& def : groups) {
 		std::cout << def->name << "\n";
 
@@ -156,11 +155,11 @@ void print_dbc_fields(const edbc::types::Definitions& groups) {
 		printer.AddColumn("Comment", 20);
 		printer.PrintHeader();
 
-		if(def->type != edbc::types::Type::STRUCT) {
+		if(def->type != dbc::types::Type::STRUCT) {
 			continue;
 		}
 
-		const auto dbc = static_cast<const edbc::types::Struct*>(def.get());
+		const auto dbc = static_cast<const dbc::types::Struct*>(def.get());
 
 		for(const auto& f : dbc->fields) {
 			std::string key;

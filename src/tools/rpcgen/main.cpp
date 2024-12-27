@@ -17,16 +17,16 @@
 #include <vector>
 #include <cstdlib>
 
+using namespace ember;
 namespace po = boost::program_options;
-namespace el = ember::log;
 
 int launch(const po::variables_map& args);
-void configure_logger(el::Logger& logger, const po::variables_map& args);
+void configure_logger(log::Logger& logger, const po::variables_map& args);
 po::variables_map parse_arguments(int argc, const char* argv[]);
 
 int main(int argc, const char* argv[]) try {
 	const po::variables_map args = parse_arguments(argc, argv);
-	el::Logger logger;
+	log::Logger logger;
 	configure_logger(logger, args);
 	return launch(args);
 } catch(const std::exception& e) {
@@ -52,19 +52,19 @@ int launch(const po::variables_map& args) try {
 	return EXIT_FAILURE;
 }
 
-void configure_logger(el::Logger& logger, const po::variables_map& args) {
-	const auto& con_verbosity = el::severity_string(args["verbosity"].as<std::string>());
-	const auto& file_verbosity = el::severity_string(args["fverbosity"].as<std::string>());
+void configure_logger(log::Logger& logger, const po::variables_map& args) {
+	const auto& con_verbosity = log::severity_string(args["verbosity"].as<std::string>());
+	const auto& file_verbosity = log::severity_string(args["fverbosity"].as<std::string>());
 	
-	auto fsink = std::make_unique<el::FileSink>(
-		file_verbosity, el::Filter(0), "rpcgen.log", el::FileSink::Mode::APPEND
+	auto fsink = std::make_unique<log::FileSink>(
+		file_verbosity, log::Filter(0), "rpcgen.log", log::FileSink::Mode::APPEND
 	);
 
-	auto consink = std::make_unique<el::ConsoleSink>(con_verbosity, el::Filter(0));
+	auto consink = std::make_unique<log::ConsoleSink>(con_verbosity, log::Filter(0));
 	consink->colourise(true);
 	logger->add_sink(std::move(consink));
 	logger->add_sink(std::move(fsink));
-	el::global_logger(logger);
+	log::global_logger(logger);
 }
 
 po::variables_map parse_arguments(int argc, const char* argv[]) {
