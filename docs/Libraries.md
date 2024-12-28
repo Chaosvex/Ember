@@ -15,38 +15,21 @@ Code generation allows for quick iteration of the inter-server protocols, backwa
 
 Boost is a large collection of libraries that perform a wide range of tasks. Ember uses the following subset of Boost libraries:
 
-### Boost ASIO
+### Boost Asio
 
-ASIO is an ***AS***ynchronous ***I/O*** library that primarily deals with networking. 
+Asio is an ***AS***ynchronous ***I/O*** library that primarily deals with networking. 
 
-All of Ember's networking, whether it's the client handling or Spark, our inter-server networking library, is layered on top of Boost ASIO.
+All of Ember's networking, whether it's the client handling or Spark, our inter-server networking library, is layered on top of Boost Asio.
 
 ### Boost Endian
 
 Endian is used for ensuring that network data is the correct endianness. For example, if Ember is compiled for a big-endian architecture, Boost Endian will ensure that network message fields are still encoded in little-endian (the encoding required by the game client).
-
-### Boost Locale
-
-Locale is used for handling localisation issues, such as character names / chat messages in languages other than English.
-
 
 ### Boost Program Options
 
 Program Options is designed for reading configuration files and handling command-line arguments.
 
 Ember's command-line argument and configuration file handling is done with this library.
-
-### Boost DLL ***(Currently unused!)***
-
-Boost DLL is by Ember's plugin system for cross-platform handling of dynamic libraries.
-
-### Misc
-
-A number of smaller, often header-only, Boost facilities are used. These include:
-* Strong typedef
-* UUID generation
-* Assert
-* Various containers & algorithms
 
 ## Botan
 
@@ -84,16 +67,14 @@ Zlib is a compression library used for handling compressed messages received fro
 
 MySQLC/CPP is Oracle's C++ wrapper for its C-based MySQL client library. This library is only used if building the project with MySQL support.
 
-## Google Breakpad ***(Currently unused!)***
-
-Google Breakpad is a crash handling library used by Ember to produce stack traces for analysis. 
-
-Breakpad also allows for submission of the generated stack traces to a Mozilla Socorro-based analysis server.
-
-## ICU ***(Currently unused!)***
-
-ICU is unicode library used in conjunction with Boost Locale for handling localisation issues, such as the collation and correct validation of character names in various languages.
-
 ## Inja
 
 Inja is a lightweight templating library. Ember uses it to generate RPC stubs.
+
+### Misc
+
+A number of smaller, often header-only, Boost facilities are used. These include:
+* Strong typedef
+* UUID generation
+* Assert
+* Various containers & algorithms
