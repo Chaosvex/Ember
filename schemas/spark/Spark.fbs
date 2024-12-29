@@ -25,7 +25,6 @@ enum Result : int {
 }
 
 table Hello {
-	protocol_ver: int = 0;
 	description: string (required);
 }
 
