@@ -11,7 +11,7 @@
 #include <logger/Sink.h>
 #include <logger/FileWrapper.h>
 #include <logger/Utility.h>
-#include <shared/util/cstring_view.hpp>
+#include <shared/utility/cstring_view.hpp>
 #include <boost/container/small_vector.hpp>
 #include <string>
 #include <utility>

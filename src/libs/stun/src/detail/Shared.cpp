@@ -11,7 +11,7 @@
 #include <stun/Exception.h>
 #include <spark/buffers/BufferAdaptor.h>
 #include <spark/buffers/BinaryStream.h>
-#include <shared/util/FNVHash.h>
+#include <shared/utility/FNVHash.h>
 #include <boost/assert.hpp>
 #include <boost/endian.hpp>
 #include <botan/hash.h>

@@ -33,11 +33,11 @@
 #include <shared/database/daos/RealmDAO.h>
 #include <shared/database/daos/UserDAO.h>
 #include <shared/IPBanCache.h>
-#include <shared/util/cstring_view.hpp>
-#include <shared/util/Utility.h>
-#include <shared/util/xoroshiro128plus.h>
-#include <shared/util/STUN.h>
-#include <shared/util/PortForward.h>
+#include <shared/utility/cstring_view.hpp>
+#include <shared/utility/Utility.h>
+#include <shared/utility/xoroshiro128plus.h>
+#include <shared/utility/STUN.h>
+#include <shared/utility/PortForward.h>
 #include <spark/Server.h>
 #include <stun/Client.h>
 #include <stun/Utility.h>

@@ -12,7 +12,7 @@
 #include <mpq/SharedDefs.h>
 #include <mpq/Exception.h>
 #include <mpq/Crypt.h>
-#include <shared/util/polyfill/start_lifetime_as>
+#include <shared/utility/polyfill/start_lifetime_as>
 
 namespace ember::mpq::v1 {
 

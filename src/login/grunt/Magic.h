@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <shared/util/MulticharConstant.h>
+#include <shared/utility/MulticharConstant.h>
 #include <shared/smartenum.hpp>
 #include <cstdint>
 

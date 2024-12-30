@@ -16,7 +16,7 @@
 #include <conpool/drivers/AutoSelect.h>
 #include <shared/database/daos/CharacterDAO.h>
 #include <shared/threading/ThreadPool.h>
-#include <shared/util/PCREHelper.h>
+#include <shared/utility/PCREHelper.h>
 #include <spark/Server.h>
 #include <boost/asio/io_context.hpp>
 #include <chrono>

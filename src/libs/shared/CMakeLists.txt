@@ -58,38 +58,38 @@ set(THREADING_SRC
 )
 
 set(UTIL_SRC
-    shared/util/xoroshiro128plus.h
-    shared/util/xoroshiro128plus.cpp
-    shared/util/enum_bitmask.h
-    shared/util/PCREHelper.h
-    shared/util/PCREHelper.cpp
-    shared/util/UTF8String.h
-    shared/util/UTF8.h
-    shared/util/UTF8.cpp
-    shared/util/Utility.h
-    shared/util/Utility.cpp
-    shared/util/FormatPacket.h
-    shared/util/LogConfig.cpp
-    shared/util/LogConfig.h
-    shared/util/ConsoleColour.h
-    shared/util/ConsoleColour.cpp
-    shared/util/base32.h
-    shared/util/base32.cpp
-    shared/util/FileMD5.h
-    shared/util/FileMD5.cpp
-    shared/util/FNVHash.h
-    shared/util/EnumHelper.h
-    shared/util/MulticharConstant.h
-    shared/util/Clock.h
-    shared/util/StringHash.h
-    shared/util/STUN.h
-	shared/util/PortForward.h
-    shared/util/polyfill/print
-    shared/util/polyfill/start_lifetime_as
-    shared/util/polyfill/inplace_vector
-    shared/util/Timing.h
-    shared/util/Timing.cpp
-    shared/util/Exception.h
+    shared/utility/xoroshiro128plus.h
+    shared/utility/xoroshiro128plus.cpp
+    shared/utility/enum_bitmask.h
+    shared/utility/PCREHelper.h
+    shared/utility/PCREHelper.cpp
+    shared/utility/UTF8String.h
+    shared/utility/UTF8.h
+    shared/utility/UTF8.cpp
+    shared/utility/Utility.h
+    shared/utility/Utility.cpp
+    shared/utility/FormatPacket.h
+    shared/utility/LogConfig.cpp
+    shared/utility/LogConfig.h
+    shared/utility/ConsoleColour.h
+    shared/utility/ConsoleColour.cpp
+    shared/utility/base32.h
+    shared/utility/base32.cpp
+    shared/utility/FileMD5.h
+    shared/utility/FileMD5.cpp
+    shared/utility/FNVHash.h
+    shared/utility/EnumHelper.h
+    shared/utility/MulticharConstant.h
+    shared/utility/Clock.h
+    shared/utility/StringHash.h
+    shared/utility/STUN.h
+	shared/utility/PortForward.h
+    shared/utility/polyfill/print
+    shared/utility/polyfill/start_lifetime_as
+    shared/utility/polyfill/inplace_vector
+    shared/utility/Timing.h
+    shared/utility/Timing.cpp
+    shared/utility/Exception.h
 )
 
 set(METRICS_SRC

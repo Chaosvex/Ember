@@ -10,7 +10,7 @@
 #include <spark/buffers/StaticBuffer.h>
 #include <spark/buffers/BinaryStream.h>
 #include <spark/buffers/BufferAdaptor.h>
-#include <shared/util/cstring_view.hpp>
+#include <shared/utility/cstring_view.hpp>
 #include <gtest/gtest.h>
 #include <gsl/gsl_util>
 #include <algorithm>

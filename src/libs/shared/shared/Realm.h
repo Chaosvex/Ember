@@ -9,7 +9,7 @@
 #pragma once
 
 #include <dbcreader/MemoryDefs.h>
-#include <shared/util/enum_bitmask.h>
+#include <shared/utility/enum_bitmask.h>
 #include <string>
 #include <cstdint>
 

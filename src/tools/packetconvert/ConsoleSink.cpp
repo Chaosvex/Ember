@@ -8,7 +8,7 @@
 
 #include "ConsoleSink.h"
 #include <protocol/Opcodes.h>
-#include <shared/util/FormatPacket.h>
+#include <shared/utility/FormatPacket.h>
 #include <iostream>
 #include <sstream>
 #include <iomanip>

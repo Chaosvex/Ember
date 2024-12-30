@@ -10,7 +10,7 @@
 
 #include <spark/buffers/pmr/StreamBase.h>
 #include <spark/buffers/pmr/BufferWrite.h>
-#include <shared/util/cstring_view.hpp>
+#include <shared/utility/cstring_view.hpp>
 #include <algorithm>
 #include <array>
 #include <concepts>

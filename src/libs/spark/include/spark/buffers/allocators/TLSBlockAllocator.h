@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <shared/util/Utility.h>
-#include <shared/util/polyfill/start_lifetime_as>
+#include <shared/utility/Utility.h>
+#include <shared/utility/polyfill/start_lifetime_as>
 #include <memory>
 #include <new>
 #include <utility>

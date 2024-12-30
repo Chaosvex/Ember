@@ -12,7 +12,7 @@
 #include <spark/buffers/BufferAdaptor.h>
 #include <protocol/Packet.h>
 #include <logger/Logger.h>
-#include <shared/util/UTF8String.h>
+#include <shared/utility/UTF8String.h>
 #include <boost/assert.hpp>
 #include <boost/endian/arithmetic.hpp>
 #include <boost/container/small_vector.hpp>

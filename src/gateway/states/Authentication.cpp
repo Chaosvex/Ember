@@ -18,9 +18,9 @@
 #include <protocol/PacketHeaders.h>
 #include <protocol/Packets.h>
 #include <spark/buffers/pmr/Buffer.h>
-#include <shared/util/EnumHelper.h>
-#include <shared/util/UTF8String.h>
-#include <shared/util/xoroshiro128plus.h>
+#include <shared/utility/EnumHelper.h>
+#include <shared/utility/UTF8String.h>
+#include <shared/utility/xoroshiro128plus.h>
 #include <logger/Logger.h>
 #include <botan/bigint.h>
 #include <botan/hash.h>

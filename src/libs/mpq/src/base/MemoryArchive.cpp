@@ -13,7 +13,7 @@
 #include <mpq/MemorySink.h>
 #include <mpq/MPQ.h>
 #include <mpq/Structures.h>
-#include <shared/util/polyfill/start_lifetime_as>
+#include <shared/utility/polyfill/start_lifetime_as>
 #include <boost/endian/conversion.hpp>
 #include <boost/container/small_vector.hpp>
 #include <bit>

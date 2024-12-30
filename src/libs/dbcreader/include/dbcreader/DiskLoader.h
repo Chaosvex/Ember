@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <shared/util/StringHash.h>
+#include <shared/utility/StringHash.h>
 #include <dbcreader/Loader.h>
 #include <dbcreader/Storage.h>
 #include <boost/unordered/unordered_flat_map.hpp>

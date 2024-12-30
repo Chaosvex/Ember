@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <shared/util/MulticharConstant.h>
+#include <shared/utility/MulticharConstant.h>
 #include <boost/endian/arithmetic.hpp>
 #include <string_view>
 #include <stdexcept>

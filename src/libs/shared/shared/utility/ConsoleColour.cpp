@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <shared/util/ConsoleColour.h>
+#include <shared/utility/ConsoleColour.h>
 
 #ifdef _WIN32
 	#include <Windows.h>

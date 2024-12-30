@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <shared/util/polyfill/start_lifetime_as>
+#include <shared/utility/polyfill/start_lifetime_as>
 #include <array>
 #include <bit>
 #include <span>

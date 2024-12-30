@@ -8,7 +8,7 @@
 
 #include <mpq/MPQ.h>
 #include <mpq/DynamicMemorySink.h>
-#include <shared/util/FileMD5.h>
+#include <shared/utility/FileMD5.h>
 #include <botan/bigint.h>
 #include <gtest/gtest.h>
 

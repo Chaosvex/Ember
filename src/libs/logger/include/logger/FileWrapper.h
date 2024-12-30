@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <shared/util/cstring_view.hpp>
+#include <shared/utility/cstring_view.hpp>
 #include <cstdio>
 
 #pragma warning(push)

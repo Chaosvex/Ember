@@ -12,8 +12,8 @@
 #include <dbcreader/Storage.h>
 #include <protocol/ResultCodes.h>
 #include <shared/database/daos/CharacterDAO.h>
-#include <shared/util/PCREHelper.h>
-#include <shared/util/UTF8.h>
+#include <shared/utility/PCREHelper.h>
+#include <shared/utility/UTF8.h>
 #include <logger/LoggerFwd.h>
 //#include <boost/locale.hpp>
 #include <pcre.h>

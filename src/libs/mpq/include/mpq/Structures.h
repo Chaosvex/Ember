@@ -9,7 +9,7 @@
 #pragma once
 
 #include <mpq/SharedDefs.h>
-#include <shared/util/enum_bitmask.h>
+#include <shared/utility/enum_bitmask.h>
 #include <cstdint>
 
 namespace ember::mpq {

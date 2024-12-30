@@ -8,8 +8,8 @@
 
 #include "LogSink.h"
 #include "../FilterTypes.h"
-#include <shared/util/cstring_view.hpp>
-#include <shared/util/FormatPacket.h>
+#include <shared/utility/cstring_view.hpp>
+#include <shared/utility/FormatPacket.h>
 #include <logger/Utility.h>
 #include <memory>
 #include <string_view>

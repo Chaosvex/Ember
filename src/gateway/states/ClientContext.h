@@ -14,7 +14,7 @@
 #include "../ConnectionDefines.h"
 #include <spark/buffers/pmr/Buffer.h>
 #include <protocol/PacketHeaders.h>
-#include <shared/util/UTF8String.h>
+#include <shared/utility/UTF8String.h>
 #include <optional>
 #include <variant>
 #include <cstdint>

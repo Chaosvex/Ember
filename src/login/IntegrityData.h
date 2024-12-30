@@ -10,7 +10,7 @@
 
 #include "GameVersion.h"
 #include "grunt/Magic.h"
-#include "shared/util/FNVHash.h"
+#include "shared/utility/FNVHash.h"
 #include <boost/unordered/unordered_flat_map.hpp>
 #include <optional>
 #include <span>

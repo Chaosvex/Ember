@@ -9,7 +9,7 @@
 #include <logger/ConsoleSink.h>
 #include <logger/Exception.h>
 #include <logger/Utility.h>
-#include <shared/util/ConsoleColour.h>
+#include <shared/utility/ConsoleColour.h>
 #include <algorithm>
 #include <iterator>
 #include <string>

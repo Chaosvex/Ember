@@ -9,7 +9,7 @@
 #pragma once
 
 #include <protocol/Packet.h>
-#include <shared/util/UTF8String.h>
+#include <shared/utility/UTF8String.h>
 #include <boost/endian/arithmetic.hpp>
 #include <stdexcept>
 #include <cstdint>

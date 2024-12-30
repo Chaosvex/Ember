@@ -11,7 +11,7 @@
 #include <mpq/Structures.h>
 #include <mpq/SharedDefs.h>
 #include <mpq/Crypt.h>
-#include <shared/util/polyfill/start_lifetime_as>
+#include <shared/utility/polyfill/start_lifetime_as>
 #include <bit>
 
 namespace ember::mpq::v0 {

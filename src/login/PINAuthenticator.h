@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <shared/util/Clock.h>
-#include <shared/util/polyfill/inplace_vector>
+#include <shared/utility/Clock.h>
+#include <shared/utility/polyfill/inplace_vector>
 #include <array>
 #include <span>
 #include <string>

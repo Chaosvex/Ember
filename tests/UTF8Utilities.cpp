@@ -6,8 +6,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <shared/util/UTF8.h>
-#include <shared/util/Utility.h>
+#include <shared/utility/UTF8.h>
+#include <shared/utility/Utility.h>
 #include <gtest/gtest.h>
 #include <string>
 

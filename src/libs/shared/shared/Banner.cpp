@@ -8,7 +8,7 @@
 
 #include "Banner.h"
 #include "Version.h"
-#include "util/ConsoleColour.h"
+#include "utility/ConsoleColour.h"
 #include <iostream>
 
 namespace ember {

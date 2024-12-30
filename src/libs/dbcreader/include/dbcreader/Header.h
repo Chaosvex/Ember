@@ -10,7 +10,7 @@
 
 #include <cstdint>
 #include <boost/endian/arithmetic.hpp>
-#include <shared/util/MulticharConstant.h>
+#include <shared/utility/MulticharConstant.h>
 
 namespace ember::dbc {
 

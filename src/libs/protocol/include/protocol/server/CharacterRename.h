@@ -10,7 +10,7 @@
 
 #include <protocol/Packet.h>
 #include <protocol/ResultCodes.h>
-#include <shared/util/UTF8String.h>
+#include <shared/utility/UTF8String.h>
 #include <boost/assert.hpp>
 #include <boost/endian/arithmetic.hpp>
 #include <stdexcept>

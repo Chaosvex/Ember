@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <shared/util/FNVHash.h>
+#include <shared/utility/FNVHash.h>
 #include <boost/endian.hpp>
 #include <gtest/gtest.h>
 #include <array>

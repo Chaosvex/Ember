@@ -11,7 +11,7 @@
 #include "Packets.h"
 #include <logger/Logger.h>
 #include <spark/buffers/pmr/BinaryStream.h>
-#include <shared/util/FormatPacket.h>
+#include <shared/utility/FormatPacket.h>
 #include <boost/assert.hpp>
 #include <vector>
 #include <cstdint>

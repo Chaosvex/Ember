@@ -8,8 +8,8 @@
 
 #include "PINAuthenticator.h"
 #include <logger/Logger.h>
-#include <shared/util/xoroshiro128plus.h>
-#include <shared/util/base32.h>
+#include <shared/utility/xoroshiro128plus.h>
+#include <shared/utility/base32.h>
 #include <boost/assert.hpp>
 #include <boost/endian/conversion.hpp>
 #include <botan/hash.h>

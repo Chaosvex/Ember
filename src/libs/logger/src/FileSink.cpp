@@ -8,7 +8,7 @@
 
 #include <logger/FileSink.h>
 #include <logger/Exception.h>
-#include <shared/util/cstring_view.hpp>
+#include <shared/utility/cstring_view.hpp>
 #include <algorithm>
 #include <array>
 #include <filesystem>

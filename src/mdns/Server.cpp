@@ -12,7 +12,7 @@
 #include "Utility.h"
 #include <logger/Logger.h>
 #include <spark/buffers/pmr/BufferAdaptor.h>
-#include <shared/util/FormatPacket.h>
+#include <shared/utility/FormatPacket.h>
 
 namespace ember::dns {
 

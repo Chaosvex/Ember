@@ -9,7 +9,7 @@
 #include <stun/MessageBuilder.h>
 #include <stun/Exception.h>
 #include <stun/detail/Shared.h>
-#include <shared/util/FNVHash.h>
+#include <shared/utility/FNVHash.h>
 #include <gsl/gsl>
 #include <algorithm>
 #include <random>

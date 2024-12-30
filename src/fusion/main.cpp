@@ -14,10 +14,10 @@
 #include <world/Runner.h>
 #include <logger/Logger.h>
 #include <shared/Banner.h>
-#include <shared/util/cstring_view.hpp>
+#include <shared/utility/cstring_view.hpp>
 #include <shared/threading/Utility.h>
-#include <shared/util/LogConfig.h>
-#include <shared/util/Utility.h>
+#include <shared/utility/LogConfig.h>
+#include <shared/utility/Utility.h>
 #include <boost/asio/io_context.hpp>
 #include <boost/asio/signal_set.hpp>
 #include <boost/program_options.hpp>

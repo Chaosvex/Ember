@@ -11,7 +11,7 @@
 #include "MonitorCallbacks.h"
 #include <logger/Logger.h>
 #include <shared/Banner.h>
-#include <shared/util/LogConfig.h>
+#include <shared/utility/LogConfig.h>
 #include <shared/metrics/MetricsImpl.h>
 #include <shared/metrics/Monitor.h>
 #include <shared/threading/ThreadPool.h>

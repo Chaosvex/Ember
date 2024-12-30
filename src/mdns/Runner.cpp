@@ -13,7 +13,7 @@
 #include <logger/Logger.h>
 #include <spark/Server.h>
 #include <shared/threading/Utility.h>
-#include <shared/util/Utility.h>
+#include <shared/utility/Utility.h>
 #include <boost/asio/io_context.hpp>
 #include <exception>
 #include <memory>

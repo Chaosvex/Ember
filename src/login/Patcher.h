@@ -13,7 +13,7 @@
 #include "grunt/Magic.h"
 #include <shared/database/daos/PatchDAO.h>
 #include <shared/database/objects/PatchMeta.h>
-#include <shared/util/FNVHash.h>
+#include <shared/utility/FNVHash.h>
 #include <logger/Logger.h>
 #include <span>
 #include <string>

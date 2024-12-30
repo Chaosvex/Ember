@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <shared/util/UTF8String.h>
+#include <shared/utility/UTF8String.h>
 #include <algorithm>
 #include <span>
 #include <string>

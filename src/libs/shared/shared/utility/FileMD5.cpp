@@ -6,7 +6,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-#include <shared/util/FileMD5.h>
+#include <shared/utility/FileMD5.h>
 #include <botan/bigint.h>
 #include <botan/hash.h>
 #include <boost/assert.hpp>

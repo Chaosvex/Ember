@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <shared/util/enum_bitmask.h>
-#include <shared/util/UTF8String.h>
+#include <shared/utility/enum_bitmask.h>
+#include <shared/utility/UTF8String.h>
 #include <string>
 #include <cstdint>
 

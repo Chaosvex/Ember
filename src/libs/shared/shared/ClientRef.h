@@ -8,8 +8,8 @@
 
 #pragma once
 
-#include <shared/util/FNVHash.h>
-#include <shared/util/xoroshiro128plus.h>
+#include <shared/utility/FNVHash.h>
+#include <shared/utility/xoroshiro128plus.h>
 #include <boost/functional/hash.hpp>
 #include <gsl/gsl_util>
 #include <algorithm>

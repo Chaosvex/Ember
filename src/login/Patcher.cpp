@@ -8,7 +8,7 @@
 
 #include "Patcher.h"
 #include "PatchGraph.h"
-#include <shared/util/FileMD5.h>
+#include <shared/utility/FileMD5.h>
 #include <boost/endian/conversion.hpp>
 #include <algorithm>
 #include <filesystem>

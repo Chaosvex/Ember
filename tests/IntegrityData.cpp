@@ -7,7 +7,7 @@
  */
 
 #include <login/IntegrityData.h>
-#include <shared/util/FileMD5.h>
+#include <shared/utility/FileMD5.h>
 #include <gtest/gtest.h>
 #include <array>
 #include <cstdint>

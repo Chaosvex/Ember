@@ -19,7 +19,7 @@
 #include <logger/Logger.h>
 #include <protocol/Packets.h>
 #include <protocol/Opcodes.h>
-#include <shared/util/UTF8String.h>
+#include <shared/utility/UTF8String.h>
 #include <memory>
 #include <vector>
 

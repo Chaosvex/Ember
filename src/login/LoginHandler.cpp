@@ -18,7 +18,7 @@
 #include <logger/Logger.h>
 #include <shared/database/daos/UserDAO.h>
 #include <shared/metrics/Metrics.h>
-#include <shared/util/EnumHelper.h>
+#include <shared/utility/EnumHelper.h>
 #include <boost/container/small_vector.hpp>
 #include <gsl/gsl_util>
 #include <ranges>

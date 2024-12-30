@@ -9,7 +9,7 @@
 #pragma once
 
 #include <logger/Severity.h>
-#include <shared/util/cstring_view.hpp>
+#include <shared/utility/cstring_view.hpp>
 #include <string>
 #include <string_view>
 #include <ctime>

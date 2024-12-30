@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <shared/util/MulticharConstant.h>
+#include <shared/utility/MulticharConstant.h>
 #include <cstdint>
 
 namespace ember::mpq {
