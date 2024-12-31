@@ -21,13 +21,13 @@ struct GameVersion {
 	std::uint16_t build;
 };
 
-inline log::Logger& operator<<(log::Logger& stream, GameVersion ver) {
-	stream << ver.major << "." << ver.minor << "." << ver.patch << " (" << ver.build << ")";
-	return stream;
-}
-
 inline std::string to_string(const GameVersion& ver) {
 	return std::format("{}.{}.{} ({})", ver.major, ver.minor, ver.patch, ver.build);
+}
+
+inline log::Logger& operator<<(log::Logger& stream, GameVersion ver) {
+	stream << to_string(ver);
+	return stream;
 }
 
 inline bool operator==(const GameVersion& lhs, const GameVersion& rhs) {
