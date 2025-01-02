@@ -71,7 +71,7 @@ std::deque<PatchGraph::Node> PatchGraph::path(std::uint16_t from, std::uint16_t 
 	queue.emplace(from, 0);
 
 	while(!queue.empty()) {
-		auto next = queue.top();
+		const auto next = queue.top();
 		queue.pop();
 
 		if(next.from == to) {
