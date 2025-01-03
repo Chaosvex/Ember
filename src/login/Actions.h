@@ -46,9 +46,10 @@ class RegisterSessionAction final : public Action {
 
 public:
 	RegisterSessionAction(const AccountClient& account_svc, std::uint32_t account_id, srp6::SessionKey key)
-	    : account_svc_(account_svc),
+		: account_svc_(account_svc),
 		  account_id_(account_id),
-		  key_(std::move(key)) { }
+		  key_(std::move(key)),
+		  res_(rpc::Account::Status::UNKNOWN_STATUS) { }
 
 	virtual void execute() override try {
 		res_ = do_register().get();
