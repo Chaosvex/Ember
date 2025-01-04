@@ -23,11 +23,11 @@
 #include <cmath>
 #include <ctime>
 
-namespace ember {
-
 namespace be = boost::endian;
 
-PINAuthenticator::PINAuthenticator(std::uint32_t seed) {
+namespace ember {
+
+PINAuthenticator::PINAuthenticator(const std::uint32_t seed) {
 	remap_pin_grid(seed);
 }
 
@@ -165,7 +165,7 @@ std::uint32_t PINAuthenticator::generate_totp_pin(const std::string& secret,
 
 	hmac->final(hmac_result.data());
 
-	unsigned int offset = hmac_result[19] & 0xF;
+	const unsigned int offset = hmac_result[19] & 0xF;
 	std::uint32_t pin = (hmac_result[offset] & 0x7f) << 24 | (hmac_result[offset + 1] & 0xff) << 16
 	                     | (hmac_result[offset + 2] & 0xff) << 8 | (hmac_result[offset + 3] & 0xff);
 
