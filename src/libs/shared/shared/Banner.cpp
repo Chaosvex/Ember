@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014, 2017 Ember
+ * Copyright (c) 2014 - 2025 Ember
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -9,6 +9,7 @@
 #include "Banner.h"
 #include "Version.h"
 #include "utility/ConsoleColour.h"
+#include <shared/utility/polyfill/print>
 #include <iostream>
 
 namespace ember {
@@ -36,7 +37,7 @@ void print_banner(std::string_view display_name) {
 
 	console.reset();
 
-	std::cout << display_name << ", v" << version::VERSION << " (" << version::GIT_HASH << ")\n\n";
+	std::print("{}, v{} ({})\n\n", display_name, version::VERSION, version::GIT_HASH);
 }
 
-}
+} // ember
