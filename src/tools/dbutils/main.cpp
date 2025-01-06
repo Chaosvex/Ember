@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 - 2024 Ember
+ * Copyright (c) 2019 - 2025 Ember
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -49,15 +49,16 @@ const std::unordered_map<std::string_view, std::array<std::string_view, 2>> db_a
 
 const auto UPDATE_BACKOUT_PERIOD = std::chrono::seconds(5);
 
-int launch(const po::variables_map& args);
+int launch(const po::variables_map& args, log::Logger& logger);
 po::variables_map parse_arguments(int argc, const char* argv[]);
-void validate_options(const po::variables_map& args);
-void validate_db_args(const po::variables_map& args, const std::string& mode);
-void db_install(const po::variables_map& args, const std::string& db_name, const bool drop);
-bool db_update(const po::variables_map& args, const std::string& db_name);
+void validate_options(const po::variables_map& args, log::Logger& logger);
+void validate_db_args(const po::variables_map& args, const std::string& mode, log::Logger& logger);
+void db_install(const po::variables_map& args, const std::string& db_name, const bool drop, log::Logger& logger);
+bool db_update(const po::variables_map& args, const std::string& db_name, log::Logger& logger);
 DatabaseDetails db_details(const po::variables_map& args, const std::string& db);
 bool apply_updates(const po::variables_map& args, QueryExecutor& exec,
-                   std::span<std::string> migration_paths, const std::string& db);
+                   std::span<std::string> migration_paths, const std::string& db,
+                   log::Logger& logger);
 
 int main(int argc, const char* argv[]) try {
 	std::cout << "Build " << ember::version::VERSION << " (" << ember::version::GIT_HASH << ")\n";
@@ -65,7 +66,7 @@ int main(int argc, const char* argv[]) try {
 	const auto& con_verbosity = log::severity_string(args["verbosity"].as<std::string>());
 	const auto& file_verbosity = log::severity_string(args["fverbosity"].as<std::string>());
 
-	auto logger = std::make_unique<log::Logger>();
+	log::Logger logger;
 
 	auto fsink = std::make_unique<log::FileSink>(
 		file_verbosity, log::Filter(0), "dbmanage.log", log::FileSink::Mode::APPEND
@@ -73,18 +74,17 @@ int main(int argc, const char* argv[]) try {
 
 	auto consink = std::make_unique<log::ConsoleSink>(con_verbosity, log::Filter(0));
 	consink->colourise(true);
-	logger->add_sink(std::move(consink));
-	logger->add_sink(std::move(fsink));
-	log::global_logger(logger.get());
+	logger.add_sink(std::move(consink));
+	logger.add_sink(std::move(fsink));
+	log::global_logger(logger);
 
-	return launch(args);
+	return launch(args, logger);
 } catch(const std::exception& e) {
 	std::cerr << e.what() << "\n";
 	return EXIT_FAILURE;
 }
 
-std::unique_ptr<QueryExecutor> db_executor(const std::string& type,
-                                           const DatabaseDetails& details) {
+std::unique_ptr<QueryExecutor> db_executor(const std::string& type, const DatabaseDetails& details) {
 	auto lower_type = type;
 
 	std::ranges::transform(lower_type, lower_type.begin(), [](const unsigned char c) {
@@ -104,19 +104,19 @@ std::unique_ptr<QueryExecutor> db_executor(const std::string& type,
 	return nullptr;
 }
 
-int launch(const po::variables_map& args) try {
-	validate_options(args);
+int launch(const po::variables_map& args, log::Logger& logger) try {
+	validate_options(args, logger);
 
 	if(!args["install"].empty()) {
-		LOG_INFO_GLOB << "Starting database setup process..." << LOG_SYNC;
+		LOG_INFO_SYNC(logger, "Starting database setup process...");
 		const auto clean = args["clean"].as<bool>();
 
 		if(clean && !args["shutup"].as<bool>()) {
-			LOG_WARN_GLOB << "You are performing an installation with --clean.\n"
-			              << "This will drop any existing databases and users specified "
-			                 "in the arguments!\n"
-			                 "Proceeding in " << UPDATE_BACKOUT_PERIOD.count()
-			              << " seconds..." << LOG_SYNC;
+			LOG_WARN(logger) << "You are performing an installation with --clean.\n"
+			                 << "This will drop any existing databases and users specified "
+			                    "in the arguments!\n"
+			                    "Proceeding in " << UPDATE_BACKOUT_PERIOD.count()
+			                 << " seconds..." << LOG_SYNC;
 			std::this_thread::sleep_for(UPDATE_BACKOUT_PERIOD);
 		}
 
@@ -130,77 +130,76 @@ int launch(const po::variables_map& args) try {
 				throw std::runtime_error("Unable to obtain a database executor. Invalid database type?");
 			}
 
-			LOG_INFO_GLOB << "Testing connection " << details.username << "@"
-			      << details.hostname << ":" << details.port
-			      << " for " << db << LOG_SYNC;
+			LOG_INFO_SYNC(logger, "Testing connection {} @ {}:{} for {}",
+			              details.username, details.hostname, details.port, db);
 
 			if(executor->test_connection()) {
-				LOG_INFO_GLOB << "Successfully established connection" << LOG_SYNC;
+				LOG_INFO_SYNC(logger, "Successfully established connection");
 			} else {
 				throw std::runtime_error("Unable to establish database connection");
 			}
 		}
 	
 		for(const auto& db : dbs) {
-			db_install(args, db, clean);
+			db_install(args, db, clean, logger);
 		}
 
-		LOG_INFO_GLOB << "Database installation complete!" << LOG_SYNC;
+		LOG_INFO_SYNC(logger, "Database installation complete!");
 
 		if(args["update"].empty()) {
-			LOG_INFO_GLOB << "Consider running --update." << LOG_SYNC;
+			LOG_INFO_SYNC(logger, "Consider running --update.");
 		}
 	}
 
 	bool success = true;
 
 	if(!args["update"].empty()) {
-		LOG_INFO_GLOB << "Starting database update process..." << LOG_SYNC;
+		LOG_INFO_SYNC(logger, "Starting database update process...");
 
 		if(!args["shutup"].as<bool>()) {
-			LOG_WARN_GLOB << "Please ensure all running Ember services have been "
-			                 "stopped and you have backed up your database!\n"
-			                 "Proceeding in " << UPDATE_BACKOUT_PERIOD.count()
-			              << " seconds..." << LOG_SYNC;
+			LOG_WARN(logger) << "Please ensure all running Ember services have been "
+			                    "stopped and you have backed up your database!\n"
+			                    "Proceeding in " << UPDATE_BACKOUT_PERIOD.count()
+			                 << " seconds..." << LOG_SYNC;
 			std::this_thread::sleep_for(UPDATE_BACKOUT_PERIOD);
 		}
 
 		const auto& dbs = args["update"].as<std::vector<std::string>>();
 
 		success = !std::ranges::any_of(dbs, [&](const auto& db) {
-			return !db_update(args, db);
+			return !db_update(args, db, logger);
 		});
 	}
 
 	if(success) {
-		LOG_INFO_GLOB << "All operations have completed successfully!" << LOG_SYNC;
+		LOG_INFO_SYNC(logger, "All operations have completed successfully!");
 	} else {
-		LOG_WARN_GLOB << "Some operations did not complete successfully!" << LOG_SYNC;
+		LOG_WARN_SYNC(logger, "Some operations did not complete successfully!");
 	}
 
 	return success? EXIT_SUCCESS : EXIT_FAILURE;
 } catch(const std::exception& e) {
-	LOG_FATAL_GLOB << e.what() << LOG_SYNC;
+	LOG_FATAL(logger) << e.what() << LOG_SYNC;
 	return EXIT_FAILURE;
 }
 
-void validate_options(const po::variables_map& args) {
-	LOG_TRACE_GLOB << log_func << LOG_SYNC;
+void validate_options(const po::variables_map& args, log::Logger& logger) {
+	LOG_TRACE(logger) << log_func << LOG_SYNC;
 
 	if(args["install"].empty() && args["update"].empty()) {
 		throw std::invalid_argument("At least --install or --update must be specified!");
 	}
 
 	if(!args["install"].empty()) {
-		validate_db_args(args, "install");
+		validate_db_args(args, "install", logger);
 	}
 	
 	if(!args["update"].empty()) {
-		validate_db_args(args, "update");
+		validate_db_args(args, "update", logger);
 	}
 }
 
-bool validate_db_names(std::span<const std::string> input_names) {
+bool validate_db_names(std::span<const std::string> input_names, log::Logger& logger) {
 	auto view = db_args | std::views::keys;
 	auto valid_names = std::ranges::to<std::vector>(view);
 	std::vector<std::string_view> bad_names;
@@ -211,18 +210,18 @@ bool validate_db_names(std::span<const std::string> input_names) {
 	std::ranges::set_difference(input, valid_names, std::back_inserter(bad_names));
 	
 	for(const auto& name : bad_names) {
-		LOG_INFO_GLOB << "Invalid or duplicate name: " << name << LOG_SYNC;
+		LOG_INFO_SYNC(logger, "Invalid or duplicate name: {}", name);
 	}
 
 	return bad_names.empty();
 }
 
-void validate_db_args(const po::variables_map& po_args, const std::string& mode) {
-	LOG_TRACE_GLOB << log_func << LOG_SYNC;
+void validate_db_args(const po::variables_map& po_args, const std::string& mode, log::Logger& logger) {
+	LOG_TRACE(logger) << log_func << LOG_SYNC;
 
 	const auto& dbs = po_args[mode].as<std::vector<std::string>>();
 
-	if(!validate_db_names(dbs)) {
+	if(!validate_db_names(dbs, logger)) {
 		throw std::invalid_argument(
 			"Database argument list contained duplicates or unknown names. "
 			"Please fix this before attempting to continue."
@@ -242,8 +241,8 @@ void validate_db_args(const po::variables_map& po_args, const std::string& mode)
 	}
 }
 
-std::vector<std::string> load_queries(const std::string& path) {
-	LOG_TRACE_GLOB << log_func << LOG_SYNC;
+std::vector<std::string> load_queries(const std::string& path, log::Logger& logger) {
+	LOG_TRACE(logger) << log_func << LOG_SYNC;
 
 	std::vector<std::string> queries;
 	std::fstream file(path, std::ios::in);
@@ -280,8 +279,8 @@ DatabaseDetails db_details(const po::variables_map& args, const std::string& db)
 	};
 }
 
-void db_install(const po::variables_map& args, const std::string& db, const bool drop) {
-	LOG_TRACE_GLOB << log_func << LOG_SYNC;
+void db_install(const po::variables_map& args, const std::string& db, const bool drop, log::Logger& logger) {
+	LOG_TRACE(logger) << log_func << LOG_SYNC;
 	const auto& sql_dir = args["sql-dir"].as<std::string>();
 	const auto& dbs = args["install"].as<std::vector<std::string>>();
 
@@ -318,31 +317,32 @@ void db_install(const po::variables_map& args, const std::string& db, const bool
 		throw std::runtime_error("Privileged DB user and new user cannot match.");
 	}
 
-	LOG_INFO_GLOB << "Creating database " << args[db_arg].as<std::string>() << "..." << LOG_SYNC;
+	LOG_INFO_SYNC(logger, "Creating database {}...", args[db_arg].as<std::string>());
 	executor->create_database(db_name, drop);
 	executor->select_db(db_name);
 
-	LOG_INFO_GLOB << "Installing " << db_name << " schema..." << LOG_SYNC;
+	LOG_INFO_SYNC(logger, "Installing {} schema...", db_name);
 	const auto& db_type = args["database-type"].as<std::string>();
 	const auto& path = args["sql-dir"].as<std::string>()  + db_type + "/" + db + "/schema.sql";
-	const auto& queries = load_queries(path);
+	const auto& queries = load_queries(path, logger);
 
 	for(const auto& query : queries) {
 		executor->execute(query);
 	}
 
-	LOG_INFO_GLOB << "Creating user " << user << "..." << LOG_SYNC;
+	LOG_INFO_SYNC(logger, "Creating user {}...", user);
 	executor->create_user(user, pass, drop);
 
-	LOG_INFO_GLOB << "Granting " << user << " access to " << db_name << "..." << LOG_SYNC;
+	LOG_INFO_SYNC(logger, "Granting {}  access to {}...", user, db_name);
 	const bool read_only = (db == "world");
 	executor->grant_user(user, db_name, read_only);
-	LOG_INFO_GLOB << "Successfully installed " << db << LOG_SYNC;
+	LOG_INFO_SYNC(logger, "Successfully installed {}", db);
 }
 
 bool apply_updates(const po::variables_map& args, QueryExecutor& exec,
-                   std::span<std::string> migration_paths, const std::string& db) {
-	LOG_TRACE_GLOB << log_func << LOG_SYNC;
+                   std::span<std::string> migration_paths, const std::string& db,
+                   log::Logger& logger) {
+	LOG_TRACE(logger) << log_func << LOG_SYNC;
 	const auto transactions = args["transactional-updates"].as<bool>();
 	const auto batched = args["single-transaction"].as<bool>();
 	exec.select_db(db);
@@ -353,8 +353,8 @@ bool apply_updates(const po::variables_map& args, QueryExecutor& exec,
 
 	for(const auto& path : migration_paths) {
 		try {
-			LOG_INFO_GLOB << "Applying " << path << LOG_ASYNC;
-			const auto& queries = load_queries(path);
+			LOG_INFO_SYNC(logger, "Applying {}", path);
+			const auto& queries = load_queries(path, logger);
 
 			if(transactions && !batched) {
 				exec.start_transaction();
@@ -383,13 +383,13 @@ bool apply_updates(const po::variables_map& args, QueryExecutor& exec,
 				exec.end_transaction();
 			}
 		} catch(std::exception& e) {
-			LOG_ERROR_GLOB << path << ": " << e.what() << LOG_SYNC;
+			LOG_ERROR_SYNC(logger, "{}: {}", path, e.what());
 
 			if (transactions || batched) {
-				LOG_ERROR_GLOB << "Migration failed, attempting rollback..." << LOG_SYNC;
+				LOG_ERROR_SYNC(logger, "Migration failed, attempting rollback...");
 				exec.rollback();
 			} else {
-				LOG_ERROR_GLOB << "Migration failed, you may need to restore your database." << LOG_SYNC;
+				LOG_ERROR_SYNC(logger, "Migration failed, you may need to restore your database.");
 			}
 
 			return false;
@@ -403,9 +403,9 @@ bool apply_updates(const po::variables_map& args, QueryExecutor& exec,
 	return true;
 }
 
-bool db_update(const po::variables_map& args, const std::string& db) {
-	LOG_TRACE_GLOB << log_func << LOG_SYNC;
-	LOG_INFO_GLOB << "Applying updates for " << db << "..." << LOG_SYNC;
+bool db_update(const po::variables_map& args, const std::string& db, log::Logger& logger) {
+	LOG_TRACE(logger) << log_func << LOG_SYNC;
+	LOG_INFO_SYNC(logger, "Applying updates for {}...", db);
 
 	const auto& details = db_details(args, db);			
 	auto executor = db_executor(args["database-type"].as<std::string>(), details);
@@ -443,36 +443,36 @@ bool db_update(const po::variables_map& args, const std::string& db) {
 	for(const auto& path : paths) {
 		// filter out any migrations older than the last applied migration
 		if(!applied_migrations.empty() && path.filename() <= applied_migrations.back().file) {
-			LOG_DEBUG_GLOB << "Skipping " << path.string() << LOG_SYNC;
+			LOG_DEBUG_SYNC(logger, "Skipping {}", path.string());
 			continue;
 		}
 
 		migration_paths.emplace_back(path.string());
 	}
 
-	LOG_INFO_GLOB << "Database has " << applied_migrations.size() << " migration(s) applied" << LOG_SYNC;
-	LOG_INFO_GLOB << "Found " << migration_paths.size() << " applicable migration(s)" << LOG_SYNC;
+	LOG_INFO_SYNC(logger, "Database has {} migration(s) applied", applied_migrations.size());
+	LOG_INFO_SYNC(logger, "Found {}  applicable migration(s)", migration_paths.size());
 
 	if(!applied_migrations.empty()) {
 		const auto& last = applied_migrations.back();
-		LOG_INFO_GLOB << "Current migration: " << last.file << LOG_SYNC;
+		LOG_INFO_SYNC(logger, "Current migration: {}", last.file);
 	}
 
 	if(migration_paths.empty() && applied_migrations.empty()) {
-		LOG_WARN_GLOB << "The database has no migration history and no applicable migrations were found. "
-		                 "No updates applied!" << LOG_SYNC;
+		LOG_WARN_SYNC(logger, "The database has no migration history and no applicable migrations were found. "
+		                      "No updates applied!");
 		return true;
 	} else if(migration_paths.empty()) {
-		LOG_INFO_GLOB << "Database appears to already be up to date!" << LOG_ASYNC;
+		LOG_INFO_SYNC(logger, "Database appears to already be up to date!");
 		return true;
 	}
 
-	const auto res = apply_updates(args, *executor, migration_paths, db_name);
+	const auto res = apply_updates(args, *executor, migration_paths, db_name, logger);
 
 	if(res) {
-		LOG_INFO_GLOB << "Database migrations applied successfully." << LOG_SYNC;
+		LOG_INFO_SYNC(logger, "Database migrations applied successfully.");
 	} else {
-		LOG_WARN_GLOB << "Some migrations could not be applied." << LOG_SYNC;
+		LOG_WARN_SYNC(logger, "Some migrations could not be applied.");
 	}
 
 	return res;
