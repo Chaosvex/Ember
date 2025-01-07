@@ -338,7 +338,7 @@ void CharacterHandler::do_restore(std::uint64_t id, const ResultCB& callback) co
 	auto characters = dao_.characters(character->account_id);
 
 	if(characters.size() >= MAX_CHARACTER_SLOTS_ACCOUNT) {
-		LOG_WARN(logger_) << "Cannot restore character - would exceed max account slots" << LOG_ASYNC;
+		LOG_WARN_ASYNC(logger_, "Cannot restore character - would exceed max account slots");
 		callback(protocol::Result::CHAR_CREATE_ACCOUNT_LIMIT);
 		return;
 	}
@@ -348,7 +348,7 @@ void CharacterHandler::do_restore(std::uint64_t id, const ResultCB& callback) co
 	});
 
 	if(realm_chars >= MAX_CHARACTER_SLOTS_SERVER) {
-		LOG_WARN(logger_) << "Cannot restore character - would exceed max server slots" << LOG_ASYNC;
+		LOG_WARN_ASYNC(logger_, "Cannot restore character - would exceed max server slots");
 		callback(protocol::Result::CHAR_CREATE_SERVER_LIMIT);
 		return;
 	}

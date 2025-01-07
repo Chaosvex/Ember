@@ -21,7 +21,7 @@ namespace po = boost::program_options;
 namespace ember::world {
 
 int run(const boost::program_options::variables_map& args, log::Logger& logger) {
-	LOG_INFO(logger) << "Loading DBC data..." << LOG_SYNC;
+	LOG_INFO_SYNC(logger, "Loading DBC data...");
 
 	dbc::DiskLoader loader(args["dbc.path"].as<std::string>(), [&](auto message) {
 		LOG_DEBUG(logger) << message << LOG_SYNC;
@@ -29,7 +29,7 @@ int run(const boost::program_options::variables_map& args, log::Logger& logger) 
 
 	auto dbc_store = loader.load("Map", "GameTips");
 
-	LOG_INFO(logger) << "Resolving DBC references..." << LOG_SYNC;
+	LOG_INFO_SYNC(logger, "Resolving DBC references...");
 	dbc::link(dbc_store);
 
 	const auto tip = random_tip(dbc_store.game_tips);
