@@ -244,9 +244,7 @@ void CharacterHandler::do_erase(std::uint32_t account_id, std::uint32_t realm_id
 	
 	// character must exist, belong to the same account and be on the same realm
 	if(!character || character->account_id != account_id || character->realm_id != realm_id) {
-		LOG_WARN_FILTER(logger_, LF_NAUGHTY_USER)
-			<< "Account " << account_id << " attempted an invalid delete on character "
-			<< character_id << LOG_ASYNC;
+		LOG_DEBUG_ASYNC(logger_, "Account {} attempted an invalid delete on character ", account_id, character_id);
 		callback(protocol::Result::CHAR_DELETE_FAILED);
 		return;
 	}
@@ -381,9 +379,8 @@ bool CharacterHandler::validate_options(const Character& character, std::uint32_
 	});
 
 	if(found == dbc_.char_base_info.end()) {
-		LOG_WARN_FILTER(logger_, LF_NAUGHTY_USER)
-			<< "Invalid class/race combination of " << character.class_
-			<< " & " << character.race << " from account ID " << account_id << LOG_ASYNC;
+		LOG_DEBUG_ASYNC(logger_, "Invalid race/class combination of {} {} from account ID {}",
+		                character.race, character.class_, account_id);
 		return false;
 	}
 
@@ -440,12 +437,9 @@ bool CharacterHandler::validate_options(const Character& character, std::uint32_
 	}
 
 	if(!facial_feature_match || !skin_match || !face_match || !hair_match) {
-		LOG_WARN_FILTER(logger_, LF_NAUGHTY_USER)
-			<< "Invalid visual customisation options from account " << account_id << ":"
-			<< " Face ID: " << character.face
-			<< " Facial feature ID: " << character.facialhair
-			<< " Hair style ID: " << character.hairstyle
-			<< " Hair colour ID: " << character.haircolour << LOG_ASYNC;
+		LOG_DEBUG_ASYNC(logger_, "Invalid visual customisation options, account {} - "
+		               "Face ID: {}, facial feature ID: {}, hair style ID: {}, hair colour ID: {}",
+			            account_id, character.face, character.facialhair, character.hairstyle, character.haircolour);
 		return false;
 	}
 
