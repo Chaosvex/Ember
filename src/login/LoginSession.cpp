@@ -41,20 +41,20 @@ LoginSession::LoginSession(SessionManager& sessions, tcp_socket socket, log::Log
 }
 
 bool LoginSession::handle_packet(spark::io::pmr::Buffer& buffer) try {
-	LOG_TRACE_FILTER(logger_, LF_NETWORK) << log_func << LOG_ASYNC;
+	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 
 	auto result = grunt_handler_.process_buffer(buffer);
 
 	if(result) {
 		const auto& packet = result->get();
-		LOG_TRACE_FILTER(logger_, LF_NETWORK) << remote_address() << " -> "
+		LOG_TRACE(logger_) << remote_address() << " -> "
 			<< grunt::to_string(packet.opcode) << LOG_ASYNC;
 		return handler_.update_state(packet);
 	}
 
 	return true;
 } catch(grunt::bad_packet& e) {
-	LOG_DEBUG_FILTER(logger_, LF_NETWORK) << e.what() << LOG_ASYNC;
+	LOG_DEBUG(logger_) << e.what() << LOG_ASYNC;
 	return false;
 }
 

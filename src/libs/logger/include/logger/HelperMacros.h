@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2015 - 2024 Ember
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
+* Copyright (c) 2015 - 2024 Ember
+*
+* This Source Code Form is subject to the terms of the Mozilla Public
+* License, v. 2.0. If a copy of the MPL was not distributed with this
+* file, You can obtain one at http://mozilla.org/MPL/2.0/.
+*/
 
 #pragma once
 
@@ -284,7 +284,7 @@ if(logger->severity() <= ember::log::Severity::WARN) { \
 
 // used to generate decorated output (e.g. 'namespace::func' vs simply 'func')
 #if _MSC_VER && !__INTEL_COMPILER
-	#define log_func __FUNCTION__
+#define log_func __FUNCTION__
 #elif __clang__ || __GNUC__
-	#define log_func __PRETTY_FUNCTION__
+#define log_func __PRETTY_FUNCTION__
 #endif

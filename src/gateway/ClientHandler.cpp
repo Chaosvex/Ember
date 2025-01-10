@@ -38,8 +38,7 @@ void ClientHandler::handle_message(BinaryStream& stream) {
 	context_.stream = &stream;
 	stream >> opcode_;
 
-	CLIENT_TRACE_FILTER(logger_, LF_NETWORK, context_)
-		<< " -> " << protocol::to_string(opcode_) << LOG_ASYNC;
+	CLIENT_TRACE(logger_, context_) << " -> " << protocol::to_string(opcode_) << LOG_ASYNC;
 
 	// handle ping & keep-alive as special cases
 	switch(opcode_) {
@@ -64,7 +63,7 @@ void ClientHandler::handle_event(std::unique_ptr<const Event> event) {
 }
 
 void ClientHandler::state_update(ClientState new_state) {
-	CLIENT_DEBUG_FILTER(logger_, LF_NETWORK, context_)
+	CLIENT_DEBUG(logger_, context_)
 		<< "State change, " << ClientState_to_string(context_.state)
 		<< " => " << ClientState_to_string(new_state) << LOG_SYNC;
 
@@ -75,7 +74,7 @@ void ClientHandler::state_update(ClientState new_state) {
 }
 
 void ClientHandler::skip(BinaryStream& stream) {
-	CLIENT_DEBUG_FILTER(logger_, LF_NETWORK, context_)
+	CLIENT_DEBUG(logger_, context_)
 		<< ClientState_to_string(context_.state) << " skipping "
 		<< protocol::to_string(opcode_)
 		<< " (" << std::to_underlying(opcode_) << ")" << LOG_ASYNC;
@@ -84,7 +83,7 @@ void ClientHandler::skip(BinaryStream& stream) {
 }
 
 void ClientHandler::handle_ping(BinaryStream& stream) {
-	LOG_TRACE_FILTER(logger_, LF_NETWORK) << log_func << LOG_ASYNC;
+	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 
 	protocol::CMSG_PING packet;
 

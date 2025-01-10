@@ -30,7 +30,7 @@ namespace {
 void handle_timeout(ClientContext& ctx);
 
 void send_character_list_fail(ClientContext& ctx) {
-	LOG_TRACE_FILTER_GLOB(LF_NETWORK) << log_func << LOG_ASYNC;
+	LOG_TRACE_GLOB << log_func << LOG_ASYNC;
 
 	// displays an error dialogue on the client
 	protocol::SMSG_CHAR_CREATE response;
@@ -39,7 +39,7 @@ void send_character_list_fail(ClientContext& ctx) {
 }
 
 void send_character_list(ClientContext& ctx, std::vector<Character> characters) {
-	LOG_TRACE_FILTER_GLOB(LF_NETWORK) << log_func << LOG_ASYNC;
+	LOG_TRACE_GLOB << log_func << LOG_ASYNC;
 
 	// emulate a quirk of the retail server
 	if(Locator::config()->list_zone_hide) {
@@ -56,7 +56,7 @@ void send_character_list(ClientContext& ctx, std::vector<Character> characters) 
 }
 
 void send_character_rename(ClientContext& ctx, const CharRenameResponse* res) {
-	LOG_TRACE_FILTER_GLOB(LF_NETWORK) << log_func << LOG_ASYNC;
+	LOG_TRACE_GLOB << log_func << LOG_ASYNC;
 
 	protocol::SMSG_CHAR_RENAME response;
 	response->result = res->result;
@@ -66,7 +66,7 @@ void send_character_rename(ClientContext& ctx, const CharRenameResponse* res) {
 }
 
 void character_rename(ClientContext& ctx) {
-	LOG_TRACE_FILTER_GLOB(LF_NETWORK) << log_func << LOG_ASYNC;
+	LOG_TRACE_GLOB << log_func << LOG_ASYNC;
 
 	protocol::CMSG_CHAR_RENAME packet;
 
@@ -84,7 +84,7 @@ void character_rename(ClientContext& ctx) {
 }
 
 void character_enumerate(const ClientContext& ctx) {
-	LOG_TRACE_FILTER_GLOB(LF_NETWORK) << log_func << LOG_ASYNC;
+	LOG_TRACE_GLOB << log_func << LOG_ASYNC;
 
 	const auto& uuid = ctx.handler->uuid();
 	Locator::character()->retrieve_characters(ctx.client_id->id,
@@ -96,7 +96,7 @@ void character_enumerate(const ClientContext& ctx) {
 }
 
 void character_enumerate_completion(ClientContext& ctx, const CharEnumResponse* event) {
-	LOG_TRACE_FILTER_GLOB(LF_NETWORK) << log_func << LOG_ASYNC;
+	LOG_TRACE_GLOB << log_func << LOG_ASYNC;
 
 	if(event->status == rpc::Character::Status::OK) {
 		send_character_list(ctx, event->characters);
@@ -106,7 +106,7 @@ void character_enumerate_completion(ClientContext& ctx, const CharEnumResponse* 
 }
 
 void send_character_delete(ClientContext& ctx, const CharDeleteResponse* res) {
-	LOG_TRACE_FILTER_GLOB(LF_NETWORK) << log_func << LOG_ASYNC;
+	LOG_TRACE_GLOB << log_func << LOG_ASYNC;
 
 	protocol::SMSG_CHAR_DELETE response;
 	response->result = res->result;
@@ -114,7 +114,7 @@ void send_character_delete(ClientContext& ctx, const CharDeleteResponse* res) {
 }
 
 void send_character_create(ClientContext& ctx, const CharCreateResponse* res) {
-	LOG_TRACE_FILTER_GLOB(LF_NETWORK) << log_func << LOG_ASYNC;
+	LOG_TRACE_GLOB << log_func << LOG_ASYNC;
 
 	protocol::SMSG_CHAR_CREATE response;
 	response->result = res->result;
@@ -122,7 +122,7 @@ void send_character_create(ClientContext& ctx, const CharCreateResponse* res) {
 }
 
 void character_create(ClientContext& ctx) {
-	LOG_TRACE_FILTER_GLOB(LF_NETWORK) << log_func << LOG_ASYNC;
+	LOG_TRACE_GLOB << log_func << LOG_ASYNC;
 
 	protocol::CMSG_CHAR_CREATE packet;
 
@@ -138,7 +138,7 @@ void character_create(ClientContext& ctx) {
 }
 
 void character_delete(ClientContext& ctx) {
-	LOG_TRACE_FILTER_GLOB(LF_NETWORK) << log_func << LOG_ASYNC;
+	LOG_TRACE_GLOB << log_func << LOG_ASYNC;
 
 	protocol::CMSG_CHAR_DELETE packet;
 
@@ -154,7 +154,7 @@ void character_delete(ClientContext& ctx) {
 }
 
 void player_login(ClientContext& ctx) {
-	LOG_TRACE_FILTER_GLOB(LF_NETWORK) << log_func << LOG_ASYNC;
+	LOG_TRACE_GLOB << log_func << LOG_ASYNC;
 
 	ctx.handler->state_update(ClientState::WORLD_ENTER);
 

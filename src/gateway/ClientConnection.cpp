@@ -21,7 +21,7 @@
 namespace ember::gateway {
 
 void ClientConnection::parse_header(StaticBuffer& buffer) {
-	LOG_TRACE_FILTER(logger_, LF_NETWORK) << log_func << LOG_ASYNC;
+	LOG_TRACE(logger_) << log_func << LOG_ASYNC;
 
 	if(buffer.size() < protocol::ClientHeader::WIRE_SIZE) {
 		return;
@@ -35,8 +35,7 @@ void ClientConnection::parse_header(StaticBuffer& buffer) {
 	stream >> msg_size_;
 
 	if(msg_size_ < sizeof(protocol::ClientHeader::OpcodeType)) {
-		LOG_DEBUG_FILTER(logger_, LF_NETWORK)
-			<< "Invalid message size from " << remote_address() << LOG_ASYNC;
+		LOG_DEBUG(logger_) << "Invalid message size from " << remote_address() << LOG_ASYNC;
 		close_session();
 		return;
 	}
@@ -130,7 +129,7 @@ void ClientConnection::read() {
 	const auto free = inbound_buffer_.free();
 
 	if(!free) {
-		LOG_DEBUG_FILTER(logger_, LF_NETWORK)
+		LOG_DEBUG(logger_)
 			<< "Inbound buffer full, closing " << remote_address() << LOG_ASYNC;
 		close_session();
 		return;
@@ -169,8 +168,7 @@ void ClientConnection::start() {
 }
 
 void ClientConnection::stop() {
-	LOG_DEBUG_FILTER(logger_, LF_NETWORK)
-		<< "Closing connection to " << remote_address() << LOG_ASYNC;
+	LOG_DEBUG(logger_) << "Closing connection to " << remote_address() << LOG_ASYNC;
 
 	handler_.stop();
 	boost::system::error_code ec; // we don't care about any errors
@@ -254,7 +252,7 @@ void ClientConnection::async_shutdown(std::shared_ptr<ClientConnection> client) 
 	client->terminate();
 
 	boost::asio::post(client->socket_.get_executor(), [client]() {
-		LOG_TRACE_FILTER_GLOB(LF_NETWORK)
+		LOG_TRACE_GLOB
 			<< "Handler for "
 			<< client->remote_address()
 			<< " destroyed" << LOG_ASYNC;
