@@ -151,7 +151,6 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 
 	const auto&  s_address = args["spark.address"].as<std::string>();
 	auto s_port = args["spark.port"].as<std::uint16_t>();
-	auto spark_filter = log::Filter(FilterType::LF_SPARK);
 
 	LOG_INFO(logger) << "Starting RPC services..." << LOG_SYNC;
 	spark::Server spark(service, "character", s_address, s_port, logger);
