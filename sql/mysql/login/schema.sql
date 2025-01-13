@@ -295,14 +295,17 @@ CREATE TABLE `users` (
   `s` binary(32) NOT NULL,
   `v` varchar(255) NOT NULL,
   `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `email` varchar(255) NOT NULL,
+  `verified` bit(1) DEFAULT b'0',
   `subscriber` bit(1) NOT NULL DEFAULT b'1',
   `survey_request` bit(1) NOT NULL DEFAULT b'0',
   `pin_method` int(11) NOT NULL DEFAULT '0',
   `pin` int(11) DEFAULT NULL,
   `totp_key` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `username_UNIQUE` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  UNIQUE KEY `username_UNIQUE` (`username`),
+  UNIQUE KEY `email_UNIQUE` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
