@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 - 2024 Ember
+ * Copyright (c) 2015 - 2025 Ember
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -34,15 +34,16 @@ class User final {
 	bool suspended_;
 	bool survey_request_;
 	bool subscriber_;
+	bool verified_;
 
 public:
 	User(std::uint32_t id, utf8_string username, std::vector<std::uint8_t> salt, std::string verifier,
 	     PINMethod pin_method, std::uint32_t pin, std::string totp_token, bool banned, bool suspended,
-	     bool survey_request, bool subscriber)
+	     bool survey_request, bool subscriber, bool verified)
          : id_(id), user_(std::move(username)), s_(std::move(salt)), v_(std::move(verifier)),
 	       pin_(pin), pin_method_(pin_method), totp_token_(std::move(totp_token)),
 	       survey_request_(survey_request), subscriber_(subscriber), banned_(banned),
-	       suspended_(suspended) {
+	       suspended_(suspended), verified_(verified) {
 		// Usernames aren't required to be uppercase in the DB but the client requires it for SRP6 calculations
 		std::ranges::transform(user_, user_.begin(), [](const unsigned char c) {
 			return std::toupper(c);
@@ -91,6 +92,10 @@ public:
 
 	bool subscriber() const {
 		return subscriber_;
+	}
+
+	bool verified() const {
+		return verified_;
 	}
 };
 
