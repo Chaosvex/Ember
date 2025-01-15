@@ -251,8 +251,9 @@ void launch(const po::variables_map& args, boost::asio::io_context& service,
 
 	LoginHandlerBuilder builder(logger, patcher, survey, bin_data, user_dao,
 	                            acct_svc, realm_list, *metrics,
-	                            args["locale.enforce"].as<bool>(),
-	                            args["integrity.enabled"].as<bool>());
+	                            args["misc.locale_enforce"].as<bool>(),
+	                            args["integrity.enabled"].as<bool>(),
+	                            args["misc.verified_email"].as<bool>());
 	LoginSessionBuilder s_builder(builder, thread_pool);
 
 	const auto& interface = args["network.interface"].as<std::string>();
@@ -382,7 +383,8 @@ unsigned int check_concurrency(log::Logger& logger) {
 po::options_description options() {
 	po::options_description opts;
 	opts.add_options()
-		("locale.enforce", po::value<bool>()->required())
+		("misc.locale_enforce", po::value<bool>()->required())
+		("misc.verified_emails", po::value<bool>()->required())
 		("patches.bin_path", po::value<std::string>()->required())
 		("survey.path", po::value<std::string>()->required())
 		("survey.id", po::value<std::uint32_t>()->required())

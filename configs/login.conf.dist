@@ -1,7 +1,8 @@
 # Login daemon configuration
 
-[locale]
-enforce = false
+[misc]
+locale_enforce = false # Only allow clients to view realms of matching locale
+verified_email = false # Only allow logins by users with verified emails
 
 [patches]
 bin_path = ""  # path to patch files

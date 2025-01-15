@@ -70,6 +70,7 @@ class LoginHandler final {
 	TransferState transfer_state_;
 	const bool locale_enforce_;
 	const bool integrity_enforce_;
+	const bool require_verified_email_;
 
 	void initiate_login(const grunt::Packet& packet);
 	void initiate_file_transfer(const FileMeta& meta);
@@ -125,12 +126,12 @@ public:
 	LoginHandler(const dal::UserDAO& users, const AccountClient& acct_svc, const Patcher& patcher,
 	             const IntegrityData& bin_data, const Survey& survey, log::Logger& logger,
 	             const RealmList& realm_list, std::string source, Metrics& metrics,
-	             bool locale_enforce, bool integrity_enforce)
+	             bool locale_enforce, bool integrity_enforce, bool verified_email)
 	             : user_src_(users), patcher_(patcher), logger_(logger), acct_svc_(acct_svc),
 	               realm_list_(realm_list), source_ip_(std::move(source)), metrics_(metrics),
 	               bin_data_(bin_data), survey_(survey), transfer_state_{},
 	               locale_enforce_(locale_enforce), integrity_enforce_(integrity_enforce),
-	               pin_grid_seed_(0) { }
+	               require_verified_email_(verified_email), pin_grid_seed_(0) { }
 };
 
 } // ember

@@ -241,10 +241,16 @@ void LoginHandler::send_login_challenge(const FetchUserAction& action) {
 
 	try {
 		if((user_ = action.get_result())) {
-			state_data_.emplace<LoginAuthenticator>(*user_);
-			response = build_login_challenge();
-			response.result = grunt::Result::SUCCESS;
-			update_state(LoginState::PROOF);
+			if(require_verified_email_ && !user_->verified()) {
+				response.result = grunt::Result::FAIL_UNKNOWN_ACCOUNT;
+				metrics_.increment("login_failure");
+				LOG_DEBUG(logger_) << "Account not verified: {} " << user_->username() << LOG_ASYNC;
+			} else {
+				state_data_.emplace<LoginAuthenticator>(*user_);
+				response = build_login_challenge();
+				response.result = grunt::Result::SUCCESS;
+				update_state(LoginState::PROOF);
+			}
 		} else {
 			// leaks information on whether the account exists (could send challenge anyway?)
 			response.result = grunt::Result::FAIL_UNKNOWN_ACCOUNT;
