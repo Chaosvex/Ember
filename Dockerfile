@@ -27,7 +27,7 @@ RUN apt-get -y update && apt-get -y upgrade \
  && apt-get install -y zlib1g-dev \
  && apt-get install -y libpcre3-dev \
  && apt-get install -y libflatbuffers-dev \
- && wget -q https://boostorg.jfrog.io/artifactory/main/release/1.84.0/source/boost_1_84_0.tar.gz \
+ && wget -q https://archives.boost.io/release/1.84.0/source/boost_1_84_0.tar.gz \
  && tar -zxf boost_1_84_0.tar.gz \
  && cd boost_1_84_0 \
  && ./bootstrap.sh --with-libraries=system,program_options,headers \
